@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-21-->
+<TreeList>
+<Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=Sensor" OriUrl="../../TransJson/TransJsonToTreeList?DataType=Sensor">
+</Properties>
+<Cols>
+  <Col name="SensorNum"  width="90" align="center">测点编号</Col>
+  <Col name="MineCode" isHide="absTrue" width="90" align="center">煤矿编号</Col>
+  <Col name="TypeName"  width="90" align="center">设备名</Col>
+  <Col name="Place"  width="120" align="center">安装地点</Col>
+  <Col name="Unit"  width="90" align="center">单位</Col>
+</Cols>
+</TreeList>

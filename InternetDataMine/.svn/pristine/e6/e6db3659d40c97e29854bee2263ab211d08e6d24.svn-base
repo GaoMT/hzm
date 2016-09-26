@@ -1,0 +1,35 @@
+﻿@model InternetDataMine.Models.PersonModel
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "../shared/_layout.cshtml";
+    
+    string Name=Model.Name;
+    int Age=Model.Age;
+    string Remark=Model.Remark;
+}
+
+@*@Html.ActionLink("第二页", "DEY1", new { Name = "李四", Age = 29, Remark = "我叫李思" })*@
+@Html.ActionLink("第三页", "CeTest", new { Name = "幽冥铁骑", Age = 100000, Remark = "纵横宇内" })
+
+@using (Html.BeginForm("DEY", "Person", FormMethod.Post))
+{
+    @Html.TextBox("Name")
+    @Html.TextBox("Age")
+    @Html.TextBox("Remark")
+    <input type="submit" value="第二页" /> 
+    
+}
+
+@Html.ActionLink("硕正列表测试", "SupcanTest")
+
+<label>姓名：</label>@Name
+
+<label>年龄：</label>@Age
+
+<label>备注：</label>@Remark
+
+
+
+

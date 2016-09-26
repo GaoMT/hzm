@@ -1,0 +1,232 @@
+﻿@{
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script>
+    //$(document).ready(function () {
+    //    $("#Rolediv")[0].style.height = (getQueryString("Height") - 30) + "px";
+    //});
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    var RoleID = "";
+    //datagrid RoleInfo 加载
+    $('#Role').ready(function() {
+
+        $('#Role').datagrid({
+            toolbar: '#tb',
+            singleSelect: false,
+            url: '../Editer/TransData?type=Role',
+            method: 'post',
+            striped: true,
+            fit: true,
+            fitColumns: true,
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'RoleID', title: '角色编号', hidden: true, width: 100 },
+                { field: 'RoleName', title: '角色名称', width: 100 },
+                { field: 'RoleDescription', title: '角色描述', width: 100 },
+                { field: 'Remark', title: '备注', width: 100 }
+            ]]
+        });
+    });
+    //修改
+    function alter() {
+        //$('#editRoleName').val("");
+        //$('#editDescription').val("");
+        //$('#editRemark').val("");
+        
+        $(".easyui-textbox").textbox("setText", "");
+
+        if ($('#Role').datagrid('getSelected')!=null) {
+            $('#editRoleName').textbox('setValue', $('#Role').datagrid('getSelected')['RoleName']);
+            $('#editDescription').textbox('setValue', $('#Role').datagrid('getSelected')['RoleDescription']);
+            $('#editRemark').textbox('setValue', $('#Role').datagrid('getSelected')['Remark']);
+            RoleID = $('#Role').datagrid('getSelected')['RoleID'];
+            $('#editdlg').dialog('open');
+        }        
+    }
+    function EditSave() {
+        if (RoleID != "") {
+            $("#ffedit").form('submit', {
+                url: '../Editer/TransData?type=EditRole&RoleID=' + RoleID + '&RoleName=' + encodeURI($('#editRoleName')[0].value) + '&RoleDescription=' + encodeURI($('#editDescription')[0].value) + '&Remark=' + encodeURI($('#editRemark')[0].value) + '',
+                onSubmit: function (param) {
+                    return $(this).form('enableValidation').form('validate')
+                },
+                success: function (data) {
+                    if (data == "True") {
+                        $.messager.alert('提示', '角色修改成功！');
+                        $('#editdlg').dialog('close');
+                        $('#Role').datagrid('reload');
+                    }
+                    else {
+                        $.messager.alert('提示', '角色修改失败！');
+                    }
+                },
+                error: function (data) {
+                    alert("error");
+                }
+            })
+            $('#Role').datagrid('reload');
+        }
+    }
+    //删除
+    function del() {
+        
+        var rows = $("#Role").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+        if ($('#Role').datagrid('getSelected') != null) {
+            $.messager.confirm('提示', '确认要删除所选项吗？', function(result) {
+                if (result) {
+
+                    AddProcessLogGlobal("删除了角色信息！");
+
+                    var condition = "";
+                    var index = 0;
+                    for (index = 0; index < rows.length; index++) {
+                        if (index == rows.length - 1) {
+                            condition += "'" + rows[index].RoleID + "'";
+                        } else {
+                            condition += "'" + rows[index].RoleID + "',";
+                        }
+                    }
+
+                    $.ajax({
+                        cache: false,
+                        method: "POST",
+                        datatype: "json",
+                        url: '../Editer/TransData?type=DelRole&RoleID=' + condition,
+                        success: function(data) {
+                            if (data == "True") {
+                                $.messager.alert('提示', '删除成功！');
+                                $('#Role').datagrid('reload');
+                            } else {
+                                $.messager.alert('提示', '删除失败！');
+                            }
+                        },
+                        error: function() {
+                            $.messager.confirm('提示', '错误！');
+                        }
+                    });
+                }
+            });
+        }
+    }
+    //添加角色信息
+    function Add() {
+        var RoleName = $('#RoleName')[0].value;
+        var RoleDescription = $('#RoleDescription')[0].value;
+        var Remark = $('#Remark')[0].value;
+        $("#ff").form('submit', {
+            url: '../Editer/TransData?type=AddRole&RoleName=' + RoleName + '&RoleDescription=' + RoleDescription + '&Remark=' + Remark,
+            onSubmit: function(param) {
+                return $(this).form('enableValidation').form('validate');
+            },
+            success: function(data) {
+                if (data == "True") {
+
+                    AddProcessLogGlobal("添加了角色信息！");
+                    $.messager.alert('提示', '角色添加成功！');
+                    $('#dlg').dialog('close');
+                    $(".easyui-textbox").textbox("setText", "");
+                    $('#Role').datagrid('reload');
+                } else {
+                    $.messager.alert('提示', '角色添加失败！');
+                }
+            },
+            error: function(data) {
+                alert("error");
+            }
+        });
+        
+
+    }
+</script>
+
+    <table id="Role" class="easyui-datagrid" title="角色信息" data-options="fit:true"></table>
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:5px">
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="$('#dlg').dialog('open')">添加角色</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="alter()">修改角色</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="del()">删除角色</a>
+        </div>
+    </div>
+    <div id="dlg" class="easyui-dialog" title="添加角色" data-options="closed:true" style="width:420px;height:200px;padding:10px">
+        <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+            <table style="width:390px;">
+                <tr>
+                    <td align="right">
+                        <font color="red"> 角色名称：</font>
+                    </td>
+                    <td align="left">
+                        <input id="RoleName" class="easyui-textbox" data-options="required:true" style="width: 300px; height:20px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        角色描述：
+                    </td>
+                    <td align="left">
+                        <input id="RoleDescription" class="easyui-textbox" style="width: 300px; height:20px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        备注：
+                    </td>
+                    <td align="left">
+                        <input id="Remark" class="easyui-textbox" style="width: 300px; height:20px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="padding-top: 5px;  text-align: left; vertical-align: middle;">
+                        <a href="#" class="easyui-linkbutton" id="subbmit" icon="icon-ok" onclick="Add()">添加</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="editdlg" class="easyui-dialog" closed="true" title="修改角色" style="width:420px;height:200px;padding:10px">
+        <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+            <table style="width:390px;">
+                <tr>
+                    <td align="right">
+                        <font color="red"> 角色名称：</font>
+                    </td>
+                    <td align="left">
+                        <input id="editRoleName" class="easyui-textbox" data-options="required:true" style="width: 300px; height: 20px; " />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        角色描述：
+                    </td>
+                    <td align="left">
+                        <input id="editDescription" class="easyui-textbox" style="width: 300px; height: 20px; " />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        备注：
+                    </td>
+                    <td align="left">
+                        <input id="editRemark" class="easyui-textbox" style="width: 300px; height: 20px; " />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style=" padding-top: 5px; text-align: left; vertical-align: middle;">
+                        <a href="#" class="easyui-linkbutton" id="editsubbmit" icon="icon-ok" onclick="EditSave()">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+

@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+   
+    @Styles.Render("~/Content/icon")
+    @Scripts.Render("~/bundles/easyui")
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-orange/easyui.css" title="orange">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-red/easyui.css" title="pink">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-cupertino/easyui.css" title="blue">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-gray/easyui.css" title="gray">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-green/easyui.css" title="green">
+    <script src="~/Scripts/CompanyInfo.js" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/common")
+
+</head>
+<body class="change-backgroundcolor" style="margin: 0 0 0 0;padding:0 0 0 0;text-align:center;vertical-align:middle;">
+
+    @*<div id="FileUpload" class="easyui-panel" style="width:250px;height:150px;" title="附件上传">
+
+        <input class="easyui-filebox" name="myok" id="myok" />
+        @*<input type="file" id="FileBrowser"  name="FileBrowser"  /><a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search',onClick:function(){ajaxFileUpload();}">上传</a>
+    </div>*@ 
+    
+
+    @RenderBody()
+   
+    @RenderSection("scripts", required: false)
+</body>
+</html>

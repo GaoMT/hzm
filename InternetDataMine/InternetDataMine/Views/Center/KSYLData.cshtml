@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "KSYLData";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript" src="../../binary/dynaload.js?20"> </script>
+<div>
+    <table style="width:100%;height:20px;">
+        <tr>
+            <td class="panel-title" style="text-align:left;">停止刷新<input id="stopRefresh" onclick="stopRefresh(this)" type="checkbox" /></td>
+
+        </tr>
+    </table>
+</div>
+<div id="myGrid" class="easyui-panel" data-options="fit:true,onResize:function(){DivChange();}" onchange="DivChange()">
+    <div style="height:96%;">
+        <table id="dg" style="height:90%" class="easyui-datagrid">
+            <thead>
+                @*表头*@
+                <tr>
+
+                    <th field="TmpID" width="5%" hidden="true"> ID号</th>
+                    <th field="SimpleName" width="15%">煤矿名称</th>
+                    <th field="SensorNum" width="10%">测点编号</th>
+                    <th field="TypeName" width="10%">设备名</th>
+                    <th field="Place" width="20%">安装地点</th>
+                    <th field="ShowValue" width="8%">测点值</th>
+                    <th field="Unit" width="5%">单位</th>
+                    <th field="Datetime"   width="20%">监测时间</th>
+                    <th field="ValueState" width="10%">状态</th>
+
+                </tr>
+
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    var rows = 0;
+    var p
+    $(function () {
+        $('#dg').datagrid({
+            pagination: true,
+            autoRowHeight: false,
+            rownumbers: true,
+            pageList: [rows],
+            singleSelect:true
+        });
+       p = $('#dg').datagrid('getPager');
+        $(p).pagination({
+            beforePageText: '第',//页数文本框前显示的汉字 
+            layout: ['first', 'prev', 'links', 'next', 'last', 'refresh', 'manual'],
+            displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
+            afterPageText: '页    共 {pages} 页',
+            showPageList:false,
+        });
+        timedCount()
+
+        //这个是刷新 当前页面 
+      //  setInterval("$('#dg').datagrid('getPager').pagination('select')", 5000);
+        
+    });
+
+ 
+
+    //获取URL参数的值
+    function getParameterByName(name) {
+        var queryname = name.toLowerCase();
+        var match = RegExp('[?&]' + queryname + '=([^&]*)')
+            .exec(window.location.search.toLowerCase());
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
+    var minecode = null;
+  
+
+    var times = 0;
+    var mystopRefresh = false;
+    //改变每页总行数
+    function ChangeRowsLength() {
+        var myHeight = parseInt($("#myGrid")[0].style.height.replace("px", ""));
+        rows = parseInt((myHeight - 100) / 27);
+        $("#dg").datagrid({
+            pageSize: rows,
+        });
+     
+       // var options = grid.datagrid('getPager').data("pagination").options;
+        //var curr = options.pageNumber;
+        //var total = options.total;
+    }
+  
+    var i ;
+    var t;
+    function timedCount() {
+        var grid = $('#dg');
+        var options = grid.datagrid('getPager').data("pagination").options;
+        i = options.pageNumber;//i为当前页
+        var curr = options.pageSize;
+        var total = options.total;
+        var count = Math.ceil(total / curr);
+        if (i == count)
+        { i = 1; }
+        else i++
+        $('#dg').datagrid('getPager').pagination('select', i);
+        t = setTimeout("timedCount()", 10000)
+    }
+
+
+  // var reflesh= setInterval("$('#dg').datagrid('getPager').pagination('select')", 5000);
+    function stopRefresh(obj) {
+        if (obj.checked) {
+        clearTimeout(t);
+
+        }
+        else {
+            timedCount()
+        }
+    }
+
+
+    function DivChange() {
+     ChangeRowsLength();
+        LoadData();
+    }
+
+    //加载数据
+    function LoadData() {
+         $("#dg").datagrid({
+             url: "../TransJson/TransJsonToTreeList?DataType=RealData_KY&isDG=y&rows=" + rows + getUrlStafix(),
+         });
+    
+    }
+
+
+</script>

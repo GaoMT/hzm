@@ -1,0 +1,94 @@
+﻿@model InternetDataMine.Models.TestModel
+
+@{
+    ViewBag.Title = "Test";
+    Layout = null;
+    var str = Model.columns;
+    var ListControl = Model.List_Object;
+}
+<script type="text/javascript">
+    function anyncColumns() {
+        var templateData = "../TransJson/TransJsonToTreeList?DataType=RealData";
+        var colfield = '@str';
+        var cols = [];
+        var cfs = colfield.split(',');
+        $(cfs).each(function (index) {
+            var s = cfs[index].split('|');
+            var col = { field: s[0], title: s[1] };
+            cols.push(col);
+        });
+
+        $("#test").datagrid({
+            toolbar: '#tb',
+            striped: true,
+            singleSelect: true,
+            url: '../TransJson/TransJsonToTreeList?DataType=RealData',
+            columns: [cols]
+        });
+    }
+    function combogrid(ControlName) {
+        //var cols = [];
+        //var cfs = colfield.split(',');
+        //$(cfs).each(function (index) {
+        //    var s = cfs[index].split('|');
+        //    var col = { field: s[0], title: s[1] };
+        //    cols.push(col);
+        //});
+        $(ControlName).combogrid({
+            onChange: function (n, o) { },
+            panelWidth: 300,
+            idField: 'MineCode',
+            textField: 'MineName',
+            url: '../TransJson/TransJsonToTreeList?DataType=MineTest',
+            method: 'get',
+            columns: [[
+                { filed: 'MineCode', title: '煤矿编号', width: 150 },
+                { filed: 'MineName', title: '煤矿名称', width: 150 }
+            ]],
+            fitColumns: true
+        })
+        $(id).combogrid("grid").datagrid("loadData", '../TransJson/TransJsonToTreeList?DataType=MineTest');
+    }
+
+    function insertHTML() {
+        var str = '@Model.teststring';
+        //document.getElementById("tb").insertAdjacentHTML("beforeBegin", str);
+        var div1 = document.getElementById("tb");
+        div1.innerHTML ="\""+ str+"\"";
+    }
+</script>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DataGrid Row Style - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="../../Content/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/themes/icon.css">
+    @*<link rel="stylesheet" type="text/css" href="../demo.css">*@
+    <script type="text/javascript" src="../../scripts/jquerymin.js"></script>
+    <script type="text/javascript" src="../../scripts/jqueryeasyuimini.js"></script>
+</head>
+<body>
+    @*数据显示区*@
+    <table id="test" class="easyui-datagrid" title="实时数据" style="width:1000px;height:250px">
+        <script>    anyncColumns()</script>
+
+    </table>
+    <div id="tb" style="padding:5px;height:auto" onclick="insertHTML()">
+        
+        @*<div id="div1">
+                煤矿名称:
+                <input id="MineName">
+                <script>combogrid(MineName)</script></input>
+                测点编号:
+                <input id="SensorNum">
+                <script>combogrid(SensorNum)</script></input>
+                设备名:
+                <input id="SensorType">
+                <script>combogrid(SensorType)</script></input>
+                <a href="#" class="easyui-linkbutton" iconcls="icon-search">Search</a>
+            </div>*@
+    </div>
+</body>
+</html>
+

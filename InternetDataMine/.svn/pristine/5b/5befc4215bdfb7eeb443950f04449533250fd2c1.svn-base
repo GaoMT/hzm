@@ -1,0 +1,329 @@
+﻿@{
+    ViewBag.Title = "模拟量历史曲线";
+    Layout = "~/Views/Shared/_Charts.cshtml";
+}
+
+<style type="text/css">
+    .title
+    {
+      float:left;
+      margin: 5px 0 0 5px;
+      width:auto;
+    }
+    .input
+    {
+        width:50%;
+    }
+</style>
+
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'north',title:'模拟量历史曲线',split:false,collapsible:false" style="height:70px;">
+        <form id="myform" class="easyui-form" method="post" data-options="novalidate:true">
+            <div class="title"><div class="easyui-combobox" id="ddlMine" data-options="prompt:'煤矿名称',required:true" style="width:150px;height:35px;"></div></div>
+            <div class="title"><div class="easyui-combogrid" id="ddlDevType" data-options="prompt:'设备名称',required:true" style="width:150px;height:35px;"></div></div>
+            <div class="title"><div class="easyui-combogrid" id="ddlSensor" data-options="prompt:'测点位置',required:true" style="width:300px;height:35px;"></div></div>
+            <div class="title"><div class="easyui-datebox" id="ddlBeginTime" data-options="prompt:'查询日期',required:true" style="height:35px;"></div></div>
+            @*<div id="divEndtime" class="title"><div class="easyui-datebox" id="ddlEndTime" data-options="prompt:'结束时间',required:true"></div></div>*@
+            <div id="divQuery" class="title"><div class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="height:35px;" onclick="ValidateQureyInput()">查询</div></div>
+        </form>
+    </div> 
+    <div id="mydiv" data-options="region:'center',fit:true,split:false,border:false">
+        <div id="main" style="width:99%; height:400px; border:0px solid #ccc;margin:10px 0 0 10px;"></div>
+    </div>
+</div>
+<div id="myDialog"></div>
+
+
+
+
+<script type="text/javascript">
+
+    var MineCode = "";//煤矿名称
+    var DevType = "A";//设备类型
+    var DevTypeName = "";
+    var devTypeCodes = "";//传感器名称编码
+    var SensorNames="";
+    var SensorCodes="";
+    var IsSensorCountOverSix = false;//所选传感器数量是否超出6个
+    var Unit = "";
+    var myChart=null;
+    $("#ddlMine").ready(function(){
+
+        $("#ddlMine").combotree({
+            url: '../Center/ReturnComboTreeData?mineCode=',
+            onChange: function (newValue, oldValue) { if (newValue != "0") { MineCode = newValue; LoadDeviceTypeforCombobox(newValue); } }
+        });
+
+     
+
+       // LoadData();
+
+    });
+   
+    function LoadSensorInfoFoCombogrid()
+    {
+        $("#ddlSensor").combogrid({
+            url: '../Center/ReturnComboGridForSensorInfo?mineCode=' + MineCode + "&SensorNameCode=" + devTypeCodes + "&devType=" + DevType,
+            panelWidth: 600,
+            sortName: 'TypeName',
+            sortOrder: 'desc',
+            idField: 'SensorNum',
+            textField: 'Place',
+            multiple: true,
+            singleSelect: false,
+            columns: [[
+         { field: 'select', title: '选择', checkbox: true, width: 40 },
+        { field: 'SensorNum', title: '测点编号', width: 60 },
+        { field: 'TypeName', title: '测点类型', width: 100 },
+        { field: 'Place', title: '测点位置', width: 200 },
+        { field: 'Unit', title: '单位', width: 60 },
+        { field: 'AlarmLower', title: '报警下限', width: 60 },
+        { field: 'AlarmHigh', title: '报警上限', width: 60 }
+            ]],
+            onCheck: function (rowIndex, rowData) {
+                if ($("#ddlSensor").combogrid("getValues").length > 6) {
+                    IsSensorCountOverSix = true;
+                    $.messager.alert('错误提示', '最多只能选六个测点！', 'error');
+                }            
+                else
+                {
+                   // alert($("#ddlSensor").combogrid("getValues").length);
+
+                    IsSensorCountOverSix = false;
+                }
+            },
+            onUncheck: function (rowIndex, rowData) {
+
+                if ($("#ddlSensor").combogrid("getValues").length > 6) {
+                    IsSensorCountOverSix = true;
+
+                }
+                else {
+                    IsSensorCountOverSix = false;
+                }
+                
+            }
+
+        });
+    }
+
+    $("#main").ready(function () {
+
+     
+
+        //$("#mydiv")[0].style.height = height;
+        var height = getQueryString("Height");
+        $("#main")[0].style.height = (height-90)+'px';
+        myChart = echarts.init(document.getElementById('main'));
+        //myChart.setOption(myoption);
+
+    });
+
+
+    function LoadDeviceTypeforCombobox(mineCode)
+    {
+        $("#ddlDevType").combogrid({
+            url: '../Center/ReturnComboboxForDevType?mineCode=' + mineCode + '&Type=' + DevType,
+            panelWidth: 300,
+            sortName: 'Typename',
+            sortOrder: 'desc',
+            idField: 'TypeCode',
+            textField: 'TypeName',
+            singleSelect: false,
+            columns: [[
+               { field: 'TypeCode', title: '设备编号', width: 60 },
+               { field: 'TypeName', title: '设备名称', width: 100 },
+               { field: 'Unit', title: '单位', width: 60 },
+               { field: 'Type', title: '类型', width:60 }
+            ]],
+            onchange: function (newValue, oldValue) {
+            },
+            onClickRow: function (rowIndex, rowData) {
+
+                
+                devTypeCodes = rowData.TypeCode;
+                DevTypeName = $("#ddlDevType").combogrid("getText");
+                Unit="  单位："+ '(' + rowData.Unit + ')';
+                LoadSensorInfoFoCombogrid();
+              
+
+            }
+        });
+    }
+
+
+
+    // Step:3 echarts & zrender as a Global Interface by the echarts-plain.js.
+    // Step:3 echarts和zrender被echarts-plain.js写入为全局接口
+  
+
+
+    function ValidateQureyInput()
+    {
+        $.messager.progress();	// 显示进度条
+        var isValid = false;
+        $('#myform').form('submit',
+            {
+            onSubmit: function ()
+            {
+                 isValid = $(this).form('enableValidation').form('validate');
+                
+            },
+            success: function ()
+            {
+                if (isValid)
+                {
+                    if (!IsSensorCountOverSix) {
+                        LoadData();
+                    }
+                    else
+                    {
+                        $.messager.alert('错误提示', '最多只能选六个测点！', 'error');
+
+                    }
+                }
+                $.messager.progress('close');	// 如果提交成功则隐藏进度条
+            }
+        });
+    }
+
+    var myoption = {
+        title: {
+            text: '',
+            subtext: ''
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: []
+        },
+        animation: false,
+        toolbox: {
+            show: true,
+            feature: {
+                mark: { show: true },
+                dataZoom: { show: true },
+                dataView: { show: false },
+                magicType: { show: true, type: ['line', 'bar'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                data: []
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                splitArea: { show: true }
+            }
+        ],
+        series: [],
+        dataZoom: {
+            show: true,
+            realtime: true,
+            y: 30,
+            height: 20,
+            start: 0,
+            end: 60
+        }
+    };
+
+    function LoadData() {
+       
+        var height = getQueryString("Height");
+        $("#main")[0].style.height = "200";
+
+        SensorCodes = $("#ddlSensor").combogrid("getValues");
+        var BeginTime = $("#ddlBeginTime").datebox("getText");
+        myoption.title.subtext = DevTypeName;
+        myoption.title.text ='模拟量日曲线'+Unit;
+        var xAxisdataIndex = 0;
+        myoption.xAxis[0].data = [];
+        var mySensorNames = String($("#ddlSensor").combogrid("getText")).split(",");
+        myoption.legend.data = [];
+        myoption.series = [];
+        myoption.legend.data = [];
+        $.ajax({
+            url: '../Chart/ReturnCurverDatas',
+            data: { mineCode: MineCode, sensorCodes: SensorCodes.join(','), BeginTime: BeginTime},
+            method: 'post',
+            type: 'json',
+            success: function (object) {
+
+                var sensorsOjbect = $.parseJSON(object);
+              
+                var i =0;
+
+                if (sensorsOjbect.length <= 0)
+                {
+                    return;
+                }
+
+
+                //循环查出所有测点
+                $(sensorsOjbect).each(function (index, item) {
+
+
+                    if (item.length > 0) {
+                        var line = {
+                            name: item[0].Place,
+                            type: 'line',
+                            data: [],
+                            //markLine: {
+                            //    data: [{ type: 'max', name: '最大值', title: '最大值' },
+                            //        { type: 'min',name:'最小值' ,title: '最小值' },
+                            //        { type: 'average',name:'平均值' ,title: '平均值' }
+                            //    ]
+                            //},
+                            markPoint: {
+                                data: [{type:'max',name:'最大值'}]
+                            }
+
+                        };
+
+                        myoption.legend.data.push(item[0].Place);
+                        // TO DO 所有曲线信息
+                        //循环查出所有测点值
+                        $(item).each(function (myindex, myitem) {
+
+                            if (i == 0) {
+                                myoption.xAxis[0].data.push(myitem.statisticTime);
+                            }
+
+
+                            line.data.push(myitem.maxValue);
+                            //TO DO 每条曲线内容信息
+
+                        });
+                        i++;
+
+                        myoption.series.push(line);
+                       
+                    }
+                   
+                });
+
+                // myChart.clear();
+
+                myChart.clear();
+                myChart.setOption(myoption);
+            
+
+            },
+            error: function (object) {
+               
+            }
+        });
+    }
+
+      
+</script>
+
+
+

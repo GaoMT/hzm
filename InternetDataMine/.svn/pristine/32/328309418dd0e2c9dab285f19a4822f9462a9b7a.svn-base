@@ -1,0 +1,379 @@
+﻿@{
+    ViewBag.Title = "隐患自查";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript">
+
+    var btest = 0;
+
+    $(document).ready(function () {
+        var MineCode = getQueryString("MineCode");//获取煤矿编号
+
+        //对下拉框及日期控件赋初始值
+        var date = new Date();
+        loadTroubleClass('#textTroubleClass');
+        loadTroubleCategory('#textTroubleCategory');
+        $("#txtCheckDate").datetimebox('setValue', date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+
+        //加载添加按钮的单击响应事件
+        $("#btnAdd").bind('click', function () {
+            $(".easyui-textbox").textbox("setText", "");
+            $("#hiddenValue")[0].innerText = "";
+            $("#divAdd").window("setTitle", "隐患自查填报单");
+
+            $("#divAdd").window("open");
+        });
+
+        //对开始时间、结束时间初始化
+        $("#txtStartTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00");
+        $("#txtEndTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+
+        //加载编辑按钮的单击响应事件
+        $("#btnEdit").bind('click', function () {
+            LoadEditeInfo();
+        });
+
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+
+        //加载查询按钮的单击响应事件
+        $("#btnQuery").bind('click', function () {
+            LoadDataGrid();
+        });
+
+        //加载删除按钮的单击响应事件
+        $("#btnRemove").bind('click', function () {
+            $.messager.progress();
+            DeleteInfo();
+
+        });
+
+        //模拟查询按钮的单击动作
+        $("#btnQuery")[0].click();
+
+        //加载保存按钮的单击响应事件
+        $('#btnsave').bind('click', function () {
+            $.messager.progress();
+            Save();
+
+        });
+    });
+
+    //加载编辑信息
+    function LoadEditeInfo() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.alert("警告", "编辑前，请先选取一行，请选取！");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert("警告", "编辑的时候，只能选取一行，请重新选择！");
+        }
+        else {
+            var data = rows[0];
+            $("#hiddenValue")[0].innerText = data.RowID;
+            $("#textTroubleClass").combotree("setText", data.TroubleClass);
+            $("#textTroubleCategory").combotree("setText", data.TroubleCategory);
+            $("#textCheckDept").textbox("setText", data.CheckDept);
+            $("#textRummager").textbox("setText", data.Rummager);
+            $("#txtCheckDate").datetimebox("setText", data.CheckDate);
+            $("#textHiddenResponsibilityDept").textbox("setText", data.HiddenResponsibilityDept);
+            $("#textTroubleContent").textbox("setText", data.TroubleContent.replace(/<br>/g, "\n"));
+            $("#textRemark").textbox("setText", data.Remark);
+            $("#divAdd").window("setTitle", "隐患自查编辑单");
+
+            $("#divAdd").window("open");
+
+        }
+
+    }
+
+    function DeleteInfo() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+
+        $.messager.confirm("提示", "你确定要删除吗？", function (r) {
+            if (r) {
+                var condition = "";
+                var index = 0;
+                for (index = 0; index < rows.length; index++) {
+                    if (index == rows.length - 1) {
+                        condition += rows[index].RowID;
+                    }
+                    else {
+                        condition += rows[index].RowID + ",";
+                    }
+                }
+
+                var url = "../HiddenTrouble/HiddenTrouble_Delete?Condition=" + condition;
+                $.ajax({
+                    dataType: "text",
+                    method: "post",
+                    url: url,
+                    success: function (data) {
+
+                        AddProcessLogGlobal("删除了隐患自查信息！");
+
+                        $.messager.progress('close');
+                        $.messager.alert('提示', data);
+                        LoadDataGrid();
+
+                    }
+                });
+            }
+            else {
+                $.messager.progress('close');
+            }
+        });
+
+
+    }
+
+
+    //加载DataGrid数据
+    function LoadDataGrid() {
+        var MineCode = getQueryString("MineCode");//获取煤矿编号
+        if (MineCode == "" | MineCode == null) {
+
+            MineCode = "";
+        }
+        
+        var StartTime = $("#txtStartTime").datetimebox("getText");
+        var EndTime = $("#txtEndTime").datetimebox("getText");
+        var url = "../HiddenTrouble/HiddenTrouble_Query?MineCode=" + MineCode + "&StartTime=" + StartTime + "&EndTime=" + EndTime + "&CheckCategory=1";
+        $('#dgvMain').datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            striped: true,
+            singleSelect: false,
+            pagination: true,
+            pageSize1:10,
+            method: 'Post',
+            url:url,
+            columns:
+               [[
+                   { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                   { title: "隐患排查类别", field: "CheckCategory", width: 100, align: 'center', hidden: true },
+                   { title: "煤矿编号", field: "MineCode", width: 70, align: 'center', hidden: true },
+                   { title: "企业名称", field: "simplename", width: 70, align: 'center', hidden:true },
+                   { title: "隐患等级", field: "TroubleClass", width: 70, align: 'center' },
+                   { title: "隐患类别", field: "TroubleCategory", width: 60, align: 'left' },
+                   { title: "检查部门", field: "CheckDept", width: 55, align: 'center' },
+                   { title: "检查人", field: "Rummager", width: 70, align: 'center' },
+                   { title: "检查日期", field: "CheckDate", width: 80, align: 'center' },
+                   { title: "隐患责任部门", field: "HiddenResponsibilityDept", width: 80, align:'left' },
+                   { title: "隐患内容", field: "TroubleContent", width: 300, align: 'left' },
+                   { title: "备注", field: "Remark", width: 70, align: 'left' }
+               ]]
+        });
+    }
+
+
+
+
+    //加载隐患等级
+    function loadTroubleClass(object) {
+        $(object).combotree('loadData', [{ id: 1, text: 'A级' }, { id: 2, text: 'B级' }, { id: 3, text: 'C级' }]);
+        $(object).combotree('setValue', '1');
+    }
+
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    //加载隐患类别
+    function loadTroubleCategory(object) {
+        $(object).combotree('loadData', [{ id: 1, text: '顶板' }, { id: 2, text: '运输' }, { id: 3, text: '机电' },
+            { id: 4, text: '通风' }, { id: 5, text: '瓦斯' }, { id: 6, text: '煤尘' }, { id: 7, text: '放炮' },
+            { id: 8, text: '火灾' }, { id: 9, text: '水害' }, { id: 10, text: '其他' }]);
+        $(object).combotree('setValue', '1');
+    }
+
+    //加载隐患等级提示信息
+    function showTip(object) {
+
+        $(object).tooltip({
+
+            position: 'right',
+            content: '<span>&nbsp;&nbsp;&nbsp;&nbsp;A级：难度大，矿解决不了，须由集团公司解决的隐患；<hr>B级：难度较大，区队解决不了，须由矿解决的隐患；<hr>C级：难度较小，由区队、业务部门自行解决的隐患。</span>',
+        }
+        );
+    }
+
+    //保存数据
+    function Save() {
+        var MineCode = getQueryString("MineCode");//获取煤矿编号
+        if (MineCode == "" | MineCode == null) {
+
+            MineCode = "";
+        }
+        var url = "";
+
+        url += "&MineCode=" + MineCode;
+        url += "&TroubleClass=" + $("#textTroubleClass").combotree("getValue");
+        url += "&TroubleCategory=" + $("#textTroubleCategory").combotree("getValue");
+        url += "&CheckDept=" + $("#textCheckDept").textbox("getText");
+        url += "&Rummager=" + $("#textRummager").textbox("getText");
+        url += "&CheckDate=" + $("#txtCheckDate").textbox("getText");
+        url += "&HiddenResponsibilityDept=" + $("#textHiddenResponsibilityDept").textbox("getText");
+        url += "&TroubleContent=" + ($("#textTroubleContent").textbox("getText").replace(/\n/g, "shine998"));
+        url += "&Remark=" + $("#textRemark").textbox("getText");
+
+        if ($("#hiddenValue")[0].innerText == "") {
+            url = "../HiddenTrouble/HiddenTrouble_Save?CheckCategory=1" + url + "&Insert=1&RowID=0";
+        }
+        else {
+            url = "../HiddenTrouble/HiddenTrouble_Save?CheckCategory=1" + url + "&Insert=2&RowID=" + $("#hiddenValue")[0].innerText;
+        }
+
+        $("#ff").form('submit', {
+            url: url,
+            onSubmit: function () {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            success: function (data) {
+
+                AddProcessLogGlobal("保存了隐患自查信息！");
+
+                $.messager.progress('close');
+                $.messager.alert('提示', data);
+                $(".easyui-textbox").textbox("setText", "");
+
+                LoadDataGrid();
+            }
+        }
+    );
+    }
+
+    function close() {
+        $('#divAdd').window('close');
+    }
+
+</script>
+@*<table class="easyui-datagrid" id="dgvMain" title="隐患排查查询" style="width: 700px; height: 250px"
+    data-options="rownumbers:true,singleSelect:false,method:'get',toolbar:'#toolbar',pagination:true,fit:true,align:'left',rownumbers:true,fitColumns:true,pageSize1:10">
+    <thead>
+        <tr>
+            <th data-options="field:'ck',checkbox:true,width:80,align:'left'">自增列</th>
+            <th data-options="field:'RowID',width:80,hidden:true">自增列</th>
+            <th data-options="field:'CheckCategory',width:100,hidden:true">隐患排查类别</th>
+            <th data-options="field:'MineCode',width:80,align:'left',hidden:true">煤矿编号</th>
+            <th data-options="field:'simplename',width:80,align:'left',hidden:true">企业名称</th>
+            <th data-options="field:'TroubleClass',width:60,align:'left'">隐患等级</th>
+            <th data-options="field:'TroubleCategory',width:60,align:'left'">隐患类别</th>
+            <th data-options="field:'CheckDept',width:60,align:'left'">检查部门</th>
+            <th data-options="field:'Rummager',width:60,align:'left'">检查人 </th>
+            <th data-options="field:'CheckDate',width:80,align:'left'">检查日期</th>
+            <th data-options="field:'HiddenResponsibilityDept',width:80,align:'left'">隐患责任部门</th>
+            <th data-options="field:'TroubleContent',width:300,align:'left'">隐患内容</th>
+            <th data-options="field:'Remark',width:80,align:'left',hidden:true">备注</th>
+        </tr>
+    </thead>
+</table>*@
+<table id="dgvMain" class="easyui-datagrid" data-options="fit:true" title="隐患排查查询"></table>
+
+<div id="toolbar">
+    <table style="width: 100%;">
+
+        <tr>
+            <td style="width:210px">开始日期:<div id="txtStartTime" style="width:150px" class="easyui-datetimebox" data-options="required:true"></div>
+            </td>
+            <td style="width:210px">
+                结束日期:<div id="txtEndTime" style="width:150px" class="easyui-datetimebox" data-options="required:true"></div>
+            </td>
+            <td style="width:80px">
+                <div class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" style="width: 80px;">查询</div>
+            </td>
+            <td style="width:80px"><a id="btnAdd" class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="width: 80px;">填报</a></td>
+            <td style="width:80px">
+                <div id="btnEdit" style="width: 80px;" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</div>
+            </td>
+            <td style="width:80px">
+                <div id="btnRemove" style="width: 80px;" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</div>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+
+</div>
+<div class="easyui-window" id="divAdd" title="隐患自查填报单" data-options="closed:true,fit:true" style="width: 943px; height: 520px;">
+    <span id="hiddenValue" style="display: none;"></span>
+    <form id="ff" method="post">
+        <table style="text-align: center; width: 100%; height: 60%; border-width: 1px; border-color: black; border-collapse: collapse;">
+            <tr>
+                <td style="border: 1px solid silver; text-align: right; width: 20%;">隐患等级：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; width: 30%;">
+                    <div id="textTroubleClass" class="easyui-combotree" onclick="showTip(this)" data-options="icons:[{iconCls:'icon-help',handler:function(e){showTip(this);}}]" style="width: 70%;"></div>
+                </td>
+                <td style="border: 1px solid silver; text-align: right; width: 20%;">隐患类别：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; width: 30%;">
+                    <div id="textTroubleCategory" class="easyui-combotree" style="width: 70%;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver;">检查部门：
+
+                </td>
+                <td style="text-align: left; border: 1px solid silver;">
+                    <input id="textCheckDept" class="easyui-textbox" data-options="required:true,prompt:'请填写排查到该隐患的部门'" style="width: 70%;">
+                </td>
+                <td style="text-align: right; border: 1px solid silver;">检查人：
+                </td>
+                <td style="text-align: left; border: 1px solid silver;">
+                    <input id="textRummager" class="easyui-textbox" data-options="required:true,prompt:'请填写一个或多个检查人'" style="width: 70%;">
+                </td>
+
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver;">检查日期：
+                </td>
+                <td style="text-align: left; border: 1px solid silver;">
+                    <input id="txtCheckDate" class="easyui-datetimebox" data-options="required:true,prompt:'请填写排查到该隐患的日期'" style="width: 70%;">
+                </td>
+                <td style="text-align: right; border: 1px solid silver;">隐患责任部门：
+                </td>
+                <td style="text-align: left; border: 1px solid silver;">
+                    <input id="textHiddenResponsibilityDept" class="easyui-textbox" data-options="required:true,prompt:'请填写对该隐患负责的部门'" style="width: 70%;">
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="1" style="text-align: right; border: 1px solid silver;">隐患内容：
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver;">
+                    <input id="textTroubleContent" class="easyui-textbox" data-options="required:true,prompt:'请按条目编写不同的隐患内容',multiline:true,validType:'length[1,1000]'" style="width: 80%; height: 100px;">最多可以输入1000个汉字！
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver;">备注：
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver;">
+                    <input id="textRemark" class="easyui-textbox" data-options="prompt:'有附加内容可以填写到此处',multiline:true,validType:'length[0,200]'" style="width: 80%; height: 100px;">
+                    最多可以输入200个汉字！
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center; border: 1px solid silver;">
+                    <a id="btnsave" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width: 150px;">保存
+                    </a>
+                    <a id="btnclose" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel',onClick:function(){$('#divAdd').window('close');}" style="width: 150px">关闭</a>
+
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

@@ -1,0 +1,126 @@
+﻿@{
+    Layout = "../shared/_LayoutEditer.cshtml";
+    }
+<script>
+    var RoleID = "";
+    //角色Combobox 加载
+    $('#RoleID').ready(function () {
+        var myDate=new Date();
+
+        $('#RoleID').combobox({
+            url: '../Editer/TransData?type=PowerManagerRole&RoleID=' + RoleID + getUrlStafix(),
+            method: 'get',
+            valueField: 'id',
+            textField: 'text',
+            value: '==请选择==',
+            editable: false,
+            onChange: function (record) {
+                OnSelectedRole();
+            }
+        })
+       // Resize();
+    })
+    //tree控件加载
+    $('#tt').ready(function () {
+        $('#tt').tree({
+            url: '../Editer/TransData?type=TreeTest&Role=' + RoleID,
+            method: 'get',
+            animate: true,
+            checkbox: true,
+            cascadeCheck: true
+        })
+    })
+    //选择角色后 加载该角色原有权限
+    function OnSelectedRole() {
+        RoleID = $('#RoleID').combobox('getValue');
+        $('#tt').tree('options').url = '../Editer/TransData?type=TreeTest&RoleID=' + RoleID + getUrlStafix();
+        $('#tt').tree('reload');
+    }
+    //保存修改
+    function getChecked() {
+        var nodes = $('#tt').tree('getChecked', ['checked', 'indeterminate']);
+        var s = '';
+        for (var i = 0; i < nodes.length; i++) {
+            s += nodes[i].id + ",";
+        }
+
+        s = s.substring(0, (s.length - 1));
+
+        $.ajax({
+            cache: false,
+            datatype: "json",
+            url: '../Editer/TransData',
+            type: "POST",
+            data:'type=savePower&MenuIDs=' + s + '&RoleID=' + $("#RoleID").combobox('getValue'),
+            success: function (data) {
+                if (data == "True") {
+                    $.messager.alert('提示', '保存成功！');
+
+                    AddProcessLogGlobal("保存了权限配置信息！");
+
+                }
+                else {
+                    $.messager.alert('提示', '保存失败！');
+                }
+            },
+            error: function (data) {
+                fsfs;
+                $.messager.alert('提示', '错误！');
+            }
+        });
+    }
+    var myheigh;
+    var mywidth;
+
+    function Resize()
+    {
+        var Height;
+        var Widtht;
+        // 获取窗口宽度
+        if (window.innerWidth)
+            Widtht = window.innerWidth;
+        else if ((document.body) && (document.body.clientWidth))
+            winWidth = document.body.clientWidth;
+        // 获取窗口高度
+        if (window.innerHeight)
+            Height = window.innerHeight;
+        else if ((document.body) && (document.body.clientHeight))
+            Height = document.body.clientHeight;
+        mywidth = (Widtht - 400) / 2;
+        myheigh = Height - 200;
+        MyWidth = mywidth + 'px';
+        MyHeigh = myheigh + 'px';
+        $('#before')[0].style.width = MyWidth;
+        $('#tree')[0].style.height = MyHeigh;
+        $('#tt')[0].style.height = MyHeigh;
+    }
+</script>
+
+<div class="easyui-panel" title="权限配置" data-options="fit:true">
+    <form id="PowerManager" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width: 100%">
+            <tr>
+                <td align="right" style="width:50%;">
+                    请选择角色：
+                    <input id="RoleID" class="easyui-combobox" data-options="required:true" style="width:200px;" />
+                </td>
+                <td align="left" style="width:50%;">
+                    <a href="#" class="easyui-linkbutton" id="subbmit" style="width:150px;" data-options="iconCls:'icon-save'" onclick="getChecked()"> 保存</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" id="tdtree" align="center">
+                    <div id="tree" class="easyui-panel" style="width:90%;overflow-y:visible;">
+                        <ul id="tt" class="easyui-tree" style="overflow:hidden;"></ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                           
+            </tr>
+        </table>                    
+    </form>
+</div>
+ 
+    
+   

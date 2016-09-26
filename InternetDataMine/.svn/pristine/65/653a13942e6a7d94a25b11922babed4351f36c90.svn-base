@@ -1,0 +1,7 @@
+﻿@model InternetDataMine.Models.TransCompanyModel
+
+@{
+    ViewBag.Title = null;
+    Response.Write(Model.GetJson);
+    Response.End();
+}

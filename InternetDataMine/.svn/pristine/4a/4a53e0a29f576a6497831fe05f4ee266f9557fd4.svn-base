@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<TreeList>
+  <Properties  Title="特种人员工作历史查询" editAble="false" bgColor="#FFFFFF" headerBgColor="#ffffff"  fadeInStep="0"  curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="7%" align="center">煤矿名称</Col>
+    <Col name="JobCardCode"  width="6%" align="center">标识卡</Col>
+    <Col name="Name"  width="6%" align="center">姓名</Col>
+    <Col name="Position"  width="6%" align="center">职务</Col>
+    <Col name="Department"  width="6%" align="center">部门</Col>
+    <Col name="InTime"  width="15%" align="center">下井时间</Col>
+    <Col name="OrigAddress" width="15%" align="center">应到地点</Col>
+    <Col name="OrigTime" width="15%" align="center">应到时间</Col>
+    <Col name="RealTime"  width="15%" align="center">实到时间</Col>
+    <Col name="State"  width="7%" align="center">状态</Col>
+  </Cols>
+</TreeList>

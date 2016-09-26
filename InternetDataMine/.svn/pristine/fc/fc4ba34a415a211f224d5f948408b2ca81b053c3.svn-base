@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "安全生产监控系统";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+
+
+<script type="text/javascript">
+   
+    var minecode = "";
+
+    $("#treeMine").ready(function ()
+    {
+        minecode = readCookie("MineCode");
+        if (minecode == "null" | minecode == null) {
+            minecode = "";
+        }
+        var url = "../Center/ReturnmMineTreeData?mineCode=" + minecode+getUrlStafix();
+        $('#treeMine').treegrid({
+            cache:false,
+            url: url,
+            idField: 'id',
+            treeField: 'text',
+            method: 'get',
+            lines: true,
+            onSelect: function (rowData,xxx) { ChangeView(rowData); },
+            columns: [[
+                 { title: '煤矿编号', field: 'minecode', width: 120, hidden: true },
+                { title: '煤矿名称', field: 'text', width: 120 },
+            {
+                title: '安全监控', field: 'AQJKState', width: 60, styler: function (value, row, index) {
+                    if (value == "正常") {
+                        return 'color:green;';
+                    }
+                    else if (value == "传输异常") {
+                        return 'color:darkred;';
+                    }
+                    else
+                    {
+                        return 'color:red;';
+                    }
+                }
+            },
+            {
+                title: '人员管理', field: 'RYGLState', width: 60, align: 'right', styler: function (value, row, index) {
+                    if (value == "正常") {
+                        return 'color:green;';
+                    }
+                    else if (value == "传输异常") {
+                        return 'color:darkred;';
+                    }
+                    else {
+                        return 'color:red;';
+                    }
+                }
+            }
+            ]]
+        });
+        window.setTimeout("ReloadTreeGrid()", 5000);
+    });
+   
+    $(document).ready(function () {
+
+        minecode = readCookie("MineCode");
+        if (minecode == "null" | minecode == null)
+        {
+            minecode = "";
+        }
+
+        ChangeView("");
+    });
+
+
+    //获取URL参数值
+    function getParameterByName(name) {
+        var queryname = name.toLowerCase();
+        var match = RegExp('[?&]' + queryname + '=([^&]*)')
+            .exec(window.location.search.toLowerCase());
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
+    //加载树形菜单
+    function ReloadTreeGrid()
+    {
+        
+        var url = "../Center/ReturnmMineTreeData?mineCode=" + minecode + getUrlStafix();
+        $('#treeMine').treegrid({
+            url: url
+        });
+      
+        window.setTimeout("ReloadTreeGrid()", 5000);
+    }
+
+    //调用周期函数
+    //window.setInterval("ReloadTreeGrid()", 40000);
+
+    //更改
+    function ChangeView(node) {
+        if (minecode != "")
+        {
+            $("#myIframeAQ")[0].src = "../Center/AQJKRTData?minecode=" + minecode;
+            $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine?minecode=" + minecode;
+        }
+        else
+        {
+            if (node == "") {
+                $("#myIframeAQ")[0].src = "../Center/AQJKRTData";
+                $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine";
+            }
+            else {
+                if (node.minecode != 0) {
+                    $("#myIframeAQ")[0].src = "../Center/AQJKRTData?minecode=" + node.minecode;
+                    $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine?minecode=" + node.minecode;
+                } else {
+                    $("#myIframeAQ")[0].src = "../Center/AQJKRTData";
+                    $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine";
+                }
+            }
+        }
+
+
+       
+    }
+</script>
+
+<div id="cc" class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west',title:'矿列表',split:true" style="width: 250px; height: 100%;">
+        <div id="treeMine" class="easyui-treegrid" data-options="fit:true"></div>
+    </div>
+    <div data-options="region:'center'" style="padding: 0px;">
+        <div class="easyui-panel" title="安全监控-实时数据" data-options="collapsed:false,collapsible:true,fit:true" >
+            <iframe id="myIframeAQ" frameborder="0" style="width: 100%; height: 99%; border: 0px;" src="../Center/AQJKRTData"></iframe>
+        </div>
+        <div class="easyui-panel" title='人员管理-实时数据' data-options="collapsed:false,collapsible:true,fit:true">
+            <iframe frameborder="0" id="myIframeRY" style="width: 100%; height: 99%; border: 0px;" src="../Person/RealTimePersonInMine"></iframe>
+        </div>
+        </div>
+    
+</div>

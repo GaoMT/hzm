@@ -1,0 +1,304 @@
+﻿@{
+    ViewBag.Title = "安全机构管理";
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script>
+    var Operation = "";
+    var URL = "";
+    var ID = "";
+
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    var mineCode = "";
+    $(document).ready(function (e) {
+
+        loadMineInfo();
+
+        mineCode = getQueryString("MineCode");
+        if (mineCode == null| mineCode=="null")
+        {
+            mineCode = "";
+        }
+
+        if (mineCode == "")
+        {
+            $("#btnAdd").hide();
+            $("#btnAlter").hide();
+            $("#btnDelete").hide();
+        }
+        else
+        {
+            $("#lblminecode").hide();
+            $("#comboMineCode + .combo").hide();
+            $("#btnQuery").hide();
+        }
+
+        $('#colliery_no').textbox('setText', mineCode);
+    });
+
+    //加载煤矿安全机构信息
+    function LoadInfo()
+    {
+        mineCode = readCookie('MineCode');
+        if ( mineCode == null | mineCode == "null") {
+
+            mineCode = "";
+        }
+
+        if (mineCode == "")
+        {
+            mineCode = $("#comboMineCode").combobox("getValue");
+        }
+
+
+        $('#AQJG').datagrid({
+            toolbar: '#tb',
+            fitColumns: true,
+            striped: true,
+            singleSelect: false,
+            method: 'Post',
+            url: '../CompanyInfoManager/TransCompanyData?type=AQJG&MineCode=' + mineCode,
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'id', title: '编号', width: 100, hidden: true },
+                { field: 'colliery_no', title: '企业编码', width: 100 },
+                { field: 'dep_name', title: '机构名称', width: 100 },
+                { field: 'dep_alias', title: '简称', width: 100 },
+                { field: 'lead', title: '负责人', width: 100 },
+                { field: 'telephone', title: '负责人电话', width: 100 },
+                { field: 'change_no', title: '负责人职务', width: 100 }
+            ]]
+        });
+    }
+
+
+    ///datagrid加载完成后，加载数据
+    $('#AQJG').ready(function ()
+    {
+
+        LoadInfo();
+
+    });
+
+    //修改信息
+    function alter() {
+        Operation = "alter";
+        if ($('#AQJG').datagrid('getSelected') != null) {
+            $(".easyui-textbox").textbox("setText", "");
+            $('#dlg').dialog('open');
+            ID = $('#AQJG').datagrid('getSelected')['id'];
+            $('#colliery_no').textbox('setText', $('#AQJG').datagrid('getSelected')['colliery_no']);
+            $('#dep_name').textbox('setText', $('#AQJG').datagrid('getSelected')['dep_name']);
+            $('#dep_alias').textbox('setText', $('#AQJG').datagrid('getSelected')['dep_alias']);
+            $('#lead').textbox('setText', $('#AQJG').datagrid('getSelected')['lead']);
+            $('#telephone').textbox('setText', $('#AQJG').datagrid('getSelected')['telephone']);
+            $('#change_no').textbox('setText', $('#AQJG').datagrid('getSelected')['change_no']);
+        }
+    }
+
+    //删除信息
+    function del() {
+        var rows = $("#AQJG").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+
+        if ($('#AQJG').datagrid('getSelected') != null) {
+            $.messager.confirm('警告', '确定要删除所选数据吗？', function (result) {
+                if (result) {
+
+                    var condition = "";
+                    var index = 0;
+                    for (index = 0; index < rows.length; index++) {
+                        if (index == rows.length - 1) {
+                            condition += rows[index].id;
+                        } else {
+                            condition += rows[index].id + ",";
+                        }
+                    }
+
+                    $.ajax({
+                        cache: false,
+                        method: 'POST',
+                        datatype: 'json',
+                        url: '../CompanyInfoManager/TransCompanyData?type=DelAQJG&ID=' + condition,
+                        success: function (data) {
+                            if (data == "True") {
+
+                                AddProcessLogGlobal("删除了安全机构！");
+
+                                $.messager.alert('提示', '删除成功！');
+                                LoadInfo();
+                            } else {
+                                $.messager.alert('提示', '删除失败！');
+                            }
+                        },
+                        error: function () {
+                            $.messager.alert('提示', '错误！');
+                        }
+                    });
+                }
+            });
+        }
+    }
+    //添加信息
+    function AddInfo() {
+        Operation = "Add";
+        $(".easyui-textbox").textbox("setText", "");
+        $('#colliery_no').textbox('setText', mineCode);
+        $('#dlg').dialog('open');
+
+    }
+
+    //组织url参数
+    function ContentURL() {
+        URL = "";
+        URL += "colliery_no|" + $('#colliery_no').textbox('getText');
+        URL += ",dep_name|" + $('#dep_name').textbox('getText');
+        URL += ",dep_alias|" + $('#dep_alias').textbox('getText');
+        URL += ",lead|" + $('#lead').textbox('getText');
+        URL += ",telephone|" + $('#telephone').textbox('getText');
+        URL += ",change_no|" + $('#change_no').textbox('getText');
+    }
+
+    //保存数据
+    function SaveInfo() {
+        $.messager.progress();
+
+        var myurl = '../CompanyInfoManager/TransCompanyData?type=';
+        ContentURL();
+        if (Operation == "Add")
+        {
+            myurl += 'AddAQJG';
+        }
+        else
+        {
+            myurl += 'AlterAQJG';
+        }
+
+        $("#ff").form('submit', {
+            url: myurl + '&ID=' + ID + '&Info=' + encodeURI(URL),
+            onSubmit: function () {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            success: function (data) {
+                $.messager.progress('close');
+                if (data == "True") {
+
+                    AddProcessLogGlobal("保存了安全机构！");
+
+                    $.messager.alert('提示', '保存成功！');
+                    $('#dlg').dialog('close');
+                    LoadInfo();
+                }
+                else {
+                    $.messager.alert('提示', '保存失败！');
+                }
+
+                $('#AQJG').datagrid('reload');
+            }
+        });
+
+        //    $.ajax({
+        //        cache: false,
+        //        method: 'POST',
+        //        datatype: 'json',
+        //        url: myurl + '&ID=' + ID + '&Info=' + encodeURI(URL),
+        //        success: function (data) {
+        //            if (data == "True") {
+        //                $.messager.alert('提示', '保存成功！');
+        //                $('#dlg').dialog('close');
+        //            }
+        //            else {
+        //                $.messager.alert('提示', '保存失败！');
+        //            }
+        //        },
+        //        error: function () {
+        //            $.messager.alert('提示', '保存时出错！');
+        //        }
+        //    })
+        //    $('#AQJG').datagrid('reload');
+    }
+</script>
+
+<table id="AQJG" class="easyui-datagrid" data-options="fit:true" title="安全机构信息"></table>
+<div id="tb" style="padding: 5px; height: auto">
+    <div style="margin-bottom: 5px">
+        <label id="lblminecode">企业名称：</label><div class="easyui-combobox" style="width:150px" id="comboMineCode"></div>
+        <a href="#" class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" onclick="LoadInfo()">查询</a>
+        <a href="#" class="easyui-linkbutton" id="btnAdd" data-options="iconCls:'icon-add'" onclick="AddInfo()">添加信息</a>
+        <a href="#" class="easyui-linkbutton" id="btnAlter" data-options="iconCls:'icon-edit'" onclick=" alter()">修改信息</a>
+        <a href="#" class="easyui-linkbutton" id="btnDelete" data-options="iconCls:'icon-remove'" onclick="del()">删除信息</a>
+    </div>
+</div>
+<div id="dlg" title="编辑安全机构信息" class="easyui-dialog" data-options="closed:true" style="width: 400px; height: 320px; padding: 15px;">
+    <form id="ff" method="post">
+        <table border="1" style="width: 95%; height: 90%; border-collapse: collapse; border-bottom-style: none; font-size: 12px; padding-left: 10px">
+            <tr style="height: 30px;">
+                <td align="right">
+                    企业编码：
+                </td>
+                <td align="left">
+                    <input id="colliery_no" class="easyui-textbox" data-options="required:true,disabled:true" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 30px;">
+                <td align="right">
+                    机构名称：
+                </td>
+                <td align="left">
+                    <input id="dep_name" class="easyui-textbox" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 30px;">
+                <td align="right">
+                    简称：
+                </td>
+                <td align="left">
+                    <input id="dep_alias" class="easyui-textbox" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 30px;">
+                <td align="right">
+                    负责人：
+                </td>
+                <td align="left">
+                    <input id="lead" class="easyui-textbox" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 30px;">
+                <td align="right">
+                    负责人电话：
+                </td>
+                <td align="left">
+                    <input id="telephone" class="easyui-textbox" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 30px;">
+                <td align="right">
+                    负责人职务：
+                </td>
+                <td align="left">
+                    <input id="change_no" class="easyui-textbox" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 30px;">
+                <td colspan="2" align="center">
+                    <a href="#" class="easyui-linkbutton" id="subbmit" data-options="iconCls:'icon-save'" style="width: 150px" onclick="SaveInfo()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+

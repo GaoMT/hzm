@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--By Supcan Report -->
+<Report>
+	<WorkSheet name="Report_FeedBack" isDefaultPrint="true">
+		<Properties>
+			<BackGround bgColor="#FFFFFF" arrange="left,top" alpha="255"/>
+			<DefaultTD>
+				<TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" isRound="true" isPrint="true"/>
+			</DefaultTD>
+			<Other isShowZero="true" isRefOriPrecision="true" LineDistance="0" isRowHeightAutoExtendAble="true"/>
+		</Properties>
+		<Fonts>
+			<Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+			<Font faceName="微软雅黑" charSet="134" height="-27" weight="700"/>
+		</Fonts>
+		<Table>
+			<Col width="0"/>
+			<Col width="100"/>
+			<Col width="80"/>
+			<Col width="100"/>
+			<Col width="40"/>
+			<Col width="100"/>
+			<Col width="100"/>
+			<Col width="140"/>
+			<Col width="80"/>
+			<Col width="100"/>
+			<Col width="15"/>
+			<!--<Col width="140"/>
+			<Col width="140"/>
+			<Col width="140"/>
+			<Col width="140"/>
+      <Col width="140"/>-->
+			<TR height="24" sequence="0">
+        <TD col="0" fontIndex="1" align="center">人员上下井报表</TD>
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="24" sequence="1">
+        <TD col="1">1</TD>
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="24" sequence="2">
+        <!--<TD col="0" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">煤矿编号</TD>-->
+        <TD col="1" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" formula="=headrow(&apos;Report_FeedBack&apos;)">煤矿名称</TD>
+        <TD col="2" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">姓名</TD>
+        <TD col="3" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">标识卡</TD>
+        <TD col="4" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">性别</TD>
+				<TD col="5" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">工种或职务</TD>
+				<TD col="6" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">部门</TD>
+				<TD col="7" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">累计时间</TD>
+				<TD col="8" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">累计次数</TD>
+				<TD col="9" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">日期</TD>
+				<TD col="10" leftBorderColor="#000000"/>
+			</TR>
+			<TR height="24" sequence="3">
+        <!--<TD col="0" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>-->
+        <TD col="1" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" formula="=datarow(&apos;Report_FeedBack&apos;)"></TD>
+        <TD col="2" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <TD col="3" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <TD col="4" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <TD col="5" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <TD col="6" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <TD col="7" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <TD col="8" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <TD col="9" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+				<TD col="10" leftBorderColor="#000000"/>
+			</TR>
+			<TR height="24" sequence="4">
+				<!--<TD col="0" topBorderColor="#000000" topBorder="1"/>-->
+        <TD col="1" topBorderColor="#000000" topBorder="1"/>
+        <TD col="2" topBorderColor="#000000"/>
+				<TD col="3" topBorderColor="#000000"/>
+				<TD col="4" topBorderColor="#000000"/>
+				<TD col="5" topBorderColor="#000000"/>
+				<TD col="6" topBorderColor="#000000"/>
+				<TD col="7" topBorderColor="#000000"/>
+				<TD col="8" topBorderColor="#000000">制表人：</TD>
+				<TD col="9"/>
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="24" sequence="5">
+				<TD col="8">制表时间：</TD>
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="24" sequence="6">
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="24" sequence="7">
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="24" sequence="8">
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="24" sequence="9">
+				<TD col="15" topBorder="0"/>
+			</TR>
+			<TR height="15" sequence="10">
+				<TD col="0" leftBorder="0"/>
+				<TD col="1" leftBorder="0"/>
+				<TD col="2" leftBorder="0"/>
+				<TD col="3" leftBorder="0"/>
+				<TD col="4" leftBorder="0"/>
+				<TD col="5" leftBorder="0"/>
+				<TD col="6" leftBorder="0"/>
+				<TD col="7" leftBorder="0"/>
+				<TD col="8" leftBorder="0"/>
+				<TD col="9" leftBorder="0"/>
+				<TD col="10" leftBorder="0"/>
+				<TD col="11" leftBorder="0"/>
+				<TD col="12" leftBorder="0"/>
+				<TD col="13" leftBorder="0"/>
+				<TD col="14" leftBorder="0"/>
+				<TD col="15" leftBorder="0" topBorder="0"/>
+			</TR>
+		</Table>
+		<Merges>
+			<Range row1="0" col1="0" row2="1" col2="9"/>
+			<Range row1="4" col1="8" row2="4" col2="9"/>
+			<Range row1="5" col1="8" row2="5" col2="9"/>
+		</Merges>
+		<PrintPage>
+			<Paper oriantation="landscape">
+				<Margin left="19" top="25" right="19" bottom="25"/>
+			</Paper>
+      <Page align="center" isPrintEmptyRow="false" isIgnoreValidBorder="true">
+        <GridLine isPrintDefinedLineOnly="true"/>
+				<PageCode>
+					<Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+				</PageCode>
+			</Page>
+		</PrintPage>
+	</WorkSheet>
+	<DataSources Version="255" isAutoCalculateWhenOpen="false" isSaveCalculateResult="false">
+		<DataSource type="4"><!-- Desc: Supcan Report Component DataSource Specification -->
+<Data>
+	<ID>Report_FeedBack</ID>
+	<Version>2</Version>
+	<Type>4</Type>
+	<TypeMeaning>JSON</TypeMeaning>
+	<Source>../TransJson/TransJsonToTreeList?DataType=ReportBKD&amp;ReportName=Report_FeedBack</Source>
+	<XML_RecordAble_Nodes>
+		<Node>
+			<name>jsonobject</name>
+		</Node>
+	</XML_RecordAble_Nodes>
+	<Columns>
+    <!--<Column>
+      <name>jsonobject\煤矿编号</name>
+      <text>煤矿编号</text>
+      <type>string</type>
+      <visible>true</visible>
+      <sequence>1</sequence>
+    </Column>-->
+    <Column>
+      <name>jsonobject\煤矿名称</name>
+      <text>煤矿名称</text>
+      <type>string</type>
+      <visible>true</visible>
+      <sequence>2</sequence>
+    </Column>
+    <Column>
+      <name>jsonobject\姓名</name>
+      <text>姓名</text>
+      <type>string</type>
+      <visible>true</visible>
+      <sequence>3</sequence>
+    </Column>
+    <Column>
+      <name>jsonobject\标识卡</name>
+      <text>标识卡</text>
+      <type>string</type>
+      <visible>true</visible>
+      <sequence>4</sequence>
+    </Column>
+    <Column>
+      <name>jsonobject\性别</name>
+      <text>性别</text>
+      <type>string</type>
+      <visible>true</visible>
+      <sequence>5</sequence>
+    </Column>
+    <Column>
+      <name>jsonobject\工种或职务</name>
+      <text>工种或职务</text>
+      <type>string</type>
+      <visible>true</visible>
+      <sequence>6</sequence>
+    </Column>
+    <Column>
+      <name>jsonobject\部门</name>
+      <text>部门</text>
+      <type>string</type>
+      <visible>true</visible>
+      <sequence>7</sequence>
+    </Column>
+		<Column>
+			<name>jsonobject\累计时间</name>
+			<text>累计时间</text>
+			<type>string</type>
+			<visible>true</visible>
+			<sequence>8</sequence>
+		</Column>
+		<Column>
+			<name>jsonobject\累计次数</name>
+			<text>累计次数</text>
+			<type>string</type>
+			<visible>true</visible>
+			<sequence>9</sequence>
+		</Column>
+		<Column>
+			<name>jsonobject\TheDate</name>
+			<text>日期</text>
+			<type>string</type>
+			<visible>true</visible>
+			<sequence>10</sequence>
+		</Column>
+	</Columns>
+</Data>
+
+		</DataSource>
+	</DataSources>
+</Report>

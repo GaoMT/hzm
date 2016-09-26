@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-orange/easyui.css" title="orange">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-pepper-grinder/easyui.css" title="pink">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-cupertino/easyui.css" title="blue">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-gray/easyui.css" title="gray">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-green/easyui.css" title="green">
+    @Scripts.Render("~/bundles/easyui")
+    @Styles.Render("~/Content/icon")
+    @Scripts.Render("~/bundles/common")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            ResizeBg();
+        });
+        function ResizeBg()
+        {
+            var winWidth;
+            var winHeight;
+            // 获取窗口宽度
+            if (window.innerWidth)
+                winWidth = window.innerWidth;
+            else if ((document.body) && (document.body.clientWidth))
+                winWidth = document.body.clientWidth;
+            // 获取窗口高度
+            if (window.innerHeight)
+                winHeight = window.innerHeight;
+            else if ((document.body) && (document.body.clientHeight))
+                winHeight = document.body.clientHeight;
+            // 通过深入 Document 内部对 body 进行检测，获取窗口大小
+            if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth) {
+                winHeight = document.documentElement.clientHeight;
+                winWidth = document.documentElement.clientWidth;
+            }
+            $('#dlg').dialog('close');
+            $('#divtip').dialog('close');
+            $("table")[0].style.height = (winHeight - 60)+'px';
+            $('.styleswitch').click(function () {
+                switchStylestyle(this.getAttribute("rel"));
+                return false;
+            });
+            var c = readCookie('style');
+            if (c == null) {
+                c = 'blue';
+            }
+            if (c) switchStylestyle(c);
+         
+        }
+
+        //function returnCharCount(InputString, MarkChar) {
+        //    var length = InputString.length;
+        //    var charCount = 0;
+        //    var mySameChar='';
+        //    var i=0;
+        //    for ( i= 0; i < length; i++) {
+        //        mySameChar = InputString.substring(i,i+1);
+        //        if (mySameChar == MarkChar) {
+        //            charCount++;
+        //        }
+        //    }
+        //    return charCount;
+        //}
+
+        function AddProcessLog(ProcessLogName, ProcessLogContent)
+        {
+            //$.post("/ProcessLog/ProcessLogAdd?ProcessLogName=" + getQueryString('UserName'), {ProcessLogName:ProcessLogName, ProcessLogContent: ProcessLogContent });
+            $.post("/ProcessLog/ProcessLogAdd", {ProcessLogName:ProcessLogName, ProcessLogContent: ProcessLogContent });
+        }
+
+
+        function redirection() {
+            var userName = escape($("#txtUserName").textbox("getText"));
+            var passWord = $("#txtPassword").textbox("getText");
+            $.ajax({
+                url: '../center/login?UserName=' + userName + '&PassWord=' + passWord,
+                method: 'post',
+                type: 'json',
+                success: function (object) {
+                    var vobject = $.parseJSON(object);
+                    if (vobject[0] == "错误")
+                    {
+
+                        AddProcessLog(userName, "登录失败，用户名或密码错误！");
+                        $("#lblerror")[0].innerText = vobject[1].message;
+                        $("#divtip").dialog("open");
+                    }
+                    else {
+
+                        AddProcessLog(vobject[1].message[0].userName, "登录成功！");
+                        createCookie('UserID', vobject[1].message[0].userID, 365);
+                        createCookie('UserName', vobject[1].message[0].userName, 365);
+                        createCookie('MineCode', vobject[1].message[0].mineCode, 365);
+                        createCookie('PassWord', passWord, 365);
+                        window.open('../RealData/MainPage', '_self', 'fullscreen=yes,directories =no,location=no,status=no,menubar=no,toolbar=no,titlebar=no,channelmode =0', 'yes');
+                    }
+                },
+                error: function (object) {
+                    $("#lblerror")[0].innerText = object;
+                    $("#divtip").dialog("open");
+                }
+            });
+        }
+
+    </script>
+</head>
+<body onshow="ResizeBg()" onresize="ResizeBg()" style="margin:20px 0 0 0; padding:0 0 0 0;">
+    <table id="Mytab" style="width:100%; max-height:2000px; height:auto; padding:0 0 0 0; margin:0 0 0 0; border-collapse:collapse;">
+        <tr>
+            <td id="tabTop" colspan="3"></td>
+        </tr>
+        <tr>
+            <td id="tabLeftBlank">
+                <img src="../content/themes/image/delinLOGO.png" style="width:150px;height:150px;" />
+                <br />
+                <h1 style="font-family:SimHei;">安全生产综合管理平台</h1>
+                <br />
+                <br />
+                <a style="width:60px; margin-top:5px;">更换颜色</a>
+                <br />
+                <div class="bs" style="margin-left:300px; display:inline-block;width:400px;vertical-align:middle;">
+
+                    <a class="styleswitch a1" style="CURSOR: pointer" title="橘黄色" rel="orange"></a>
+                    <a class="styleswitch a2" style="CURSOR: pointer" title="竹绿色" rel="green"></a>
+                    <a class="styleswitch a3" style="CURSOR: pointer" title="天蓝色" rel="blue"></a>
+                    <a class="styleswitch a4" style="CURSOR: pointer" title="黑灰色" rel="gray"></a>
+                    <a class="styleswitch a5" style="CURSOR: pointer" title="艳红色" rel="pink"></a>
+                </div>
+                <br />
+                <br />
+            </td>
+            <td id="tabMidlle"></td>
+            <td id="tabRightBlank">
+                <div style="display:inline-block;width:400px;vertical-align:middle;">
+                    <div class="easyui-panel" @*onkeydown="javascript: if (event.keyCode == 13) redirection();"*@  title=" 系统登录入口" data-options="iconCls:'icon-colorlock'" style="padding:30px 70px 20px 70px;height:280px;">
+                       
+                            <div style="margin-bottom:20px">
+                                <input id="txtUserName" class="easyui-textbox" style="width:100%;height:40px;padding:12px" data-options="prompt:'用户名',iconCls:'icon-man',iconWidth:38">
+                            </div>
+                            <div style="margin-bottom:20px">
+                                <input id="txtPassword" class="easyui-textbox easyui-validatebox" type="password" style="width:100%;height:40px;padding:12px" data-options="prompt:'登录密码',iconCls:'icon-lock',iconWidth:38">
+                            </div>
+                            <div>
+                                <a onclick="redirection()" id="btnLogin" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="padding:12px;height:40px;width:100%;">
+                                    <span style="font-size:14px;">登录</span>
+                                </a>
+                            </div>
+                      
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td id="tabBottom" colspan="3"></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; " colspan="3">
+                (C) 2015&nbsp;&nbsp;&nbsp;&nbsp;江苏三恒科技股份有限公司&nbsp;&nbsp;&nbsp;&nbsp;<span onclick="$('#dlg').dialog('open')" style="cursor:pointer;">联系我们>></span>
+            </td>
+        </tr>
+    </table>
+    <div id="divtip" class="easyui-dialog" title="提示" data-options="iconCls:'icon-tip',modal:true" style="height:120px;width:200px;text-align:center;vertical-align:middle;">
+        <br />
+        <br />
+        <label id="lblerror" style="color:red;padding-top:50px; vertical-align:middle;">用户名不存在</label>
+    </div>
+    <div id="dlg" class="easyui-dialog" title="联系我们" data-options="iconCls:'icon-phone',modal:true"
+         style="width:400px;height:220px;padding:10px; text-align:center;">
+        <h3>
+            江苏三恒科技股份有限公司
+        </h3>
+        工程中心软件项目部
+        <br />
+        <br />
+        联系电话：0519-85765653
+        <br />
+        <br />
+        公司传真：0519-85129372
+        <br />
+        <br />
+        公司地址：江苏省常州市新北区龙虎塘街道科技大道1号
+    </div>
+    @RenderBody()
+</body>
+</html>

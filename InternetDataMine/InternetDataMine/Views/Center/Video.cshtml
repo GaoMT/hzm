@@ -1,0 +1,86 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Video</title>
+</head>
+<body>
+    <div>
+        <div id="ocxModel" tabid="OCX" title="OCX" style="display: none">
+            <object id='dsscocx' width='100%' height='100%'
+                    style="max-height: 2000px; max-width: 2000px;"
+                    classid='CLSID:1D1A0ACA-3A53-4589-88B8-94A0DDC47EA6'
+                    onreadystatechange='initDsscOcx()'></object>
+
+        </div>
+        <script language="javascript">
+            function dsscocx::switchMenu(code) {
+                if (code == -1) {
+                    //首次加载时由WEB控件
+                    if (menuFlg == false) {
+                        $("#secordMenu1 >ul >li:first").find("a").click();
+                    } else {
+                        if (menuFlg.split(";").length < 2) {
+                            var status = $("a[coding=" + menuFlg + "]", ".top-tab").attr("rel");
+                            $("#secordMenu" + status + " >ul >li:first").find("a").click();
+                        } else {
+                            firstMenuCode = menuFlg.split(";")[1];
+                            $("a[tabid=" + firstMenuCode + "]", ".main-menu").click();
+                        }
+                    }
+                } else {
+                    //之后控件权交由OCX
+                    $("a[url=" + code + "]", ".main-menu").click();
+                }
+                recoveryBodyArea();
+            }
+
+            function dsscocx::OnNotifyLogout() {
+                try {
+                    $("#ocxModel").hide();
+                    $.dialog.alert(getLocaleMessage("user.freeze.or.delete"), function () {
+                        window.location.href = appPath + "login_loginOut.action";
+                    })
+                } catch (e) {
+                }
+            }
+            function dsscocx::EnbaleAlarmSound() {
+                //alert("报警来了开启声音")
+                $("#alarmSound").attr("class", "header-ico alarm-yes-ico")
+                $("#alarmSound").attr("title", "关闭声音");
+            }
+            function dsscocx::UpdateAlarmCount(count) {
+                //alert("刷新报警 数为："+count);
+                if (count == 0) {
+                    $(".alarm-count").hide();
+                    $("#alarmCount").attr("title", "");
+                } else {
+                    if (parseInt(count) > 999) {
+                        $("#alarmCount").html("999+");
+                    } else {
+                        $("#alarmCount").html(count);
+                    }
+                    $(".alarm-count").show();
+                    $("#alarmCount").attr("title", "查看报警");
+                }
+
+            }
+
+            //控件将抓图信息传给web，web拓传给智能实战
+
+        </script>
+    </div>
+    <!-- 延迟下载OCX注册   -->
+    <div id="downloadocx">
+
+    </div>
+    </div>
+
+    </div>
+</body>
+</html>

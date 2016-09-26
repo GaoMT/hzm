@@ -1,0 +1,523 @@
+﻿@{
+    ViewBag.Title = "NetDiskManage";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript">
+    var diskid = "";
+    var PDiskID = "";
+    var username = "";
+    $(document).ready(function () {
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+        LoadTree();
+
+    });
+
+    function LoadViewUsers() {
+        var url = "../TransJson/TransJsonToTreeList?DataType=DiskViewUsers";
+        $('#cmbViewUsers').combobox({
+            url: url,
+            valueField: 'UserName',
+            textField: 'UserName',
+            multiple: true,
+            onLoadSuccess: function (data) {
+                $('#cmbManageUsers').combobox({
+                    data: data,
+                    valueField: 'UserName',
+                    textField: 'UserName',
+                    multiple: true
+                });
+
+            }
+        });
+
+    }
+
+    // 绑定树
+    function LoadTree() {
+        var MineCode = getQueryString("MineCode");//获取煤矿编号
+        username = getQueryString("UserName");
+        if (MineCode == "" || MineCode == null) {
+            MineCode = "";
+        }
+        //alert(username);
+        var url = "../TransJson/TransJsonToTreeList?DataType=DiskTree&MineCode=" + escape(username);
+
+        $('#treeNetDisk').treegrid({
+            fitColumns: true,
+            singleSelect: true,
+
+            method: 'Post',
+            idField: "Disk_ID",
+            treeField: "DiskName",
+            url: url,
+            columns:
+            [[
+                { title: "兴义市", field: "DiskName", width: 150 }
+            ]],
+            onSelect: function (rowData) { ChangeNetDisk(rowData); }
+        });
+    }
+
+    // 点击目录触发
+    function ChangeNetDisk(rowData) {
+        diskid = rowData.Disk_ID;
+        PDiskID = rowData.PDiskID;
+
+        $('#ckbView')[0].checked = false;
+        $("#cmbViewUsers").combo('enable');
+        $('#ckbManage')[0].checked = false;
+        $("#cmbManageUsers").combo('enable');
+
+        $('#btnPower').linkbutton('disable');
+        $('#btnAddDisk').linkbutton('disable');
+        $('#btnRemoveDisk').linkbutton('disable');
+        $('#btnUpFile').linkbutton('disable');
+        $('#btnRemove').linkbutton('disable');
+        $('#btnRename').linkbutton('disable');
+
+
+     
+
+        // 权限配置
+        if (rowData.ManageUsers.indexOf(username) >= 0 || rowData.CreateUser.indexOf(username) >= 0) {
+            $('#btnPower').linkbutton('enable');
+            $('#btnAddDisk').linkbutton('enable');
+            $('#btnRemoveDisk').linkbutton('enable');
+            $('#btnUpFile').linkbutton('enable');
+            $('#btnRemove').linkbutton('enable');
+            $('#btnRename').linkbutton('enable');
+            LoadViewUsers();
+
+            // 查看权限
+            if (rowData.ViewUsers == "全部") {
+                $('#ckbView')[0].checked = true;
+                $("#cmbViewUsers").combo('disable');
+            } else {
+                var view = rowData.ViewUsers.split(',');
+                var viewUsers = "";
+                if (view.length > 1) {
+                    viewUsers = "$('#cmbViewUsers').combobox('setValues', [";
+                    for (var i = 1; i < view.length - 1; i++) {
+                        if (i == 1) viewUsers += "'" + view[i] + "'";
+                        else viewUsers += ",'" + view[i] + "'";
+                    }
+                    viewUsers += "]);";
+                    eval(viewUsers);
+                }
+            }
+
+            // 管理权限
+            if (rowData.ManageUsers == "全部") {
+                $('#ckbManage')[0].checked = true;
+                $("#cmbManageUsers").combo('disable');
+            } else {
+                var manage = rowData.ManageUsers.split(',');
+                var manageUsers = "";
+                if (manage.length > 1) {
+                    manageUsers = "$('#cmbManageUsers').combobox('setValues', [";
+                    for (var i = 1; i < manage.length - 1; i++) {
+                        if (i == 1) manageUsers += "'" + manage[i] + "'";
+                        else manageUsers += ",'" + manage[i] + "'";
+                    }
+                    manageUsers += "]);";
+                    eval(manageUsers);
+                }
+            }
+        }
+
+        if (rowData.ManageUsers == username) {
+            $('#btnUpFile').linkbutton('enable');
+        }
+
+        LoadFile(diskid);
+    }
+
+    // 加载文件列表
+    function LoadFile(diskid) {
+        var url = "../TransJson/TransJsonToTreeList?DataType=FileList&MineCode=" + diskid;
+
+        $("#dgvMain").datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            //striped: true,
+            singleSelect: false,
+            pagination: true,
+            pageSize1: 10,
+            method: 'Post',
+            url: url,
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'File_ID', title: 'File_ID', hidden: true, width: 100 },
+                { field: 'FileUpName', title: '文件名', width: 100 },
+                { field: 'FileSize', title: '大小', width: 100 },
+                { field: 'UploadUser', title: '上传人', width: 100 }
+            ]]
+        });
+
+
+    }
+
+    // 上传文件
+    function UpFile() {
+        $('#txtFile')[0].value = "";
+        $('#divUpFile').dialog('open');
+    }
+
+    var MineCode = "";
+    function onUpFile() {
+        MineCode = readCookie('MineCode');
+        var username = readCookie('UserName');
+        var url = "../NetDisk/FileUpLoad?MineCode=" + MineCode + "&username=" + escape(username) + "&diskid=" + diskid;
+
+        var isValidate = $("#ff").form('validate');
+        if (!isValidate) {
+            return false;
+        }
+        $.messager.progress();
+
+        $.ajaxFileUpload(
+            {
+                url: url, //用于文件上传的服务器端请求地址
+                secureuri: false, //一般设置为false
+                fileElementId: 'txtFile', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    if (typeof (data.error) != 'undefined') {
+                        if (data.error != '') {
+                            $.messager.progress("close");
+                            $.messager.alert("警告", data.error, "error");
+                        } else {
+
+                            AddProcessLogGlobal("向网络硬盘上传了文件！");
+                            $('#dgvMain').datagrid("reload");
+                            $('#divUpFile').dialog('close');
+                            $.messager.progress("close");
+                            $.messager.alert("提示", data.msg, "info");
+
+                        }
+                    }
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert("error");
+                }
+            }
+        );
+        return false;
+    }
+
+    // 删除文件
+    function RemoveFiles() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+
+        $.messager.confirm('提示', '确认要删除所选项吗？', function (result) {
+            if (result) {
+                var condition = "";
+                var index = 0;
+                for (index = 0; index < rows.length; index++) {
+                    if (index == rows.length - 1) {
+                        condition += "'" + rows[index].File_ID + "'";
+                    } else {
+                        condition += "'" + rows[index].File_ID + "',";
+                    }
+                }
+                var url = "../TransJson/TransJsonToTreeList?DataType=RemoveFiles&MineCode=" + condition;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    datatype: "json",
+                    url: url,
+                    success: function (data) {
+                        if (data == "True") {
+                            AddProcessLogGlobal("删除了网络硬盘的文件！");
+                            $.messager.confirm('提示', '删除成功！');
+                            $('#dgvMain').datagrid('reload');
+                        } else {
+                            $.messager.confirm('提示', '删除失败！');
+                        }
+                    },
+                    error: function () {
+                        $.messager.confirm('提示', '错误！');
+                    }
+                });
+            }
+        });
+    }
+
+    // 删除目录
+    function RemoveDisk() {
+        if (diskid == "") {
+            $.messager.confirm('提示', '请选择要删除的目录！');
+            return;
+        }
+        $.messager.confirm('提示', '确认要删除当前目录吗？目录下的文件及子目录都会一起被删除', function (result) {
+            if (result) {
+                var url = "../TransJson/TransJsonToTreeList?DataType=RemoveDisk&MineCode=" + diskid;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    datatype: "json",
+                    url: url,
+                    success: function (data) {
+                        if (data == "True") {
+                            AddProcessLogGlobal("删除了网络硬盘的目录！");
+                            $.messager.confirm('提示', '删除成功！');
+                            $('#treeNetDisk').treegrid('reload');
+                        } else {
+                            $.messager.confirm('提示', '删除失败！');
+                        }
+                    },
+                    error: function () {
+                        $.messager.confirm('提示', '错误！');
+                    }
+                });
+            }
+        });
+    }
+
+    // 重命名
+    function DiskReName() {
+        var diskname = $('#treeNetDisk').datagrid('getSelected')['DiskName'];
+        var orderby = $('#treeNetDisk').datagrid('getSelected')['OrderBy'];
+
+        $('#txtDiskName').textbox('setValue', diskname);
+        $('#txtOrderby').textbox('setValue', orderby);
+        $('#divDisk').dialog('open');
+    }
+
+    // 新建子目录
+    function DiskAdd() {
+        // 父目录
+        diskid = "";
+        PDiskID = $('#treeNetDisk').datagrid('getSelected')['Disk_ID'];
+
+        $('#txtDiskName').textbox('setValue', '');
+        //$('#txtOrderby').textbox('setValue', '1');
+        $('#divDisk').dialog('open');
+    }
+
+    // 保存目录（新建子目录，重命名）
+    function EditSave() {
+        var diskname = $('#txtDiskName').textbox('getValue');
+        var orderby = $('#txtOrderby').textbox('getValue');
+        if (diskname.length < 1 || diskname.replace(/(^\s*)|(\s*$)/g, "") == "") {
+            $.messager.confirm('提示', '请填写目录名称！');
+            return;
+        }
+
+        var url = "../TransJson/TransJsonToTreeList?DataType=DiskReName&MineCode=" + diskid + "&SensorNum=" + escape(diskname) + "&DropName=" + PDiskID + "&ReportName=" + escape(username) + "&Position=" + orderby;
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            datatype: "json",
+            url: url,
+            success: function (data) {
+                if (data == "True") {
+                    AddProcessLogGlobal("修改了网络硬盘目录名称！");
+                    $.messager.confirm('提示', '修改成功！');
+                    $('#treeNetDisk').treegrid('reload');
+                    $('#divDisk').dialog('close');
+                } else {
+                    $.messager.confirm('提示', '修改失败！');
+                }
+            },
+            error: function () {
+                $.messager.confirm('提示', '错误！');
+            }
+        });
+    }
+
+    // 权限配置
+    function DiskPower() {
+        $('#divPower').dialog('open');
+    }
+
+    // 下载
+    function DownFile() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1 | rows.length > 1) {
+            $.messager.alert("提示", "下载时，请选择一个文件下载，不选或多选都无法进行操作，请选择！", "error");
+        }
+        else {
+            AddProcessLogGlobal("下载了网络硬盘文件！");
+            var Url = "../NetDisk/FileDownLoad?FilePath=" + rows[0].FileSavePath + "&FileName=" + rows[0].FileUpName;
+            downloadFile(Url);
+        }
+    }
+
+    // 查看权限
+    function cmbViewUsersEnable() {
+        if ($('#ckbView')[0].checked) {
+            $("#cmbViewUsers").combo('disable');
+        } else {
+            $("#cmbViewUsers").combo('enable');
+        }
+    }
+
+    // 管理权限
+    function cmbManageUsersEnable() {
+        if ($('#ckbManage')[0].checked) {
+            $("#cmbManageUsers").combo('disable');
+        } else {
+            $("#cmbManageUsers").combo('enable');
+        }
+    }
+
+    function UsersSave() {
+
+        var ViewUsers = $('#ckbView')[0].checked ? "全部" : $('#cmbViewUsers').combo('getValues');
+        var ManageUsers = $('#ckbManage')[0].checked ? "全部" : $('#cmbManageUsers').combo('getValues');
+
+        if (ViewUsers.length < 1 || ManageUsers.length < 1) {
+            $.messager.confirm('提示', '请配置权限！');
+            return;
+        }
+
+        var url = "../TransJson/TransJsonToTreeList?DataType=DiskSaveUsers&MineCode=" + diskid + "&SensorNum=" + escape(ViewUsers) + "&DropName=" + escape(ManageUsers);
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            datatype: "json",
+            url: url,
+            success: function (data) {
+                if (data == "True") {
+                    AddProcessLogGlobal("设置了网络硬盘权限！");
+                    $.messager.confirm('提示', '配置权限成功！');
+                    $('#divPower').dialog('close');
+                } else {
+                    $.messager.confirm('提示', '配置权限失败！');
+                }
+            },
+            error: function () {
+                $.messager.confirm('提示', '错误！');
+            }
+        });
+
+    }
+</script>
+<div id="cc" class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west',title:'网络硬盘',split:true" style="width: 250px; height: 100%;">
+        <div id="treeNetDisk" class="easyui-treegrid" data-options="fit:true"></div>
+    </div>
+    <div data-options="region:'center'" style="padding: 0px;">
+        <div class="easyui-panel" title="网络硬盘" data-options="collapsed:false,collapsible:true,fit:true">
+            <table id="dgvMain" class="easyui-datagrid" data-options="fit:true" title=""></table>
+
+            <div id="toolbar">
+                <table style="width: 100%;">
+                    <tr>
+                        <td>
+                            <div id="btnAddDisk" style="width: 120px;" class="easyui-linkbutton" data-options="iconCls:'icon-add',disabled:true" onclick="DiskAdd();">新建子目录</div>
+                            <div id="btnRemoveDisk" style="width: 80px;" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="RemoveDisk();">删除目录</div>
+                            <div id="btnUpFile" class="easyui-linkbutton" data-options="iconCls:'icon-undo'" style="width: 80px;" onclick="UpFile();">上传</div>
+
+                            <div id="btnRemove" style="width: 80px;" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="RemoveFiles();">删除</div>
+                            <div id="btnRename" style="width: 80px;" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="DiskReName();">重命名</div>
+                            <div id="btnDownFile" style="width: 80px;" class="easyui-linkbutton" data-options="iconCls:'icon-redo'" onclick="DownFile();">下载</div>
+
+                            <div id="btnPower" style="width: 80px;" class="easyui-linkbutton" data-options="iconCls:'icon-redo'" onclick="DiskPower();">权限设置</div>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*目录操作*@
+<div id="divDisk" class="easyui-dialog" closed="true" title="目录操作" style="width:420px;height:160px;padding:10px">
+    <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width:390px;">
+            <tr>
+                <td align="right">
+                    目录名称：
+                </td>
+                <td align="left">
+                    <input id="txtDiskName" class="easyui-textbox" data-options="required:true" style="width: 300px; height: 20px; " />
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    排序：
+                </td>
+                <td align="left">
+                    <input id="txtOrderby" class="easyui-numberspinner" value="1" style="width:80px;" required="required">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style=" padding-top: 5px; text-align: left; vertical-align: middle;">
+                    <div class="easyui-linkbutton" id="editsubbmit" icon="icon-ok" onclick="EditSave()">保存</div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="divPower" class="easyui-dialog" closed="true" title="权限操作" style="width:420px;height:160px;padding:10px">
+    <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width:390px;">
+            <tr>
+                <td align="right">
+                    查看权限：
+                </td>
+                <td align="left">
+                    @*<input id="txtDiskName" class="easyui-textbox" data-options="required:true" style="width: 300px; height: 20px; " />*@
+                    <select id="cmbViewUsers" class="easyui-combobox" style="width:200px;" data-options="required:true"></select>
+                    <input id="ckbView" type="checkbox" onclick="cmbViewUsersEnable();" />全部
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    管理权限：
+                </td>
+                <td align="left">
+                    <select id="cmbManageUsers" class="easyui-combobox" style="width:200px;" data-options="required:true"></select>
+                    <input id="ckbManage" type="checkbox" onclick="cmbManageUsersEnable();" />全部
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style=" padding-top: 5px; text-align: center; vertical-align: middle;">
+                    <div class="easyui-linkbutton" id="editsubbmit" icon="icon-ok" onclick="UsersSave()">保存</div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+
+<div id="divUpFile" class="easyui-dialog" closed="true" title="上传文件" style="width:420px;height:160px;padding:10px">
+    <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width:390px;">
+            <tr>
+                <td align="right">
+                    选择文件：
+                </td>
+                <td align="left">
+                    @*<input id="txtFile" type="filebox" style="width:300px" buttonText="选择文件">*@
+                    <input id="txtFile" name="filename" type="file" />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style=" padding-top: 5px; text-align: center; vertical-align: middle;">
+                    <div class="easyui-linkbutton" style="width:120px;" id="editsubbmit" onclick="onUpFile();">上传</div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+
+

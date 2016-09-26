@@ -1,0 +1,627 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpMap.Web</name>
+    </assembly>
+    <members>
+        <member name="T:SharpMap.Web.Caching">
+            <summary>
+            Class for storing rendered images in the httpcache
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.Caching.InsertIntoCache(System.Int32,System.Drawing.Image)">
+            <summary>
+            Inserts an image into the HttpCache and returns the cache identifier.
+            </summary>
+            <remarks>
+            Image can after insertion into the cache be requested by calling getmap.aspx?ID=[identifier]<br/>
+            This requires you to add the following to web.config:
+            <code escaped="true">
+            <httpHandlers>
+               <add verb="*" path="GetMap.aspx" type="SharpMap.Web.HttpHandler,SharpMap"/>
+            </httpHandlers>
+            </code>
+            <example>
+            Inserting the map into the cache and setting the ImageUrl:
+            <code>
+            string imgID = SharpMap.Web.Caching.CacheMap(5, myMap.GetMap(), Session.SessionID, Context);
+            imgMap.ImageUrl = "getmap.aspx?ID=" + HttpUtility.UrlEncode(imgID);
+            </code>
+            </example>
+            </remarks>
+            <param name="minutes">Number of minutes to cache the map</param>
+            <param name="map">Map reference</param>
+            <returns>Image identifier</returns>
+        </member>
+        <member name="T:SharpMap.Web.HttpHandler">
+            <summary>
+            HttpHandler class for web applications
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.HttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Returns the requested image in an http imagestream
+            </summary>
+            <param name="context">HttpContext</param>
+        </member>
+        <member name="P:SharpMap.Web.HttpHandler.IsReusable">
+            <summary>
+            Enable Http pooling
+            </summary>
+        </member>
+        <member name="T:SharpMap.Web.UI.Ajax.AjaxMapControl">
+            <summary>
+            The Ajax Map Control is a javascript controlled map that is able to refresh
+            the map without the whole webpage has to do a roundtrip to the server.
+            </summary>
+            <remarks>
+            <para>This webcontrol is tested with both IE and FireFox.</para>
+            <para>The webcontrol creates a client-side javascript object named after
+            the ClientID of this control
+            and appends "Obj" to it. Below are a list of some of the properties
+            and methods of the client-side object. The <see cref="P:SharpMap.Web.UI.Ajax.AjaxMapControl.OnViewChanging"/> 
+            and <see cref="P:SharpMap.Web.UI.Ajax.AjaxMapControl.OnViewChange"/> client-side events
+            are also is parsing a reference to this object.</para>
+            <list type="table">
+            <listheader><term>Method/Property</term><description>Description</description></listheader>
+            <item><term>.minX</term><description>World coordinate of the left side of the current view</description></item>
+            <item><term>.maxY</term><description>World coordinate of the top of the current view</description></item>
+            <item><term>.GetCenter()</term><description>Gets a center point object with the current view (use the .x and .y properties of the returned object for the coordinates)</description></item>
+            <item><term>.zoom</term><description>The current zoom level of the map (map width)</description></item>
+            <item><term>.zoomAmount</term><description>The amount to zoom on a zoom-in event (negative values equals zoom out)</description></item>
+            <item><term>.container</term><description>Reference to the map box element</description></item>
+            <item><term>.statusbar</term><description>Reference to the statusbar element</description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControl.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SharpMap.Web.UI.Ajax.AjaxMapControl"/>
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControl.GetCallbackResult">
+            <summary>
+            Returns the result of the callback event that targets <see cref="T:SharpMap.Web.UI.Ajax.AjaxMapControl"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControl.RaiseCallbackEvent(System.String)">
+            <summary>
+            Creates the arguments for the callback handler in the
+            <see cref="M:System.Web.UI.ClientScriptManager.GetCallbackEventReference(System.Web.UI.Control,System.String,System.String,System.String)"/> method. 
+            </summary>
+            <param name="eventArgument"></param>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControl.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            Sends server control content to a provided HtmlTextWriter object, which writes the content to be rendered on the client.
+            </summary>
+            <param name="writer">The HtmlTextWriter object that receives the server control content.</param>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControl.CreateChildControls">
+            <summary>
+            Called by the ASP.NET page framework to notify server controls that use
+            composition-based implementation to create any child controls they
+            contain in preparation for posting back or rendering
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControl.GenerateMap">
+            <summary>
+            Returns a Url to the map
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControl.GenerateClientScripts">
+            <summary>
+            Registers the client-side scripts and creates an initialize script for the current map
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.ZoomSpeed">
+            <summary>
+            Sets the speed which the zoom is (lower = faster).
+            The default value is 15
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.FadeSpeed">
+            <summary>
+            Sets the speed of the fade (lower = faster).
+            The default value is 10
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.OnViewChange">
+            <summary>
+            Client-side method to call when map view have changed
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.OnViewChanging">
+            <summary>
+            Client-side method to call when map are starting to update
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.OnClickEvent">
+            <summary>
+            Gets or sets the clientside method to call when custom click-event is active.
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.ClickEventPropertyName">
+            <summary>
+            Gets the name of the clientside ClickEvent property on the map object.
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.ToogleClickEventMethodName">
+            <summary>
+            Gets the name of the clientside ToogleClickEvent method to enable or disable 
+            the custom click-event on the map object.
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.DisableClickEventMethodName">
+            <summary>
+            Gets the name of the clientside DisableClickEvent method to disable 
+            the custom click-event on the map object.
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.EnableClickEventMethodName">
+            <summary>
+            Gets the name of the clientside EnableClickEvent method to enable
+            the custom click-event on the map object.
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.UseCache">
+            <summary>
+            Sets whether the control should use the http cache or call a specific maphandler
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.StatusBarText">
+            <summary>
+            Text shown on the map status bar.
+            </summary>
+            <remarks>
+            <para>Use [X] and [Y] to display cursor position in world coordinates and [ZOOM] for displaying the zoom value.</para>
+            <para>The default value is "[X], [Y] - Map width=[ZOOM]"</para>
+            </remarks>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.ResponseFormat">
+            <summary>
+            Formatting of the callback response used when <see cref="P:SharpMap.Web.UI.Ajax.AjaxMapControl.UseCache"/> is false.
+            </summary>
+            <remarks>
+            <para>
+            Use [X] and [Y] for center position, [ZOOM] for zoom value,
+            [WIDTH] for image width and [WIDTH] for image height. These values will automatically
+            be replaced by the current values. The return-result should correspond to the url of
+            a maphandler that renders the map from these values
+            </para>
+            <para>myMapHandler.aspx?Width=[WIDTH]&amp;Height=[HEIGHT]&amp;Zoom=[ZOOM]&amp;X=[X]&amp;Y=[Y]</para>
+            </remarks>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.DisplayStatusBar">
+            <summary>
+            Specifies whether the statusbar is visible or not.
+            </summary>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControl.Map">
+            <summary>
+            The <see cref="T:SharpMap.Map"/> that is to be rendered in the control
+            </summary>
+        </member>
+        <member name="T:SharpMap.Web.UI.Ajax.AjaxMapControlDesigner">
+            <summary>
+            Control used for the VS designer
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControlDesigner.GetDesignTimeHtml">
+            <summary>
+            Returns the design-time HTML
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SharpMap.Web.UI.Ajax.AjaxMapControlDesigner.Initialize(System.ComponentModel.IComponent)">
+            <summary>
+            Initializes the designer control
+            </summary>
+            <param name="component"></param>
+        </member>
+        <member name="P:SharpMap.Web.UI.Ajax.AjaxMapControlDesigner.AllowResize">
+            <summary>
+            Allows the control to be resized
+            </summary>
+        </member>
+        <member name="T:SharpMap.Web.Wms.ServerCapabilities">
+            <summary>
+            Class for generating the WmsCapabilities Xml
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.Wms.ServerCapabilities.GetCapabilities(SharpMap.Map,SharpMap.Web.Wms.Capabilities.WmsServiceDescription)">
+            <summary>
+            Generates a capabilities file from a map object for use in WMS services
+            </summary>
+            <remarks>The capabilities document uses the v1.3.0 OpenGIS WMS specification</remarks>
+            <param name="map">The map to create capabilities for</param>
+            <param name="serviceDescription">Additional description of WMS</param>
+            <returns>Returns XmlDocument describing capabilities</returns>
+        </member>
+        <member name="T:SharpMap.Web.Wms.WmsException">
+            <summary>
+            Class for throwing WMS exceptions to client
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsException.ThrowWmsException(System.String)">
+            <summary>
+            Throws a <see cref="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.NotApplicable"/> WMS excption. The <see cref="P:System.Web.HttpContext.Current"/> is used to write the response stream.
+            </summary>
+            <param name="message">An additional message text</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="T:System.Web.HttpContext"/></exception>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsException.ThrowWmsException(System.String,System.Web.HttpContext)">
+            <summary>
+            Throws a <see cref="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.NotApplicable"/> WMS excption. The <paramref name="context"/> is used to write the response stream.
+            </summary>
+            <param name="message">An additional message text</param>
+            <param name="context">The <see cref="T:System.Web.HttpContext"/></param>
+            <exception cref="T:System.InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="T:System.Web.HttpContext"/></exception>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsException.ThrowWmsException(SharpMap.Web.Wms.WmsException.WmsExceptionCode,System.String)">
+            <summary>
+            Throws a <paramref name="code"/> WMS excption. The <see cref="P:System.Web.HttpContext.Current"/> is used to write the response stream.
+            </summary>
+            <param name="code">The WMS exception code</param>
+            <param name="message">An additional message text</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="T:System.Web.HttpContext"/></exception>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsException.ThrowWmsException(SharpMap.Web.Wms.WmsException.WmsExceptionCode,System.String,System.Web.HttpContext)">
+            <summary>
+            Throws a <paramref name="code"/> WMS excption. The <paramref name="context"/> is used to write the response stream.
+            </summary>
+            <param name="code">The WMS exception code</param>
+            <param name="message">An additional message text</param>
+            <param name="context">The <see cref="T:System.Web.HttpContext"/></param>
+            <exception cref="T:System.InvalidOperationException">Thrown if this function is used outside a valid valid <see cref="T:System.Web.HttpContext"/></exception>
+        </member>
+        <member name="T:SharpMap.Web.Wms.WmsException.WmsExceptionCode">
+            <summary>
+            WMS Exception codes
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.InvalidFormat">
+            <summary>
+            Request contains a Format not offered by the server.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.InvalidCRS">
+            <summary>
+            Request contains a CRS not offered by the server for one or more of the
+            Layers in the request.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.LayerNotDefined">
+            <summary>
+            GetMap request is for a Layer not offered by the server, or GetFeatureInfo
+            request is for a Layer not shown on the map.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.StyleNotDefined">
+            <summary>
+            Request is for a Layer in a Style not offered by the server.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.LayerNotQueryable">
+            <summary>
+            GetFeatureInfo request is applied to a Layer which is not declared queryable.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.InvalidPoint">
+            <summary>
+            GetFeatureInfo request contains invalid X or Y value.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.CurrentUpdateSequence">
+            <summary>
+            Value of (optional) UpdateSequence parameter in GetCapabilities request is
+            equal to current value of service metadata update sequence number.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.InvalidUpdateSequence">
+            <summary>
+            Value of (optional) UpdateSequence parameter in GetCapabilities request is
+            greater than current value of service metadata update sequence number.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.MissingDimensionValue">
+            <summary>
+            Request does not include a sample dimension value, and the server did not
+            declare a default value for that dimension.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.InvalidDimensionValue">
+            <summary>
+            Request contains an invalid sample dimension value.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.OperationNotSupported">
+            <summary>
+            Request is for an optional operation that is not supported by the server.
+            </summary>
+        </member>
+        <member name="F:SharpMap.Web.Wms.WmsException.WmsExceptionCode.NotApplicable">
+            <summary>
+            No error code
+            </summary>
+        </member>
+        <member name="T:SharpMap.Web.Wms.WmsServer">
+            <summary>
+            This is a helper class designed to make it easy to create a WMS Service
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.ParseQueryString(SharpMap.Map,SharpMap.Web.Wms.Capabilities.WmsServiceDescription,System.Int32,SharpMap.Web.Wms.WmsServer.InterSectDelegate)">
+             <summary>
+             Generates a WMS 1.3.0 compliant response based on a <see cref="T:SharpMap.Map"/> and the current HttpRequest.
+             </summary>
+             <remarks>
+             <para>
+             The Web Map Server implementation in SharpMap requires v1.3.0 compatible clients,
+             and support the basic operations "GetCapabilities" and "GetMap"
+             as required by the WMS v1.3.0 specification. SharpMap does not support the optional
+             GetFeatureInfo operation for querying.
+             </para>
+             <example>
+             Creating a WMS server in ASP.NET is very simple using the classes in the SharpMap.Web.Wms namespace.
+             <code lang="C#">
+             void page_load(object o, EventArgs e)
+             {
+            		//Get the path of this page
+            		string url = (Request.Url.Query.Length&gt;0?Request.Url.AbsoluteUri.Replace(Request.Url.Query,""):Request.Url.AbsoluteUri);
+            		SharpMap.Web.Wms.Capabilities.WmsServiceDescription description =
+            			new SharpMap.Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+            		
+            		// The following service descriptions below are not strictly required by the WMS specification.
+            		
+            		// Narrative description and keywords providing additional information 
+            		description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
+            		description.Keywords.Add("bird");
+            		description.Keywords.Add("roadrunner");
+            		description.Keywords.Add("ambush");
+            		
+            		//Contact information 
+            		description.ContactInformation.PersonPrimary.Person = "John Doe";
+            		description.ContactInformation.PersonPrimary.Organisation = "Acme Inc";
+            		description.ContactInformation.Address.AddressType = "postal";
+            		description.ContactInformation.Address.Country = "Neverland";
+            		description.ContactInformation.VoiceTelephone = "1-800-WE DO MAPS";
+            		//Impose WMS constraints
+            		description.MaxWidth = 1000; //Set image request size width
+            		description.MaxHeight = 500; //Set image request size height
+            		
+            		//Call method that sets up the map
+            		//We just add a dummy-size, since the wms requests will set the image-size
+            		SharpMap.Map myMap = MapHelper.InitializeMap(new System.Drawing.Size(1,1));
+            		
+            		//Parse the request and create a response
+            		SharpMap.Web.Wms.WmsServer.ParseQueryString(myMap,description);
+             }
+             </code>
+             </example>
+             </remarks>
+             <param name="map">Map to serve on WMS</param>
+             <param name="description">Description of map service</param>
+            <param name="pixelSensitivity"> </param>
+            <param name="intersectDelegate">Delegate for Getfeatureinfo intersecting, when null, the WMS will default to ICanQueryLayer implementation</param>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.ParseQueryString(SharpMap.Map,SharpMap.Web.Wms.Capabilities.WmsServiceDescription,System.Int32,SharpMap.Web.Wms.WmsServer.InterSectDelegate,System.Web.HttpContext)">
+             <summary>
+             Generates a WMS 1.3.0 compliant response based on a <see cref="T:SharpMap.Map"/> and the current HttpRequest.
+             </summary>
+             <remarks>
+             <para>
+             The Web Map Server implementation in SharpMap requires v1.3.0 compatible clients,
+             and support the basic operations "GetCapabilities" and "GetMap"
+             as required by the WMS v1.3.0 specification. SharpMap does not support the optional
+             GetFeatureInfo operation for querying.
+             </para>
+             <example>
+             Creating a WMS server in ASP.NET is very simple using the classes in the SharpMap.Web.Wms namespace.
+             <code lang="C#">
+             void page_load(object o, EventArgs e)
+             {
+            		//Get the path of this page
+            		string url = (Request.Url.Query.Length&gt;0?Request.Url.AbsoluteUri.Replace(Request.Url.Query,""):Request.Url.AbsoluteUri);
+            		SharpMap.Web.Wms.Capabilities.WmsServiceDescription description =
+            			new SharpMap.Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+            		
+            		// The following service descriptions below are not strictly required by the WMS specification.
+            		
+            		// Narrative description and keywords providing additional information 
+            		description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
+            		description.Keywords.Add("bird");
+            		description.Keywords.Add("roadrunner");
+            		description.Keywords.Add("ambush");
+            		
+            		//Contact information 
+            		description.ContactInformation.PersonPrimary.Person = "John Doe";
+            		description.ContactInformation.PersonPrimary.Organisation = "Acme Inc";
+            		description.ContactInformation.Address.AddressType = "postal";
+            		description.ContactInformation.Address.Country = "Neverland";
+            		description.ContactInformation.VoiceTelephone = "1-800-WE DO MAPS";
+            		//Impose WMS constraints
+            		description.MaxWidth = 1000; //Set image request size width
+            		description.MaxHeight = 500; //Set image request size height
+            		
+            		//Call method that sets up the map
+            		//We just add a dummy-size, since the wms requests will set the image-size
+            		SharpMap.Map myMap = MapHelper.InitializeMap(new System.Drawing.Size(1,1));
+            		
+            		//Parse the request and create a response
+            		SharpMap.Web.Wms.WmsServer.ParseQueryString(myMap,description);
+             }
+             </code>
+             </example>
+             </remarks>
+            <param name="map">Map to serve on WMS</param>
+             <param name="description">Description of map service</param>
+            <param name="pixelSensitivity"> </param>
+            <param name="intersectDelegate">Delegate for Getfeatureinfo intersecting, when null, the WMS will default to ICanQueryLayer implementation</param>
+            <param name="context">The context the <see cref="T:SharpMap.Web.Wms.WmsServer"/> is running in.</param>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.ParseQueryString(SharpMap.Map,SharpMap.Web.Wms.Capabilities.WmsServiceDescription)">
+            <summary>
+            Generates a WMS 1.3.0 compliant response based on a <see cref="T:SharpMap.Map"/> and the current HttpRequest.
+            </summary>
+            <remarks>
+            <para>
+            The Web Map Server implementation in SharpMap requires v1.3.0 compatible clients,
+            and support the basic operations "GetCapabilities" and "GetMap"
+            as required by the WMS v1.3.0 specification. SharpMap does not support the optional
+            GetFeatureInfo operation for querying.
+            </para>
+            <example>
+            Creating a WMS server in ASP.NET is very simple using the classes in the SharpMap.Web.Wms namespace.
+            <code lang="C#">
+            void page_load(object o, EventArgs e)
+            {
+            	//Get the path of this page
+            	string url = (Request.Url.Query.Length&gt;0?Request.Url.AbsoluteUri.Replace(Request.Url.Query,""):Request.Url.AbsoluteUri);
+            	SharpMap.Web.Wms.Capabilities.WmsServiceDescription description =
+            		new SharpMap.Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+            	
+            	// The following service descriptions below are not strictly required by the WMS specification.
+            	
+            	// Narrative description and keywords providing additional information 
+            	description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
+            	description.Keywords.Add("bird");
+            	description.Keywords.Add("roadrunner");
+            	description.Keywords.Add("ambush");
+            	
+            	//Contact information 
+            	description.ContactInformation.PersonPrimary.Person = "John Doe";
+            	description.ContactInformation.PersonPrimary.Organisation = "Acme Inc";
+            	description.ContactInformation.Address.AddressType = "postal";
+            	description.ContactInformation.Address.Country = "Neverland";
+            	description.ContactInformation.VoiceTelephone = "1-800-WE DO MAPS";
+            	//Impose WMS constraints
+            	description.MaxWidth = 1000; //Set image request size width
+            	description.MaxHeight = 500; //Set image request size height
+            	
+            	//Call method that sets up the map
+            	//We just add a dummy-size, since the wms requests will set the image-size
+            	SharpMap.Map myMap = MapHelper.InitializeMap(new System.Drawing.Size(1,1));
+            	
+            	//Parse the request and create a response
+            	SharpMap.Web.Wms.WmsServer.ParseQueryString(myMap,description);
+            }
+            </code>
+            </example>
+            </remarks>
+            <param name="map">Map to serve on WMS</param>
+            <param name="description">Description of map service</param>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.ParseQueryString(SharpMap.Map,SharpMap.Web.Wms.Capabilities.WmsServiceDescription,System.Web.HttpContext)">
+            <summary>
+            Generates a WMS 1.3.0 compliant response based on a <see cref="T:SharpMap.Map"/> and the current HttpRequest.
+            </summary>
+            <remarks>
+            <para>
+            The Web Map Server implementation in SharpMap requires v1.3.0 compatible clients,
+            and support the basic operations "GetCapabilities" and "GetMap"
+            as required by the WMS v1.3.0 specification. SharpMap does not support the optional
+            GetFeatureInfo operation for querying.
+            </para>
+            <example>
+            Creating a WMS server in ASP.NET is very simple using the classes in the SharpMap.Web.Wms namespace.
+            <code lang="C#">
+            void page_load(object o, EventArgs e)
+            {
+            	//Get the path of this page
+            	string url = (Request.Url.Query.Length&gt;0?Request.Url.AbsoluteUri.Replace(Request.Url.Query,""):Request.Url.AbsoluteUri);
+            	SharpMap.Web.Wms.Capabilities.WmsServiceDescription description =
+            		new SharpMap.Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
+            	
+            	// The following service descriptions below are not strictly required by the WMS specification.
+            	
+            	// Narrative description and keywords providing additional information 
+            	description.Abstract = "Map Server maintained by Acme Corporation. Contact: webmaster@wmt.acme.com. High-quality maps showing roadrunner nests and possible ambush locations.";
+            	description.Keywords.Add("bird");
+            	description.Keywords.Add("roadrunner");
+            	description.Keywords.Add("ambush");
+            	
+            	//Contact information 
+            	description.ContactInformation.PersonPrimary.Person = "John Doe";
+            	description.ContactInformation.PersonPrimary.Organisation = "Acme Inc";
+            	description.ContactInformation.Address.AddressType = "postal";
+            	description.ContactInformation.Address.Country = "Neverland";
+            	description.ContactInformation.VoiceTelephone = "1-800-WE DO MAPS";
+            	//Impose WMS constraints
+            	description.MaxWidth = 1000; //Set image request size width
+            	description.MaxHeight = 500; //Set image request size height
+            	
+            	//Call method that sets up the map
+            	//We just add a dummy-size, since the wms requests will set the image-size
+            	SharpMap.Map myMap = MapHelper.InitializeMap(new System.Drawing.Size(1,1));
+            	
+            	//Parse the request and create a response
+            	SharpMap.Web.Wms.WmsServer.ParseQueryString(myMap,description);
+            }
+            </code>
+            </example>
+            </remarks>
+            <param name="map">Map to serve on WMS</param>
+            <param name="description">Description of map service</param>
+            <param name="context">The context the <see cref="T:SharpMap.Web.Wms.WmsServer"/> is running in.</param>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.GetEncoderInfo(System.String)">
+            <summary>
+            Used for setting up output format of image file
+            </summary>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.ParseBBOX(System.String,System.Boolean)">
+            <summary>
+            Parses a boundingbox string to a boundingbox geometry from the format minx,miny,maxx,maxy. Returns null if the format is invalid
+            </summary>
+            <param name="boundingBox">string representation of a boundingbox</param>
+            <param name="flipXY">Value indicating that x- and y-ordinates should be changed.</param>
+            <returns>Boundingbox or null if invalid parameter</returns>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.CreateFeatureInfoPlain(SharpMap.Map,System.String[],System.Single,System.Single,System.Int32,System.String,System.Web.HttpContext)">
+            <summary>
+            Gets FeatureInfo as text/plain
+            </summary>
+            <param name="map">The map</param>
+            <param name="requestedLayers">The requested layers</param>
+            <param name="x">The x-ordinate</param>
+            <param name="y">The y-ordinate</param>
+            <param name="featureCount"></param>
+            <param name="cqlFilter">The code query language</param>
+            <param name="context">The <see cref="T:System.Web.HttpContext"/> to use. If not specified or <value>null</value>, <see cref="P:System.Web.HttpContext.Current"/> is used.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if this function is used without a valid <see cref="T:System.Web.HttpContext"/> at hand</exception>
+            <returns>Plain text string with featureinfo results</returns>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.CreateFeatureInfoGeoJSON(SharpMap.Map,System.String[],System.Single,System.Single,System.Int32,System.String,System.Web.HttpContext)">
+            <summary>
+            Gets FeatureInfo as GeoJSON
+            </summary>
+            <param name="map">The map to create the feature info from</param>
+            <param name="requestedLayers">The layers to create the feature info for</param>
+            <param name="x">The x-Ordinate</param>
+            <param name="y">The y-Ordinate</param>
+            <param name="featureCount">The number of features</param>
+            <param name="cqlFilterString">The CQL Filter string</param>
+            <param name="context">The <see cref="T:System.Web.HttpContext"/> to use. If not specified or <value>null</value>, <see cref="P:System.Web.HttpContext.Current"/> is used.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if this function is used without a valid <see cref="T:System.Web.HttpContext"/> at hand</exception>
+            <returns>GeoJSON string with featureinfo results</returns>
+        </member>
+        <member name="M:SharpMap.Web.Wms.WmsServer.CqlFilter(SharpMap.Data.FeatureDataRow,System.String)">
+            <summary>
+            Filters the features to be processed by a CQL filter
+            </summary>
+            <param name="row">A <see cref="T:SharpMap.Data.FeatureDataRow"/> to test.</param>
+            <param name="cqlString">A CQL string defining the filter </param>
+            <returns>GeoJSON string with featureinfo results</returns>
+        </member>
+        <member name="P:SharpMap.Web.Wms.WmsServer.FeatureInfoResponseEncoding">
+            <summary>
+            Set the characterset used in FeatureInfo responses
+            </summary>
+            <remarks>
+            To use Windows-1252 set the FeatureInfoResponseEncoding = System.Text.Encoding.GetEncoding(1252);
+            Set to Null to not set any specific encoding in response
+            </remarks>
+        </member>
+    </members>
+</doc>

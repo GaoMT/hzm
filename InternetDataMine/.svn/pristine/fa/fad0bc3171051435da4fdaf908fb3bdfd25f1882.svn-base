@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript">
+    $('#dg').datagrid({
+        url: 'datagrid_data.json',
+        columns: [[
+            { field: 'id', title: 'id', width: 100, align: 'center',hidden:true },
+            { field: 'MineName', title: 'MineName', width: 100, align: 'center' },
+            { field: 'Content', title: 'Content', width: 100, align: 'center' }
+        ]]
+    });
+</script>
+<table id="dg"></table>

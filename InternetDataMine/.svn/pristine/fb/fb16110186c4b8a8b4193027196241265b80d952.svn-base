@@ -1,0 +1,309 @@
+﻿@{
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script>
+
+    var operatType = 0;
+    var transUrl = "";
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    $(document).ready(function (){
+        $('#MineCode').combobox({
+            url: '../Editer/TransData?type=MineCode&randnum=' + Math.floor(Math.random() * 1000000),
+            valueField: 'id',
+            textField: 'text'
+        });
+    });
+
+
+
+
+    var GroupID = "";
+    //datagrid 加载
+    $('#UserGroup').ready(function() {
+        $('#UserGroup').datagrid({
+            toolbar: '#tb',
+            singleSelect: false,
+            url: '../Editer/TransData?type=UserGroup&Flag' + (new Date().getSeconds()),
+            method: 'post',
+            //striped: true,
+            fit: true,
+            fitColumns: true,
+            columns: [
+                [
+                    { field: 'ck', title: '选择', checkbox: true, },
+                    { field: 'GroupID', title: '用户组编号', hidden: true, width: 100 },
+                    { field: 'RoleID', title: '角色编号', hidden: true, width: 100 },
+                       { field: 'RoleName', title: '角色名称', width: 100 },
+                    { field: 'MineCode', title: '企业编号', width: 100 },
+                    { field: 'SimpleName', title: '企业简称', width: 100 },
+                    { field: 'GroupName', title: '用户组名称', width: 100 },
+                    { field: 'GroupDescription', title: '用户组描述', width: 100 },
+                    { field: 'Remark', title: '备注', width: 100 }
+                ]
+            ]
+        });
+    });
+    //RoleID combo 加载
+    $('#RoleID').ready(function() {
+        $('#RoleID').combobox({
+            required: true,
+            editable: false,
+            url: '../Editer/TransData?type=RoleCombo',
+            valueField: 'id',
+            textField: 'text'
+        });
+    });
+
+    function LoadUserGroup()
+    {
+        $.ajax({
+            url: '../Editer/TransData?type=UserGroup&Flag' + (new Date().getSeconds()),
+            dataType: 'json',
+            success:function(data)
+            {
+                $("#UserGroup").datagrid("loadData", data);
+            },
+            error:function(data)
+            {
+                alert(data);
+            }
+        });
+    }
+
+
+    //添加用户组信息
+    function Add() {
+        operatType = 0;
+      
+        $(".easyui-textbox").textbox("setText", "");
+        
+        $('#dlg').dialog('open');
+
+        var RoleID = $('#RoleID').combobox('getValue');
+        var MineCode = $('#MineCode').combobox('getValue');
+        var GroupName = $('#UserGroupName').textbox('getText');
+        var GroupDescription = $('#Description').textbox('getText');
+        var Remark = $('#Remark').textbox('getText');
+        var myurl = '../Editer/TransData?type=AddGroup&RoleID=' + RoleID + '&MineCode=' + MineCode + '&Remark=' + Remark + '&GroupName=' + GroupName + '&GroupDescription=' + GroupDescription + '';
+        $("#ff").form('submit', {
+            url: myurl,
+            onSubmit: function(param) {
+                return $(this).form('enableValidation').form('validate')
+            },
+            success: function (data) {
+
+                AddProcessLogGlobal("添加了用户组信息！");
+                $.messager.confirm('提示', data);
+                $('#dlg').dialog('close');
+                LoadUserGroup();
+            },
+            error: function(data) {
+                alert("error");
+            }
+        });
+    }
+    //修改用户组信息
+    function alter() {
+
+        operatType = 1;
+
+        LoadMine();
+        var rows = $("#UserGroup").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.alert("警告", "编辑前，请先选取一行，请选取！");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert("警告", "编辑的时候，只能选取一行，请重新选择！");
+        }
+        else 
+        {
+            GroupID = $('#UserGroup').datagrid('getChecked')[0].GroupID;
+            $("#UserGroupName").val("");
+            $('#RoleID').combobox('setValue', $('#UserGroup').datagrid('getChecked')[0].RoleID);
+            $('#UserGroupName').textbox('setText', $('#UserGroup').datagrid('getChecked')[0].GroupName);
+            $('#Description').textbox('setText', $('#UserGroup').datagrid('getChecked')[0].GroupDescription);
+            if ($('#UserGroup').datagrid('getChecked')[0].MineCode != "")
+            {
+                $("#IsMine")[0].checked = true;
+                $("#MineCode").combobox("enable");
+                $("#MineCode").combobox("select", $('#UserGroup').datagrid('getChecked')[0].MineCode);
+            }
+            else
+            {
+                $("#IsMine")[0].checked = false;
+                $("#MineCode").combobox("select", "");
+                $("#MineCode").combobox("disable");
+                
+
+            }
+           // $('#MineCode').textbox('setText', $('#UserGroup').datagrid('getChecked')[0].MineCode);
+            $('#Remark').textbox('setText', $('#UserGroup').datagrid('getChecked')[0].Remark);
+            $('#dlg').dialog('open');
+}
+    }
+    //保存修改用户信息
+    function Save() {
+
+        var RoleID = $('#RoleID').combobox('getValue');
+        var MineCode = $('#MineCode').combobox('getValue');
+        var GroupName = $('#UserGroupName').textbox('getText');
+        var GroupDescription = $('#Description').textbox('getText');
+        var Remark = $('#Remark').textbox('getText');
+        //添加用户用户组信息
+        if (operatType == 0) {
+            transUrl='../Editer/TransData?type=AddGroup&RoleID=' + RoleID + '&MineCode=' + MineCode + '&Remark=' + Remark + '&GroupName=' + GroupName + '&GroupDescription=' + GroupDescription;
+        } else {//修改用户组信息
+           
+                transUrl = '../editer/TransData?type=EditUserGroup&GroupID=' + GroupID + '&RoleID='  + RoleID + '&MineCode=' + MineCode + '&Remark=' + Remark + '&GroupName=' + GroupName + '&GroupDescription=' + GroupDescription ;
+            
+        }
+        $("#ff").form('submit', {
+            url: transUrl,
+            onSubmit: function(param) {
+                return $(this).form('enableValidation').form('validate');
+            },
+            success: function(data) {
+                AddProcessLogGlobal("保存了用户组信息！");
+                    $.messager.alert('提示', data);
+                    $('#dlg').dialog('close');
+               
+                    LoadUserGroup();
+            },
+            error: function(data) {
+                alert("error");
+            }
+        });
+    }
+    
+    //删除用户组信息
+    function del() {
+        var rows =$('#UserGroup').datagrid('getChecked');
+        if(rows.length>0)
+        {
+            $.messager.confirm('警告', '确认要删除所选项吗？', function (result) {
+                if (result)
+                {
+                    var checkedGroupID = "";
+                    var checkedGroupIDs = $('#UserGroup').datagrid('getChecked');
+                    var index = 0;
+                    for (index = 0; index < checkedGroupIDs.length; index++) {
+                        if (index == checkedGroupIDs.length - 1) {
+                            checkedGroupID += "'" + checkedGroupIDs[index].GroupID + "'";
+                        }
+                        else {
+                            checkedGroupID += "'" + checkedGroupIDs[index].GroupID + "',";
+                        }
+                    }
+                    $.ajax({
+                        datatype: "json",
+                        url: '../Editer/TransData?type=DelUserGroup&Condition=' + checkedGroupID,
+                        success: function (data) {
+                            if (data == "True") {
+                                LoadUserGroup();
+                                AddProcessLogGlobal("删除了用户组信息！");
+                                $.messager.confirm('提示', '删除成功！');
+
+                            } else {
+                                $.messager.confirm('提示', '删除失败！');
+                            }
+                        },
+                        error: function () {
+                            $.messager.confirm('提示', '错误！');
+                        }
+                    });
+                }
+            });
+        }
+        else
+        {
+            $.messager.alert("警告","无有效的选择行数！无法执行删除操作！","warning");
+        }
+    }
+
+
+    //是煤矿 则加载煤矿信息
+    function LoadMine() {
+        if (document.getElementsByName("IsMine")[0].checked) {
+
+            $('#MineCode').combobox("enable");
+            $('#MineCode').combobox("select", $('#UserGroup').datagrid('getChecked')[0].MineCode);
+
+        }
+        else {
+            $('#MineCode').combobox("disable");
+            $("#MineCode").combobox("select","");
+        }
+
+
+    }
+</script>
+
+    <table id="UserGroup" class="easyui-datagrid" title="用户组信息" data-options="fit:true"></table>
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:5px">
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="Add()">添加用户组</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="alter()">修改用户组</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="del()">删除用户组</a>
+
+        </div>
+    </div>
+    <div id="dlg" class="easyui-dialog" title="添加用户组" data-options="closed:true" style="width: 430px; height: 300px; padding: 10px;align-content:center">
+        <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+            <table style="width:390px;">
+                <tr>
+                    <td align="right">
+                        角色：
+                    </td>
+                    <td align="left">
+                        <select id="RoleID" class="easyui-combobox" style="width: 300px; height:20px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        煤矿名称：
+                    </td>
+                    <td align="left">
+                        <input id="MineCode" class="easyui-combobox" data-options="editable:false,disabled:true" style="width: 60%; height: 20px; " />
+                        <input name="IsMine" id="IsMine" type="checkbox" style="zoom:100%;" onclick="LoadMine()" />企业用户组
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        用户组名：
+                    </td>
+                    <td align="left">
+                        <input id="UserGroupName" class="easyui-textbox" data-options="required:true" style="width: 300px; height: 20px; " />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        描述：
+                    </td>
+                    <td align="left">
+                        <input id="Description" class="easyui-textbox" style="width: 300px; height: 20px; " />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        备注：
+                    </td>
+                    <td align="left">
+                        <input id="Remark" class="easyui-textbox" data-options="multiline:true" style="width: 300px; height: 40px; " />
+                    </td>
+                </tr>
+                <tr>
+                  
+                    <td colspan="2" style="padding-top: 10px; padding-bottom: 10px; text-align: center; vertical-align: middle;">
+                        <a href="#" class="easyui-linkbutton" id="subbmit" style="width:150px;" data-options="iconCls:'icon-save'" onclick="Save()">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+   

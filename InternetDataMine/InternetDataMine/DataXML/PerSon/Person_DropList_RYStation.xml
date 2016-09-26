@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=RYStation" OriUrl="../../TransJson/TransJsonToTreeList?DataType=RYStation">
+  </Properties>
+  <Cols>
+    <Col name="StationCode" width="90" align="center">分站编号</Col>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="90" align="center">煤矿名称</Col>
+    <Col name="city" isHide="absTrue"  width="90" align="center">归属城市</Col>
+    <Col name="StationName"  width="120" align="center">分站名称</Col>
+    <Col name="Place"  width="150" align="center">安装地址</Col>
+    <Col name="Time" datatype ="datetime"  width="150" align="center">最近更新时间</Col>
+  </Cols>
+</TreeList>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-21-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=MineName">
+  </Properties>
+  <Cols>
+    <Col name="MineCode"  width="90" align="center">煤矿编号</Col>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="90" align="center">矿名</Col>
+    <Col name="city"  width="90" align="center">归属城市</Col>
+  </Cols>
+</TreeList>

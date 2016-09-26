@@ -1,0 +1,285 @@
+﻿@model InternetDataMine.Models.LoadModel
+@{
+    ViewBag.Title = "ShowData";
+    Layout = null;
+    var QueryBarPath = Model.QueryBarPath;
+    var QueryDataPath = Model.QueryDataPath;
+    var PreLoadData = Model.PreLoadData;
+    var PageSystemType = Model.SystemType;
+    var UserMineCode = Model.UserMineCode;
+    var UserAbility = Model.UserAbility;
+    var SystemType = Model.SystemType;
+    var PageType = Model.PageType;
+    var ReportName = Model.ReportName;
+    var PageTitle = Model.PageTitle;
+    int TotalHeight = 500;
+    if (Model.Height != null && Model.Height != "")
+    {
+        TotalHeight = int.Parse(Model.Height) - 90;
+    }
+}
+@Scripts.Render("~/bundles/jquery")
+@*<script src="~/bundles/supcan"></script>
+<script src="~/bundles/jquery"></script>*@
+<script type="text/javascript" src="../../binary/dynaload.js?20"> </script>
+<script type="text/javascript">
+
+    //是否启用自动刷新功能
+    var isRefresh = 0;
+    var count = 0;
+
+    var mydata = 0;
+
+    var systemType = 1;
+
+    function OnReady(id) {
+        systemType = '@SystemType';
+
+        count++;
+        if (count != 3) return;
+        Title.func("Build", "../DataXML/Public/Public_Title.xml");
+        Title.func("SetValue", "_title" + "\r\n" + '@PageTitle');
+        Bar.func("build", '@QueryBarPath');//按指定路径加载QueryBar
+        DataList.func("build", '@QueryDataPath');//按指定路径架构TreeList/Report
+        if ('@PageType' != "Report") {
+            DataList.func("OpenFreeformBar", "../DataXML/freeformpager2.xml \r\n bBar");//打开bBar
+            DataList.func("SetProp", "IsRemoteSort \r\n true");//指定服务器端排序
+            var h = DataList.func("GetHandle", "");//获取datalist句柄
+            var hBbar = DataList.func("GetHandle", "bBar");//获取bBar句柄
+            DataList.func(hBbar + "BindPager", h + "\r\n ID0");
+            //var myHeight = parseInt($("#myGrid")[0].style.height.replace("px", ""));
+            var myrows = ( @TotalHeight -50) / 26;
+            var hBbar = DataList.func("GetHandle", "bBar");//获取bBar句柄
+            DataList.func(hBbar + "SetObjectProp", "ID0\r\n pageRows  \r\n" + myrows); //让Treelist异步加载数据
+            
+        }
+
+      
+        //准备是否定时刷新，历史数据不用定时刷新
+        isRefresh = getParameterByName("refresh");
+
+        if (isRefresh == 1) {
+            LoadData();
+            DataList.func("bBar.timerRoundPage", "ID0 \r\n 10000");
+        }
+
+    }
+
+    var times = 0;
+    //启动定时器
+   //window.setInterval("refreshData()", 10000);
+
+    //根据参数名称，获取URL参数的值
+    function getParameterByName(name) {
+        var queryname = name.toLowerCase();
+        var match = RegExp('[?&]' + queryname + '=([^&]*)')
+            .exec(window.location.search.toLowerCase());
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+
+
+
+    }
+
+
+    //根据时间，生成URl后缀，防止URL数据不刷新
+    function getUrlStafix() {
+        var myDate = new Date();
+        return "&myDate=" + myDate.getFullYear() + myDate.getMonth() + myDate.getDate() + myDate.getHours() + myDate.getMinutes() + myDate.getSeconds();
+    }
+
+    ////刷新数据
+    //function refreshData() {
+    //    if (isRefresh == 1) {
+    //        //if (times < 3) {
+    //        //    times++;
+    //        //}
+    //        //else {
+    //        //    times = 0;
+    //        //}
+    //        //if (isRefresh == 1 && times == 2) {
+    //        //获取当前页码
+    //        var currentPageIndex = DataList.func("bBar.ID0.GetCurrentPage", "");
+    //        //指向下一页
+    //        DataList.func("bBar.ID0.GotoPage", (parseInt(currentPageIndex) + 1));
+    //        //}
+    //        //else if (isRefresh == 1 && times < 2) {
+    //        //    LoadData();
+    //        //}
+    //    }
+    //}
+
+
+    //硕正控件事件响应
+    function OnEvent(id, Event, p1, p2, p3, p4) {
+
+        if (id == "Bar") {
+            if (Event == "EditChanged" && p1 == "StartTime" && '@PreLoadData' == "AQKGL_Week")
+            {
+                var StartDate = Bar.func("getText", "StartTime");
+                var myStartDate = new Date(StartDate.replace(/-/g, '/'));
+                var newDate = new Date(myStartDate.setDate(myStartDate.getDate() + 7));
+                Bar.func("setText", "EndTime \r\n " + (newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()));
+
+            }
+            else if(Event=="EditChanged" && p1=="MineName")//煤矿下拉框改变
+            {
+                var minecode = Bar.func("getValue", "MineName")
+
+                RebindDropDownList(minecode);
+            }
+            else if (Event == "EditChanged" && p1 == "StopRefresh")//煤矿下拉框改变
+            {
+                //实时数据-是否停止刷新 添加于2015-9-15 申云飞
+                var stopRefresh = Bar.func("getValue", "StopRefresh");
+                if (stopRefresh == "1") {
+                    DataList.func("bBar.timerRoundPage", "ID0 \r\n 0");
+                } else {
+                    DataList.func("bBar.timerRoundPage", "ID0 \r\n 10000");
+                }
+
+            }
+            //查询
+            else if (Event == "ButtonClicked" && p1 == "Query")
+            {
+                //DataList.func("bBar.ID0.GotoPage", 0);
+                //获取页大小PageSize
+                var pageSize = DataList.func("bBar.ID0.GetObjProp", "pageRows");
+                //alert(pageSize);
+                LoadData();
+            }
+        }
+        //当硕正控件加载完成后
+        if (p1=="Complete!")
+        {
+            var mine = getParameterByName("MineCode");
+            if (mine == null || mine == "") {
+                mine = Bar.func("getValue", "MineName");
+            }
+            RebindDropDownList(mine);
+        }
+    }
+
+    $(document).ready(function (id) {
+
+        var h = Bar.func("GetHandle", "SensorNum");
+        var url = Bar.func(h + "getProp", "dataURL");
+        LoadData();
+    });
+
+    //重新绑定下拉框,用于分矿显示和下拉框联动
+    function RebindDropDownList(minecode)
+    {
+        if (systemType == 1)
+        {
+            var barControls = Bar.func("GetObjectIds", "");
+            if (barControls.indexOf("SensorNum") >= 0) {
+                var h = Bar.func("GetHandle", "SensorNum");
+                var url = Bar.func(h + "getProp", "OriUrl");
+                url = url + "&MineCode=" + minecode + getUrlStafix();
+                Bar.func(h + "Load", url);
+            }
+        }
+        else if (systemType == 2)
+        {
+            var barControls = Bar.func("GetObjectIds", "");
+            if (barControls.indexOf("SensorNum") >= 0) {
+                var h = Bar.func("GetHandle", "SensorNum");
+                var url = Bar.func(h + "getProp", "OriUrl");
+                url = url + "&MineCode=" + minecode + getUrlStafix();
+                // Bar.func(h + "setProp", "dataURL\r\n" + url);
+                Bar.func(h + "Load", url);
+            }
+            if (barControls.indexOf("DevType") >= 0) {
+                var h = Bar.func("GetHandle", "DevType");
+                var url = Bar.func(h + "getProp", "OriUrl");
+                url = url + "&MineCode=" + minecode + getUrlStafix();
+                // Bar.func(h + "setProp", "dataURL\r\n" + url);
+                Bar.func(h + "Load", url);
+            }
+        }
+
+
+    }
+
+
+    var pageIndex = 0;
+    var mydata = "";
+    //加载数据
+    function LoadData() {
+        var date = new Date();
+        var objectsName = Bar.func("getObjectIds", "Input");
+        var arraryObjectName = objectsName.split(',', objectsName.split(',').length - 1);
+        var tmp = "";
+        $(arraryObjectName).each(function (id, item) {
+            var varTemp = Bar.func("getValue", item);
+            if (varTemp != "") {
+                tmp += "&" + item + "=" + varTemp
+            }
+        });
+
+
+
+
+        var mine = getParameterByName("MineCode");
+        if (mine == null || mine == "") {
+            mine = Bar.func("getValue", "MineName");
+
+        }
+        var tmp = "&MineCode=" + mine;
+        tmp = tmp + "&SensorNum=" + Bar.func("getValue", "SensorNum");
+        tmp = tmp + "&SensorType=" + Bar.func("getValue", "DevType");
+        tmp = tmp + "&DropListType=" + escape(Bar.func("getValue", "DropListType"));
+        tmp = tmp + "&Position=" + Bar.func("getValue", "Position");
+        tmp = tmp + "&Name=" + Bar.func("getValue", "Name");
+        tmp = tmp + "&TypeName=" + Bar.func("getValue", "TypeName");
+        tmp = tmp + "&StartTime=" + Bar.func("getValue", "StartTime");
+        tmp = tmp + "&EndTime=" + Bar.func("getText", "EndTime");
+        tmp = tmp + "&Position=" + Bar.func("getValue", "Position");
+        tmp = tmp + "&mydate=" + date.getFullYear() + date.getMonth() + date.getDate() + date.getHours() + date.getMinutes() + date.getSeconds();
+        var urlq = "../TransJson/TransJsonToTreeList?DataType=" + '@PreLoadData' + tmp;
+        urlq = urlq + "&autoPage=" + isRefresh;
+        if ('@PageType' != "Report") {
+            var pageSize = DataList.func("GetProp", "pageRows");
+            urlq += "&startRow=@@startRow" + "&rows=@@rows";
+            var forIndex = 0;
+            var hBbar = DataList.func("GetHandle", "bBar");//获取bBar句柄
+            DataList.func(hBbar + "SetObjectProp", "ID0\r\n dataURL  \r\n" + urlq + "\r\n mode=asynch"); //让Treelist异步加载数据
+
+        }
+        else {
+            urlq = urlq + "&ReportName=" + '@ReportName';//郁森修改
+            DataList.func("SetSource", "test\r\n" + urlq);
+            DataList.func("calc", "mode=asynch;range=current");
+        }
+    }
+
+    function clickme() {
+        var mydate = new Date("");
+    }
+
+</script>
+
+
+<body style="margin:5px 0 0 5px;padding:0 0 0 0;">
+        <div style="height:30px">
+            <script type="text/javascript">
+                insertFreeForm('Title', '');
+            </script>
+        </div>
+        <div style="height:30px">
+            <script type="text/javascript">
+                insertFreeForm('Bar', '');
+            </script>
+        </div>
+        <div style="height:@TotalHeight;">
+            <script type="text/javascript">
+                if ('@PageType' != "Report") {
+                    insertTreeList('DataList', '');
+                }
+                else {
+                    insertReport('DataList', '');
+                }
+            </script>
+        </div>
+</body>
+

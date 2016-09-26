@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "~/Views/Shared/_charts.cshtml";
+
+}
+<script src="~/bundles/supcan"></script>
+<script src="~/bundles/jquery"></script>
+<script type="text/javascript" src="../../binary/dynaload.js?20"> </script>
+<body style="margin:5px 0 0 5px;padding:0 0 0 0;">
+    <div style="height:30px">
+        <script type="text/javascript">
+            insertFreeForm('Title', '');
+        </script>
+    </div>
+    <div style="height:30px">
+        <script type="text/javascript">
+            insertFreeForm('Bar', '');
+        </script>
+    </div>
+</body>
+<div id="main" style="height:390px; width:95%; border:1px solid #ccc;padding:10px;"></div>
+<script type="text/javascript">
+    // Step:3 echarts & zrender as a Global Interface by the echarts-plain.js.
+    // Step:3 echarts和zrender被echarts-plain.js写入为全局接口
+    function OnReady(id) {
+        Title.func("Build", "../DataXML/Public/Public_Title.xml");
+        Title.func("SetValue", "_title" + "\r\n" + '历史曲线查询');
+        Bar.func("Build", '../DataXML/Safe/Safe_Bar_His.xml');
+    }
+
+    function OnEvent(id, Event, p1, p2, p3, p4)
+    {
+
+        if (id == "Bar")
+        {
+            //煤矿下拉菜单单击
+            if (Event == "EditChanged" && p1 == "MineName")
+            {
+                var mineid = Bar.func("getValue", p1);
+                var url = "../TransJson/TransJsonToTreeList?SystemType=1&DataType=Filter&MineCode=" + mineid;
+                Bar.func("Load", "SensorNum\r\n" + encodeURI(url));
+            }
+                //其他下拉菜单单击
+            else if (Event == "ButtonClicked" && p1 == "Query")
+            {
+                var objectsName = Bar.func("getObjectIds", "Input");
+                var arraryObjectName = objectsName.split(',', objectsName.split(',').length - 1);
+                var tmp = "";
+                $(arraryObjectName).each(function (id, item)
+                {
+                    var varTemp = Bar.func("getValue", item);
+                    if (varTemp != "") {
+                        tmp += "&" + item + "=" + varTemp
+                    }
+                });
+
+                var urlq = "../TransJson/TransJsonToTreeList?DataType=HistLine" + tmp;
+                var tmp = "MineCode=" + Bar.func("getValue", "MineName");
+                tmp = tmp + "&SensorNum=" + Bar.func("getValue", "SensorNum");
+                tmp = tmp + "&DevType=" + Bar.func("getValue", "SensorType");
+                tmp = tmp + "&TypeName=" + Bar.func("getValue", "TypeName");
+                tmp = tmp + "&StartTime=" + Bar.func("getValue", "StartTime");
+                tmp = tmp + "&EndTime=" + Bar.func("getValue", "EndTime");
+                urlq = urlq + "&" + tmp;
+                $.ajax({
+                    url: urlq,
+                    dataType: 'json',
+                    success: function(data) {
+                        alert(urlq);
+                        $(data).each(function(index, item) {});
+                    },
+
+            });
+
+                //var hBbar = DataList.func("GetHandle", "bBar");
+                //DataList.func(hBbar + "SetObjectProp", "ID0\r\n dataURL  \r\n" + encodeURI(urlq) + "\r\n mode=asynch");
+            }
+        }
+    }
+    var myChart = echarts.init(document.getElementById('main'));
+    var date = new Date();
+    date.setFullYear(2014, 5, 9)
+    var list = [];
+    var n = 0;
+    while (n++ < 100) {
+        date.setDate(date.getDate() + 1);
+        list.push(date.getYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate());
+    }
+
+    var s1_list = [ ];
+    for (var i = 1; i <= 100; i++)
+    {
+        s1_list.push(Math.round(Math.random() * 10));
+    }
+
+    var s2_list = [];
+    for (var i = 1; i <= 100; i++)
+    {
+        s2_list.push(Math.round(Math.random() * 10));
+    }
+
+    myChart.setOption({
+        title:{
+            text: '模拟量历史曲线(‰)',
+            subtext: '日最大值'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['-240大巷甲烷', '-310回采甲烷']
+        },
+        dataZoom: {
+            show: true,
+            realtime: true,
+            //orient: 'vertical',   // 'horizontal'
+            //x: 0,
+            y: 36,
+            //width: 400,
+            height: 20,
+            //backgroundColor: 'rgba(221,160,221,0.5)',
+            //dataBackgroundColor: 'rgba(138,43,226,0.5)',
+            //fillerColor: 'rgba(38,143,26,0.6)',
+            //handleColor: 'rgba(128,43,16,0.8)',
+            //xAxisIndex:[],
+            //yAxisIndex:[],
+            start: 0,
+            end: 60
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                mark: { show: true },
+                dataZoom: { show: true },
+                dataView: { show: true },
+                magicType: { show: true, type: ['line', 'bar'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                data: list
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                splitArea: { show: true }
+            }
+        ],
+        series: [
+            {
+                name: '-240大巷甲烷',
+                type: 'line',
+                data: s1_list
+            },
+            {
+                name: '-310回采甲烷',
+                type: 'line',
+                data: s2_list
+            }
+        ]
+    });
+
+
+</script>

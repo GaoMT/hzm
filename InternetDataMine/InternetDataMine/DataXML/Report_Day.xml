@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--By Supcan Report -->
+<Report>
+  <WorkSheet name="Report_Day">
+    <Properties>
+      <BackGround bgColor="#FFFFFF"/>
+      <DefaultTD>
+        <TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#000000" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" isRound="true" isPrint="true"/>
+      </DefaultTD>
+      <Other isShowZero="true" isRefOriPrecision="true" LineDistance="0" isRowHeightAutoExtendAble="true"/>
+    </Properties>
+    <Fonts>
+      <Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+      <Font faceName="宋体" charSet="134" height="-15" weight="700"/>
+      <Font faceName="宋体" charSet="134" height="-15" weight="400"/>
+      <Font faceName="宋体" charSet="134" height="-27" weight="700"/>
+    </Fonts>
+    <Table>
+      <Col width="0"/>
+      <Col width="110"/>
+      <Col width="110"/>
+      <Col width="140"/>
+      <Col width="160"/>
+      <Col width="60"/>
+      <Col width="60"/>
+      <Col width="60"/>
+      <Col width="60"/>
+      <Col width="173"/>
+      <Col width="15"/>
+      <TR height="24" sequence="0">
+        <TD fontIndex="3" topBorderColor="#C0C0C0" align="center">模拟量日报表</TD>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD topBorderColor="#C0C0C0"/>
+      </TR>
+      <TR height="24" sequence="1">
+        <TD/>
+        <TD>1</TD>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD topBorderColor="#C0C0C0"/>
+      </TR>
+      <TR height="24" sequence="2">
+        <TD topBorderColor="#C0C0C0"/>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1" formula="=headrow(&apos;Report_Day&apos;)">煤矿名称</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1">测点编号</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1">设备类型</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1">安装位置</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1">单位</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1" weight="700">报警值</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1">平均值</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1">最大值</TD>
+        <TD fontIndex="1" leftBorderColor="#000000" datatype="1">最大值时间</TD>
+        <TD leftBorderColor="#000000" topBorderColor="#C0C0C0"/>
+      </TR>
+      <TR height="24" sequence="3">
+        <TD topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1" formula="=datarow(&apos;Report_Day&apos;)"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="1"/>
+        <TD fontIndex="2" leftBorderColor="#000000" datatype="3"/>
+        <TD leftBorderColor="#000000" topBorderColor="#C0C0C0"/>
+      </TR>
+      <TR height="24" sequence="4">
+        <TD topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2"/>
+        <TD fontIndex="2"/>
+        <TD fontIndex="2"/>
+        <TD fontIndex="2"/>
+        <TD fontIndex="2"/>
+        <TD fontIndex="2"/>
+        <TD fontIndex="2"/>
+        <TD fontIndex="2">制表人：</TD>
+        <TD/>
+        <TD topBorderColor="#C0C0C0"/>
+      </TR>
+      <TR height="24" sequence="5">
+        <TD topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0"/>
+        <TD fontIndex="2" topBorderColor="#C0C0C0">制表时间：</TD>
+        <TD/>
+        <TD topBorderColor="#C0C0C0"/>
+      </TR>
+      <TR height="15" sequence="6">
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+        <TD leftBorder="0" topBorderColor="#C0C0C0"/>
+      </TR>
+    </Table>
+    <Merges>
+      <Range row1="0" col1="0" row2="1" col2="9"/>
+      <Range row1="4" col1="8" row2="4" col2="9"/>
+      <Range row1="5" col1="8" row2="5" col2="9"/>
+    </Merges>
+    <PrintPage>
+      <Paper oriantation="landscape">
+        <Margin left="19" top="25" right="19" bottom="25"/>
+      </Paper>
+      <Page align="center" isPrintEmptyRow="false" isIgnoreValidBorder="true">
+        <GridLine isPrintDefinedLineOnly="true"/>
+        <PageCode>
+          <Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+        </PageCode>
+      </Page>
+    </PrintPage>
+  </WorkSheet>
+  <DataSources Version="255" isAutoCalculateWhenOpen="false" isSaveCalculateResult="false">
+    <DataSource type="4">
+      <!-- Desc: Supcan Report Component DataSource Specification -->
+      <Data>
+        <ID>Report_Day</ID>
+        <Version>2</Version>
+        <Type>4</Type>
+        <TypeMeaning>JSON</TypeMeaning>
+        <Source>../TransJson/TransJsonToTreeList?DataType=Report&amp;MineCode=508590001&amp;SensorNum=&amp;SensorType=低浓度甲烷&amp;DropListType=&amp;Position=&amp;Name=&amp;TypeName=&amp;StartTime=2015.08.10 00:00:00&amp;EndTime=&amp;Position=&amp;mydate=201571116543&amp;autoPage=0&amp;ReportName=Report_Day</Source>
+        <XML_RecordAble_Nodes>
+          <Node>
+            <name>jsonobject</name>
+          </Node>
+        </XML_RecordAble_Nodes>
+        <Columns>
+          <Column>
+            <name>jsonobject\TmpID</name>
+            <text>TmpID</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>1</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\煤矿编号</name>
+            <text>煤矿编号</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>2</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\煤矿名称</name>
+            <text>煤矿名称</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>3</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\测点编号</name>
+            <text>测点编号</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>4</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\设备名</name>
+            <text>设备类型</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>5</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\安装位置</name>
+            <text>安装位置</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>6</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\单位</name>
+            <text>单位</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>7</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\报警值</name>
+            <text>报警值</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>8</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\解报值</name>
+            <text>解报值</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>9</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\断电值</name>
+            <text>断电值</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>10</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\复电值</name>
+            <text>复电值</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>11</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\平均值</name>
+            <text>平均值</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>12</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\最大值</name>
+            <text>最大值</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>13</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\最大值时间</name>
+            <text>最大值时间</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>14</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\报警次数</name>
+            <text>报警次数</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>15</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\报警时间</name>
+            <text>报警时间</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>16</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\断电次数</name>
+            <text>断电次数</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>17</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\断电时间</name>
+            <text>断电时间</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>18</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\馈电异常次数</name>
+            <text>馈电异常次数</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>19</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\馈电异常时间</name>
+            <text>馈电异常时间</text>
+            <type>string</type>
+            <visible>false</visible>
+            <sequence>20</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\SubmitTime</name>
+            <text>统计时间</text>
+            <type>datetime</type>
+            <visible>false</visible>
+            <sequence>21</sequence>
+          </Column>
+        </Columns>
+      </Data>
+
+    </DataSource>
+  </DataSources>
+</Report>

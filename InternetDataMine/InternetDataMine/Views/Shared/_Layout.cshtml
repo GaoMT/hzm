@@ -1,0 +1,407 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/common") 
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-cupertino/easyui.css" title="blue">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-gray/easyui.css" title="gray">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-green/easyui.css" title="green">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-orange/easyui.css" title="orange">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-red/easyui.css" title="pink">
+    @Scripts.Render("~/bundles/easyui")
+    @Styles.Render("~/Content/icon")
+    <script type="text/javascript">
+        function start(obj) {
+            marquee1.start();
+        }
+
+        function stop(obj) {
+            marquee1.stop();
+        }
+
+        function resizeIframe() {
+            $("#iframeShowData")[0].style.height = (document.body.clientHeight - 195) + "px";
+            $("#iframeShowData1")[0].style.height = (document.body.clientHeight - 195) + "px";
+        }
+
+        function MouseEnter(obj)
+        {
+            if ($("#iframeShowData")[0].src == "") {
+                ChangeIframeSrc('../Center/ShowData?PageName=RealData&refresh=1', $("#control1")[0]);
+            }           
+        }
+
+        function MouseEnter1(obj)
+        {
+            if ($("#iframeShowData1")[0].src == "") {
+                ChangeIframeSrc1('../person/RealTimePersonInMine?PageName=NULL', $("#Control2")[0]);
+            }
+        }
+
+        function ChangeIframeSrc(object, control) {
+
+            $(".icon-flaggreen").each(function (index, element) {
+                element.style.fontWeight = "normal";
+                element.className = "icon-flagblue";
+            });
+            control.style.fontWeight = "bold";
+            control.className = "icon-flaggreen";
+            $("#iframeShowData")[0].title = object + "&Height=" + $("#iframeShowData")[0].style.height.replace('px', '');
+
+            $("#iframeShowData")[0].src = object + "&Height=" + $("#iframeShowData")[0].style.height.replace('px', '');
+
+        }
+
+        function ChangeIframeVideo(object, control)
+        {
+
+            $(".icon-flaggreen").each(function (index, element) {
+                element.style.fontWeight = "normal";
+                element.className = "icon-flagblue";
+            });
+            control.style.fontWeight = "bold";
+            control.className = "icon-flaggreen";
+
+            $("#iframeVideo")[0].style.height = $("#iframeVideo")[0].parentElement.style.height;
+            $("#iframeVideo")[0].src = "http://" + object;
+
+            $("#divVideo").window("open");
+
+
+        }
+        function ChangeIframeSrc1(object,control) {
+            $(".icon-flaggreen").each(function (index, element) {
+                element.style.fontWeight = "normal";
+                element.className = "icon-flagblue";
+            });
+            control.style.fontWeight = "bold";
+            control.className = "icon-flaggreen";
+            $("#iframeShowData1")[0].src = object;
+        }
+
+        function showAlarmWindow() {
+         
+            $("iframe").hide("fast");
+            $("#divAlarm").window("open");
+        }
+
+        function ShowAllIframe()
+        {
+            $("iframe").show("fast");
+        }
+
+        function divclick(OBJ) {
+            if (OBJ == 'EXIT') {
+                window.parent.close();
+            }
+        }
+
+        $(document).ready(function()
+        {
+            $("#divVideo").window("close");
+        });
+
+    </script>
+
+</head>
+<body style="margin:0 0 0 0;" class="easyui-layout" onresize="resizeIframe()" onload="resizeIframe()">
+    <div id="divAlarm" title="实时报警" class="easyui-window" data-options="closed:true,modal:true,iconCls:'icon-save',onClose:function(){ShowAllIframe();},onMinimize:function(){ShowAllIframe();}" style="z-index:100; width:90%;height:600px; z-index:100; ">
+    </div>
+    <div data-options="region:'north'" style=" height:66px; text-align:center; display:table-cell; vertical-align:middle;">
+        <table style="width:100%;height:100%;font-size:12px; border-style:none;border-collapse:collapse;border-width:0 0 0 0;">
+            <tr>
+                <td id="TopLeftBgImage"></td>
+                <td id="TopMiddleBgImage">&nbsp;</td>
+                <td id="TopRightBgImage">
+                    <table id="TabTopTitle">
+                        <tr>
+                            <td style="text-align:right;height:40%;" colspan="2">欢迎你，[Admin]&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td colspan="3" class="toptd" style="text-align:center;"></span></td>
+                        </tr>
+                        <tr>
+                            <td width="30%"></td>
+                            <td style="float:right;">
+                              
+                                <div class="bs">
+                                    <label style="margin-bottom:10px;">更换颜色</label>
+                                    <label class="styleswitch a1" style="CURSOR: pointer" title="橘黄色" rel="orange">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a2" style="CURSOR: pointer" title="竹绿色" rel="green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a3" style="CURSOR: pointer" title="天蓝色" rel="blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a4" style="CURSOR: pointer" title="黑灰色" rel="gray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a5" style="CURSOR: pointer" title="艳红色" rel="pink">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                </div>
+                            </td>
+                            <td style="width:80px;"></td>
+                            <td id="Logout" style="width:64px;height:24px;">
+                                <div style="width:100%;height:100%;cursor:pointer;" onclick="divclick('LOGOUT')"></div>
+                            </td>
+                            <td id="Exite" style="width:64px;"><div style="width:100%;height:100%;cursor:pointer;" onclick="divclick('EXIT')"></div></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div data-options="region:'south'" style="height:20px;">
+        二甲煤矿安全监控传输正常
+    </div>
+    <div id="divMain" data-options="region:'center'" title="
+        <marquee id='marquee1'><a id='AlarmPrompt' style='color:green; text-decoration:none;' href='#' onclick='showAlarmWindow()' onmouseover='    stop(this)' onmouseout='    start(this)'>一切正常，当前无报警信息1！</a></marquee>" style="height:80%; ">
+        <div  class="easyui-tabs" data-options="tabWidth:100,tabHeight:60,fit:true" style="width:100%;margin:0 0 0 0;">
+            <div title="
+                <span class='tt-inner'><img src='../content/themes/image/modem.png' /><br>安全监控</span>" style="padding:2px;" onmouseover="MouseEnter('安全监控')">
+                <div class="easyui-layout" data-options="fit:true,border:false" style="margin:3px 1px 3px 1px;">
+                    <div title="子功能菜单" id="divwest" data-options="region:'west',split:true" style="width:150px; text-align:center;">
+                        <div class="easyui-accordion" data-options="fit:true,border:false">
+                            <div title="实时数据" data-options="iconCls:'icon-ok'" style="overflow:auto; text-align:left; align-self:center;">
+                                <table>
+                                    <tr>
+                                        <td><a id="control1" onclick="ChangeIframeSrc('../Center/ShowData?PageName=RealData&refresh=1',this)" class="icon-flagblue">实时数据</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQGZ&refresh=1', this)" class="icon-flagblue">实时故障</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQBJ&refresh=1', this)" class="icon-flagblue">实时报警</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQDD&refresh=1', this)" class="icon-flagblue">实时断电</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQKD&refresh=1', this)" class="icon-flagblue">实时馈电</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div title="历史数据" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                                <table>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQMT&refresh=0', this)" class="icon-flagblue">历史模拟量统计</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQGZHis&refresh=0', this)" class="icon-flagblue">历史故障</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQBJHis&refresh=0', this)" class="icon-flagblue">历史报警</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQDDHis&refresh=0', this)" class="icon-flagblue">历史断电</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=AQKDHis&refresh=0', this)" class="icon-flagblue">历史馈电</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div title="曲线显示" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                                <table>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Chart/MCDay?PageName=PointSet', this)" class="icon-flagblue">历史曲线显示</a></td>
+                                    </tr>
+                                  
+                                </table>
+                            </div>
+                            <div title="基本信息" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                                <table>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=PointSet&refresh=0', this)" class="icon-flagblue">测点配置</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=MineInfo&refresh=0', this)" class="icon-flagblue">煤矿信息</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=MineState&refresh=0', this)" class="icon-flagblue">煤矿传输状态</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a onclick="ChangeIframeSrc('../Center/ShowData?PageName=ChildSystemSet&refresh=0', this)" class="icon-flagblue">子系统配置</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div title="报表" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px">
+                                <a onclick="ChangeIframeSrc('../Center/ShowData?PageName=Report&refresh=0', this)" class="icon-flagblue">模拟量日报表</a>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div id="diviframe" data-options="region:'center',border:false" style="z-index:1;">
+                        <iframe id="iframeShowData" frameborder="0" style="z-index:1; width:100%;min-height:100px;max-height:1000px;border:0; border-width:0px; border-color:white;   margin:0 0 0 0;padding:0 0 0 0;">
+                        </iframe>
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+            <div title="
+                <span class='tt-inner'onmouseover= 'MouseEnter1(this)'>
+                <img src='../content/themes/image/scanner.png' /><br>人员管理</span>" style="padding:2px;" onmouseover="MouseEnter1('')">
+                <div class="easyui-layout" data-options="fit:true,border:false" style="margin:3px 1px 3px 1px;">
+                    <div title="  ==子功能菜单==  " id="divwest" data-options="region:'west',split:true" style="width:150px; text-align:center;">
+                        <div class="easyui-accordion" data-options="fit:true,border:false">
+                            <div title="基本信息" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a id="Control2" onclick="ChangeIframeSrc1('../Person/RealTimePersonInMine?PageName=NULL', this)" class="icon-flagblue">井下人员显示</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RYStation&refresh=0', this)" class="icon-flagblue">分站信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RYAreaInfo&refresh=0', this)" class="icon-flagblue">区域信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RYXX&refresh=0', this)" class="icon-flagblue">人员信息</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div title="实时数据" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RealInPeople&refresh=1', this)" class="icon-flagblue">实时井下人员</a>
+                                        </td>
+                                    </tr>                                   
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RealCS&refresh=1', this)" class="icon-flagblue">实时超时信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RealXZ&refresh=1', this)" class="icon-flagblue">实时限制信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RealCY&refresh=1', this)" class="icon-flagblue">实时超员信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=RealTZYC&refresh=1', this)" class="icon-flagblue">实时特种异常信息</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div title="历史数据" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=HisTrack&refresh=0', this)" class="icon-flagblue">历史下井信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=HisTrackInfo&refresh=0', this)" class="icon-flagblue">历史轨迹信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=QYFZQuery&refresh=0', this)" class="icon-flagblue">区域人员信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=HisCS&refresh=0', this)" class="icon-flagblue">历史超时信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=HisXZ&refresh=0', this)" class="icon-flagblue">历史限制信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=HisCY&refresh=0', this)" class="icon-flagblue">历史超员信息</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Center/ShowData?PageName=HisTZYC&refresh=0', this)" class="icon-flagblue">历史特种异常信息</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Editer/UserManager?test=test', this)" class="icon-flagblue">历史特种异常信息</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Editer/UserManager?test=test', this)" class="icon-flagblue">用户管理</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Editer/MenusManager?test=test', this)" class="icon-flagblue">菜单管理</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Editer/RoleManager?test=test', this)" class="icon-flagblue">角色管理</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a onclick="ChangeIframeSrc1('../Editer/UserGroupManager?test=test', this)" class="icon-flagblue">用户组管理</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="diviframe" data-options="region:'center',border:false">
+                        <iframe id="iframeShowData1" frameborder="0" style="width:100%;min-height:100px;max-height:1000px;border:none;"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div title="
+                <span class='tt-inner'><img src='../content/themes/image/modem.png' /><br>视频</span>" style="padding:2px;" onmouseover="MouseEnter('安全监控')">
+                <div class="easyui-layout" data-options="fit:true,border:false" style="margin:3px 1px 3px 1px;">
+                    <div title="子功能菜单" id="divwest" data-options="region:'west',split:true" style="width:150px; text-align:center;">
+                        <div class="easyui-accordion" data-options="fit:true,border:false">
+                            <div title="视频" data-options="iconCls:'icon-ok'" style="overflow:auto; text-align:left; align-self:center;">
+                                <table>
+                                    <tr>
+                                        <td><a id="control2" onclick="ChangeIframeVideo('172.17.3.2',this)" class="icon-flagblue">视频</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        </DIV>
+                        <div id="diviframe" data-options="region:'center',border:false,fit:true" style="z-index:1;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    <div id="divVideo" title="视频联网" class="easyui-window" data-options="modal:true" style="width:95%;max-height:2000px;min-height:600px;">
+        <iframe id="iframeVideo" frameborder="0" style="z-index:1; width:100%;min-height:600px;max-height:1000px;border:0; border-width:0px; border-color:white;   margin:0 0 0 0;padding:0 0 0 0;"></iframe>
+    </div>
+    <style scoped="scoped">
+        .tt-inner {
+            display: inline-block;
+            line-height: 12px;
+            padding-top: 5px;
+        }
+
+            .tt-inner img {
+                border: 0;
+            }
+    </style>
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

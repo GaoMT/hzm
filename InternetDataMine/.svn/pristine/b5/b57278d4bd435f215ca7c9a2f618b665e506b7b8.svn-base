@@ -1,0 +1,464 @@
+﻿@{
+    ViewBag.Title = "HiddenMonitorEnterpriseRecheck";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+
+<script type="text/javascript">
+
+    var btest = 0;
+
+    $(document).ready(function () {
+        //var MineCode = getQueryString("MineCode");//获取煤矿编号
+        //if (MineCode == "" | MineCode == null) {
+        //    $("#tdMineName")[0].style.display = "none";
+        //}
+
+        //对下拉框及日期控件赋初始值
+        var date = new Date();
+
+        $("#txtTroubleProcessDate").datetimebox('setValue', date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+        $("#txtTroubleProcessCompleteDate").datetimebox('setValue', date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+
+        //加载添加按钮的单击响应事件
+        $("#btnAdd").bind('click', function () {
+
+            var rowdata = $("#dgvMain").datagrid("getChecked");
+            if (rowdata.length < 1) {
+                $.messager.alert("警告", "请先选取一行，请选取！", "error");
+                return;
+            }
+            if (rowdata.length > 1) {
+                $.messager.alert("警告", "只能选取一行，请重新选择！", "error");
+            }
+            else {
+                if (rowdata[0].ProcessStatus == "未处理") {
+                    $.messager.alert("警告", "该条隐患尚未处理，无法进行复查操作！", "error");
+                }
+                else if (rowdata[0].recheckFlag == "已复查") {
+                    $.messager.alert("警告", "该条隐患已复查过了，无法进行复查操作，请尝试进行隐患再复查操作！", "error");
+                }
+                else {
+                    $(".easyui-textbox").textbox("setText", "");
+                    $("#txtRecheckDate").datebox("setText", "");
+                    $("#textIsPass")[0].checked = false;
+                    $("#RowID")[0].innerText = "";
+                    $("#TroubleID")[0].innerText = rowdata[0].RowID;
+                    $("#processID")[0].innerText = rowdata[0].processID;
+                    $("#divAdd").window("setTitle", "隐患复查填报单");
+                    $("#divAdd").window("open");
+                }
+            }
+        });
+
+        //对开始时间、结束时间初始化
+        $("#txtStartTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00");
+        $("#txtEndTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+
+        //加载编辑按钮的单击响应事件
+        $("#btnEdit").bind('click', function () {
+            LoadEditeInfo();
+        });
+
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+
+        //加载查询按钮的单击响应事件
+        $("#btnQuery").bind('click', function () {
+            LoadDataGrid();
+        });
+
+        //加载删除按钮的单击响应事件
+        $("#btnShow").bind('click', function () {
+            //$.messager.progress();
+            //DeleteInfo();
+            ShowTroubleProcess();
+        });
+
+        //模拟查询按钮的单击动作
+        $("#btnQuery")[0].click();
+
+        //加载保存按钮的单击响应事件
+        $('#btnsave').bind('click', function () {
+            $.messager.progress();
+            Save();
+
+        });
+
+        //加载煤矿下拉信息
+        LoadMineBaseInfo();
+    });
+
+    function ShowTroubleProcess() {
+
+    }
+
+    //加载煤矿基本信息
+    function LoadMineBaseInfo() {
+
+        $('#comboMineCode').combobox({
+            url: "../CompanyInfoManager/QueryJBXX",
+            valueField: 'minecode',
+            textField: 'simplename'
+        });
+
+
+        //$.ajax({
+        //    dataType: "text",
+        //    method: "post",
+        //    url: "../CompanyInfoManager/QueryJBXX",
+        //    success: function (data) {
+        //        var myjson1, mydata;
+        //        var mydata = data.replace(/minecode/g, "id").replace(/simplename/g, "text");
+        //        myjson1 = $.parseJSON(mydata);
+        //        $("#comboMineCode").combobox('loadData', myjson1);
+        //    }
+        //});
+    }
+
+    //加载编辑信息
+    function LoadEditeInfo() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.alert("警告", "编辑前，请先选取一行，请选取！");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert("警告", "编辑的时候，只能选取一行，请重新选择！");
+        }
+        else {
+
+            if (rows[0].ProcessStatus == "未处理") {
+                $.messager.alert("警告", "该条隐患尚未处理，无法进行再复查操作！", "error");
+            }
+            else if (rows[0].recheckFlag == "未复查") {
+                $.messager.alert("警告", "该条隐患尚未复查，无法进行再复查操作，请尝试进行隐患复查操作！", "error");
+            }
+            else if (rows[0].recheckResult == "隐患已消除") {
+
+                $.messager.alert("警告", "该条隐患已消除，无法进行再复查操作！", "error");
+            }
+
+            else if (rows[0].recheckResult == "隐患未消除") {
+                var data = rows[0];
+                $("#RowID")[0].innerText = data.recheckID;
+                $("#TroubleID")[0].innerText = data.RowID;
+                $("#processID")[0].innerText = data.processID;
+                $("#txtRecheckDate").datebox("setText", data.TroubleRecheckDate);
+                $("#txtRechecker").textbox("setText", data.TroubleRechecker);
+                $("#textTroubleRecheckResult").textbox("setText", data.TroubleRecheckResult.replace(/<br>/g, "\n"));
+                $("#textIsPass")[0].checked = data.IsPass == "1" ? true : false;
+                $("#textRemark").textbox("setText", data.Remark.replace(/<br>/g, "\n"));
+                $("#divAdd").window("setTitle", "隐患再复查编辑单");
+
+                $("#divAdd").window("open");
+            }
+
+        }
+
+    }
+
+    $("#dgvMain").ready(function (e) {
+
+        LoadDataGrid();
+    });
+
+    $(function () {
+        $('#dgvMain').datagrid({
+            view: detailview,
+            detailFormatter: function (rowIndex, rowData) {
+                var TroubleProcesser = rowData.TroubleProcesser == null ? "" : rowData.TroubleProcesser;
+                var TroubleProcessDate = rowData.TroubleProcessDate == null ? "" : rowData.TroubleProcessDate;
+                var TroubleProcessCompleteDate = rowData.TroubleProcessCompleteDate == null ? "" : rowData.TroubleProcessCompleteDate;
+                var TroubleProcessContent = rowData.TroubleProcessContent == null ? "" : rowData.TroubleProcessContent;
+
+                var Info = "";
+                if (rowData.TroubleRechecker != null) {
+                    // 复查日期 RecheckDate，复查人 Rechecker，复查意见 TroubleRecheckResult，隐患已消除IsPass
+                    var Rechecker = rowData.TroubleRechecker == null ? "" : rowData.TroubleRechecker;
+                    var RecheckDate = rowData.TroubleRecheckDate == null ? "" : rowData.TroubleRecheckDate;
+                    var TroubleRecheckResult = rowData.TroubleRecheckResult == null ? "" : rowData.TroubleRecheckResult;
+                    var IsPass = rowData.IsPass == null ? "" : (rowData.IsPass == 0 ? "否" : "是");
+
+                    Info = "<tr><td style='border:0;text-align:left;'>复查人:</td><td style='border:0;text-align:left;'>" + Rechecker + "</td><td style='border:0;text-align:left;'>复查日期:</td><td style='border:0;text-align:left;'>" + RecheckDate + "</td></tr>";
+                    Info += "<tr><td style='border:0;text-align:left;'>复查意见:</td><td colspan='3' style='border:0;text-align:left;'>" + TroubleRecheckResult + "</td></tr>";
+                    Info += "<tr><td style='border:0;text-align:left;'>隐患已消除:</td><td colspan='3' style='border:0;text-align:left;'>" + IsPass + "</td></tr>";
+                }
+                return '<table style="borderCollapse:collapse;border:0;width:50%;"><tr>' +
+                        '<td style="border:0;text-align:left;">' +
+                        '监督人: ' +
+                        '</td>' +
+                        '<td colspan="3" style="border:0">' +
+                        TroubleProcesser +
+                        '</td>' +
+                        '</tr>' +
+                        //'<tr>' +
+                        '<td style="border:0;text-align:left;">' +
+                        '隐患整改开始日期: ' +
+                        '</td>' +
+                        '<td style="border:0">' +
+                        TroubleProcessDate +
+                        '</td>' +
+                        '<td style="border:0;text-align:left;">' +
+                        '隐患整改截止日期: ' +
+                        '</td>' +
+                        '<td style="border:0">' +
+                        TroubleProcessCompleteDate +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td colspan="0" style="border:0;text-align:left;">' +
+                        '隐患整改意见:' +
+                        '</td>' +
+                        '<td colspan="3" style="border:0">' +
+                        TroubleProcessContent +
+                        '</td>' +
+                        '</tr>' + Info + '</table>';
+
+
+            }
+        });
+    });
+
+
+    //加载DataGrid数据
+    function LoadDataGrid() {
+        var MineCode = "";
+        MineCode = $("#comboMineCode").combo("getValue");
+
+        var StartTime = $("#txtStartTime").datetimebox("getText");
+        var EndTime = $("#txtEndTime").datetimebox("getText");
+        var url = "../HiddenTrouble/HiddenTrouble_Recheck_Query?MineCode=" + MineCode + "&StartTime=" + StartTime + "&EndTime=" + EndTime + "&CheckCategory=1";
+
+
+        //var url = "../HiddenTrouble/HiddenTrouble_Recheck_Query";
+        //$.messager.progress();
+        //$("#dgvMain").datagrid({
+        //    url: url,
+        //    queryParams: {
+        //        MineCode: MineCode,
+        //        StartTime: StartTime,
+        //        EndTime: EndTime,
+        //        CheckCategory: 2,
+        //        random: (new Date().getSeconds())
+        //    }
+        //});
+
+        //$.messager.progress("close");
+
+        ////$.ajax({
+        ////    dataType: "json",
+        ////    method: "get",
+        ////    url: url,
+        ////    success: function (data) {
+        ////        $("#dgvMain").datagrid("loadData", data);
+        ////      //  $("#dgvMain").datagrid("loadData",data);
+        ////    },
+        ////    error:function(data){
+        ////        alert("fdsfa");
+
+        ////}
+        ////});
+
+        ////启动客户端分页功能
+        //// $("#dgvMain").datagrid("clientPaging");
+
+        $('#dgvMain').datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            striped: true,
+            singleSelect: false,
+            pagination: true,
+            pageSize1: 10,
+            method: 'Post',
+            url: url,
+            columns:
+               [[
+                   { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                   { title: "隐患排查类别", field: "CheckCategory", width: 100, align: 'center', hidden: true },
+                   { title: "煤矿编号", field: "MineCode", width: 70, align: 'center', hidden: true },
+                   { title: "企业名称", field: "SimpleName", width: 70, align: 'center' },
+                   { title: "隐患等级", field: "TroubleClass", width: 70, align: 'center' },
+                   { title: "隐患类别", field: "TroubleCategory", width: 60, align: 'left' },
+                   { title: "检查部门", field: "CheckDept", width: 55, align: 'center' },
+                   { title: "检查人", field: "Rummager", width: 70, align: 'center' },
+                   { title: "检查日期", field: "CheckDate", width: 80, align: 'center' },
+                   { title: "隐患责任部门", field: "HiddenResponsibilityDept", width: 80, align: 'left' },
+                   { title: "隐患内容", field: "TroubleContent", width: 300, align: 'left' },
+                   { title: "处理状态", field: "ProcessStatus", width: 70, align: 'left', styler: function (value, row, index) { if (value == '未处理') { return 'color:red;'; } else { return 'color:Green;'; } } },
+                   { title: "复查状态", field: "recheckFlag", width: 70, align: 'left', styler: function (value, row, index) { if (value == '已复查') { return 'color:green;'; } else { return 'color:red;'; } } },
+                   { title: "隐患复查结果", field: "recheckResult", width: 70, align: 'left', styler: function (value, row, index) { if (value == '隐患已消除') { return 'color:green;'; } else { return 'color:red;'; } } }
+               ]]
+        });
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+    }
+
+
+
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    //保存数据
+    function Save() {
+
+        var url = "";
+
+
+        url += "&TroubleID=" + $("#TroubleID")[0].innerText;
+        url += "&RecheckCategory=1";
+        url += "&TroubleProcessID=" + $("#processID")[0].innerText;
+        url += "&TroubleRecheckDate=" + $("#txtRecheckDate").datebox("getText");
+        url += "&TroubleRechecker=" + $("#txtRechecker").textbox("getText");
+        url += "&TroubleRecheckResult=" + $("#textTroubleRecheckResult").textbox("getText").replace(/\n/g, "shine998");
+        url += "&IsPass=" + ($("#textIsPass")[0].checked == true ? "1" : "0");
+        url += "&Remark=" + $("#textRemark").textbox("getText").replace(/\n/g, "shine998");
+
+
+
+        if ($("#RowID")[0].innerText == "") {
+            url = "../HiddenTrouble/HiddenTrouble_Recheck_Save?" + url + "&Insert=1&RowID=0";
+        }
+        else {
+            url = "../HiddenTrouble/HiddenTrouble_Recheck_Save?" + url + "&Insert=2&RowID=" + $("#RowID")[0].innerText;
+        }
+
+        $("#ff").form('submit', {
+            url: url,
+            onSubmit: function () {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            success: function (data) {
+
+                AddProcessLogGlobal("保存了隐患复查信息！");
+                $.messager.progress('close');
+                $.messager.alert('提示', data);
+                $(".easyui-textbox").textbox("setText", "");
+                $("#divAdd").window("close");
+
+                LoadDataGrid();
+            }
+        }
+    );
+    }
+
+    function close() {
+        $('#divAdd').window('close');
+    }
+
+</script>
+@*<table class="easyui-datagrid" id="dgvMain" title="隐患整改管理" style="width:700px;height:250px"
+           data-options="rownumbers:true,singleSelect:false,method:'get',toolbar:'#toolbar',pagination:true,fit:true,align:'left',rownumbers:true,fitColumns:true,pageSize1:10">
+        <thead>
+            <tr>
+                <th data-options="field:'ck',checkbox:true,width:80,align:'left'">自增列</th>
+                <th data-options="field:'RowID',width:80,hidden:true">自增列</th>
+                <th data-options="field:'CheckCategory',width:100,hidden:true">隐患排查类别</th>
+                <th data-options="field:'MineCode',width:80,align:'left'">煤矿编号</th>
+                <th data-options="field:'SimpleName',width:80,align:'left'">企业名称</th>
+                <th data-options="field:'TroubleClass',width:60,align:'left'">隐患等级</th>
+                <th data-options="field:'TroubleCategory',width:60,align:'left'">隐患类别</th>
+                <th data-options="field:'CheckDept',width:60,align:'left'">检查部门</th>
+                <th data-options="field:'Rummager',width:60,align:'left'">检查人 </th>
+                <th data-options="field:'CheckDate',width:80,align:'left'">检查日期</th>
+                <th data-options="field:'HiddenResponsibilityDept',width:80,align:'left'">隐患责任部门</th>
+                <th data-options="field:'TroubleContent',width:300,align:'left'">隐患内容</th>
+                <th data-options="field:'processID',width:80,align:'left',hidden:true">隐患处理自增列</th>
+                <th data-options="field:'TroubleProcesser',width:80,align:'left',hidden:true">隐患处理人</th>
+                <th data-options="field:'TroubleProcessDate',width:80,align:'left',hidden:true">隐患处理日期</th>
+                <th data-options="field:'TroubleProcessContent',width:80,align:'left',hidden:true">隐患处理意见</th>
+                <th data-options="field:'TroubleProcessCompleteDate',width:80,align:'left',hidden:true">隐患处理截止日期</th>
+                <th data-options="field:'ProcessStatus',width:50,align:'left',styler: function(value,row,index){if (value=='未处理'){return 'color:red;'}else{return 'color:Green;'}}">处理状态</th>
+                <th data-options="field:'recheckFlag',width:80,align:'left',styler: function(value,row,index){if (value=='已复查'){return 'color:green;'}else{return 'color:red;'}}">复查状态</th>
+                <th data-options="field:'recheckID',width:50,align:'left',hidden:true">隐患复查自增列</th>
+                <th data-options="field:'TroubleRechecker',width:300,align:'left',hidden:true">隐患复查人</th>
+                <th data-options="field:'TroubleRecheckDate',width:300,align:'left',hidden:true">隐患复查日期</th>
+                <th data-options="field:'TroubleRecheckResult',width:80,align:'left',hidden:true">隐患复查内容</th>
+                <th data-options="field:'IsPass',width:80,align:'left',hidden:true">隐患复查是否通过</th>
+                <th data-options="field:'recheckResult',width:60,align:'left',styler: function(value,row,index){if (value=='隐患已消除'){return 'color:green;'}else{return 'color:red;'}}">隐患复查结果</th>
+                <th data-options="field:'Remark',width:80,align:'left',hidden:true">隐患复查备注</th>
+            </tr>
+        </thead>
+    </table>*@
+<table id="dgvMain" class="easyui-datagrid" data-options="fit:true" title="企业隐患监管"></table>
+
+<div id="toolbar">
+    <table style="width:100%;">
+
+        <tr>
+            <td id="tdMineName" style="width:240px;">企业名称:<div id="comboMineCode" style="width:180px;" class="easyui-combobox"></div></td>
+            <td style="width:210px;">开始日期:<div id="txtStartTime" style="width:150px" class="easyui-datetimebox" data-options="required:true"></div></td>
+            <td style="width:210px;"> 结束日期:<div id="txtEndTime" style="width:150px" class="easyui-datetimebox" data-options="required:true"></div></td>
+            <td style="width:80px;"><div class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" style="width:80px;">确定</div></td>
+            <td style="width:80px;"><a id="btnAdd" class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="width: 80px; display: none;">隐患复查</a></td>
+            <td style="width:80px;"><div id="btnEdit" style="width: 100px; display: none;" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">隐患再复查</div></td>
+            <td style="text-align:right;display:none;"><div id="btnShow" style="width:140px;" class="easyui-linkbutton" data-options="iconCls:'icon-blank'">查看结果</div></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+</div>
+<div class="easyui-window" id="divAdd" title="隐患复查处理单" data-options="closed:true,fit:true" style="width:943px;height:520px;">
+    <span id="RowID" style="display:none;"></span><span id="TroubleID" style="display:none;"></span><span id="processID" style="display:none;"></span>
+    <form id="ff" method="post">
+        <table style="text-align: center; width: 100%; height: 60%; border-width:1px; border-color:black; border-collapse:collapse;">
+            <tr>
+                <td style="border:1px solid silver; text-align:right;width:20%;">
+                    复查日期：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; width:30%;">
+                    <input id="txtRecheckDate" class="easyui-datebox" data-options="required:true,prompt:'请填写复查隐患的日期'" style="width:70%;" />
+                </td>
+                <td style="text-align: right; border: 1px solid silver; width: 20%;">
+                    复查人：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; width: 30%;">
+                    <input id="txtRechecker" class="easyui-textbox" data-options="required:true,prompt:'请填写复查该隐患的人员姓名'" style="width:70%;" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" style="text-align: right; border: 1px solid silver;width:20%; ">
+                    复查意见：
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver;width:80%;">
+                    <input id="textTroubleRecheckResult" class="easyui-textbox" data-options="required:true,prompt:'请按条目编写不同的隐患复查意见',multiline:true,validType:'length[1,1000]'" style="width:80%;height:200px;">最多可以输入1000个汉字！
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1" style="text-align: right; border: 1px solid silver;width:20%; ">
+                    隐患已消除：
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver;width:80%;">
+                    <input id="textIsPass" type="checkbox" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver; width:20%;">
+                    备注：
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver; width:80%;">
+                    <input id="textRemark" class="easyui-textbox" data-options="prompt:'有附加内容可以填写到此处',multiline:true,validType:'length[0,200]'" style="width:80%;height:100px;">
+                    最多可以输入200个汉字！
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center; border: 1px solid silver;">
+                    <a id="btnsave" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:150px;">
+                        保存
+                    </a>
+                    <a id="btnclose" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel',onClick:function(){$('#divAdd').window('close');}" style="width:150px">关闭</a>
+
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+

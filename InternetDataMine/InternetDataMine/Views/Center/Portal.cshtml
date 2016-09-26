@@ -1,0 +1,53 @@
+﻿@{
+    Layout = null;
+    
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-orange/easyui.css" title="orange">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-pepper-grinder/easyui.css" title="pink">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-cupertino/easyui.css" title="blue">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-dark-hive/easyui.css" title="gray">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-green/easyui.css" title="green">
+    @Scripts.Render("~/bundles/easyui")
+    @Styles.Render("~/Content/icon")
+    @Scripts.Render("~/bundles/common")
+    <script type="text/javascript">
+       // $('#pp').portal(options);
+
+        // create the panel    
+        var p = $('<div></div>').appendTo('body');
+        p.panel({
+            title: 'My Title',
+            height: 150,
+            closable: true,
+            collapsible: true
+        });
+
+        // add the panel to portal    
+        $('#pp').portal('add', {
+            panel: p,
+            columnIndex: 0
+        });
+
+    </script>
+        </head>
+        <body>
+            <div>
+                <div id="pp" style="width:800px;height:500px;">
+                    <div style="width:33%"></div>
+                    <div style="width:33%"></div>
+                    <div style="width:33%"></div>
+                </div>
+
+            </div>
+        </body>
+        </html>

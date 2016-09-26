@@ -1,0 +1,10 @@
+﻿
+
+@{
+    ViewBag.Title = "ShowTest";
+    Layout = null;
+}
+
+<h2>ShowTest</h2>
+<a href="../Center/Test?PageName=RealData"> 实时数据</a>
+<a href="../Center/Test?PageName=RealIn"> 实时井下人员</a>

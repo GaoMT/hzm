@@ -1,0 +1,238 @@
+﻿@{
+    ViewBag.Title = "交接班查询";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+
+<script type="text/javascript">
+    var btest = 0;
+    $(document).ready(function () {
+        var MineCode = getQueryString("MineCode");//获取煤矿编号
+        //对下拉框及日期控件赋初始值
+        var date = new Date();
+        $("#txtNextWorkTime").datetimebox('setValue', date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+        $("#txtPreWorkTime").datetimebox('setValue', date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+
+        //加载班次信息
+        $("#txtPreWorkShift").combotree("loadData", [{ "id": 1, "text": "早班" }, { "id": 2, "text": "中班" }, { "id": 3, "text": "晚班" }]);
+        $("#txtNextWorkShift").combotree("loadData", [{ "id": 1, "text": "早班" }, { "id": 2, "text": "中班" }, { "id": 3, "text": "晚班" }]);
+        //对开始时间、结束时间初始化
+        $("#txtStartTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00");
+        $("#txtEndTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 23:59:59");
+        //加载编辑按钮的单击响应事件
+        $("#btnPreview").bind('click', function () {
+            LoadEditeInfo();
+        });
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+        //加载查询按钮的单击响应事件
+        $("#btnQuery").bind('click', function () {
+            LoadDataGrid();
+        });
+      
+        //模拟查询按钮的单击动作
+        $("#btnQuery")[0].click();
+        //加载煤矿列表信息
+        loadMineInfo();
+ 
+    });
+
+    //加载编辑信息
+    function LoadEditeInfo() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.alert("警告", "编辑前，请先选取一行，请选取！");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert("警告", "编辑的时候，只能选取一行，请重新选择！");
+        }
+        else {
+            var data = rows[0];
+            $("#txtRowID")[0].innerText = data.RowID;
+            $("#txtDept").textbox("setText", data.Dept);
+            $("#txtPreWorkTime").datetimebox("setText", data.PreWorkTime);
+            $("#txtNextWorkTime").datetimebox("setText", data.NextWorkTime);
+            $("#txtPreWorkShift").combotree("setText", data.PreWorkShift);
+            $("#txtNextWorkShift").combotree("setText", data.NextWorkShift);
+            $("#txtPreWorkContent").textbox("setText", data.PreWorkContent.replace(/<br>/g, "\n"));
+            $("#txtNextWorkContent").textbox("setText", data.NextWorkContent.replace(/<br>/g, "\n"));
+            $("#txtPreWorkPersonName").textbox("setText", data.PreWorkPersonName);
+            $("#txtNextWorkPersonName").textbox("setText", data.NextWorkPersonName);
+            $("#textRemark").textbox("setText", data.Remark.replace(/<br>/g, "\n"));
+            $("#divAdd").window("setTitle", "交接班预览单");
+            $("#tdTitle")[0].innerText = "交接班预览单";
+            $("#divAdd").window("open");
+        }
+    }
+
+    //加载DataGrid数据
+    function LoadDataGrid() {
+        var WorkShiftCategory = 1;
+        var MineCode = $("#comboMineCode").combobox("getValue");
+        var StartTime = $("#txtStartTime").datetimebox("getText");
+        var EndTime = $("#txtEndTime").datetimebox("getText");
+        var url = "../WorkShift/WorkShift_Query?MineCode=" + MineCode + "&StartTime=" + StartTime + "&EndTime=" + EndTime + "&WorkShiftCategory=" + WorkShiftCategory + getUrlStafix();
+        $('#dgvMain').datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            striped: true,
+            fit: true,
+            singleSelect: false,
+            method: 'Post',
+            pagination: true,
+            pageSize1: 10,
+            url: url,
+            columns: [[
+                { field: 'ck', checkbox: true, width: 100 },
+                { field: 'RowID', title: '编号', width:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         100, hidden: true },
+                { field: 'MineCode', title: '企业编码', width: 60 },
+                { field: 'simpleName', title: '企业名称', width: 60 },
+                { field: 'Dept', title: '值班部门', width: 100 },
+                { field: 'PreWorkTime', title: '交班时间', width: 100 },
+                { field: 'PreWorkShift', title: '交班班次', width: 60 },
+                { field: 'PreWorkPersonName', title: '交班人', width: 60 },
+                { field: 'PreWorkContent', title: '交班情况', width: 200 },
+                { field: 'NextWorkTime', title: '接班时间', width: 100 },
+                { field: 'NextWorkShift', title: '接班班次', width: 60 },
+                { field: 'NextWorkPersonName', title: '接班人', width: 60 },
+                { field: 'NextWorkContent', title: '接班情况', width: 200 },
+                { field: 'Remark', title: '备注', width: 100, hidden: true }
+            ]]
+        });
+
+
+    }
+
+    $("#dgvMain").ready(function () {
+        LoadDataGrid();
+    });
+
+
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+</script>
+<table class="easyui-datagrid" id="dgvMain" title="交接班记录查询" style="width:700px;height:250px"></table>
+<div id="toolbar">
+    <table style="width:100%;">
+        <tr>
+            <td id="tdMineName" style="width:240px;">企业名称:<div style="width:180px;" class="easyui-combotree" id="comboMineCode"></div></td>
+            <td style="width:210px;">开始日期:<div id="txtStartTime" style="width:150px" class="easyui-datetimebox" data-options="required:true"></div></td>
+            <td style="width:210px;"> 结束日期:<div id="txtEndTime" style="width:150px" class="easyui-datetimebox" data-options="required:true"></div></td>
+            <td style="width:80px"><div class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" style="width:80px;">查询</div></td>
+            <td style="width:80px"><div id="btnPreview" style="width:80px;" class="easyui-linkbutton" data-options="iconCls:'icon-Page_preview'">预览</div></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+</div>
+<div class="easyui-window" id="divAdd" title="交接班填报单" data-options="closed:true,shadow:true,fit:true" style="width:943px;height:580px;">
+    <span id="txtRowID" style="display:none;"></span>
+    <form id="ff" method="post">
+        <table style="text-align: center; width: 100%; height: 60%; border-width:1px; border-color:black; border-collapse:collapse;">
+            <tr>
+                <td colspan="4" id="tdTitle" style="font:bold 20px large; border:1px solid silver;">交接班填报单</td>
+            </tr>
+            <tr>
+                <td style="border:1px solid silver; text-align:right;width:20%;">
+                    交接班部门：
+                </td>
+                <td style="text-align: left; border: 1px solid silver;width:30%;">
+                    <div id="txtDept" class="easyui-textbox" data-options="disabled:true,required:true,prompt:'请填写交接班部门'" style="width:70%;"></div>
+                </td>
+                <td style="border:1px solid silver; text-align:right;width:20%;">
+                    交班时间：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; width:30%;">
+                    <div id="txtPreWorkTime" class="easyui-datetimebox" data-options="disabled:true" style="width:70%;"></div>
+                </td>
+            </tr>
+            <tr>
+
+                <td style="text-align: right; border: 1px solid silver; ">
+                    交班班次：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; ">
+                    <input id="txtPreWorkShift" class="easyui-combotree" data-options="disabled:true,required:true,prompt:'请选择一个交班班次'" style="width:70%;">
+
+                </td>
+
+                <td style="text-align: right; border: 1px solid silver;">
+                    交班人姓名：
+                </td>
+                <td style="text-align: left; border: 1px solid silver;">
+                    <input id="txtPreWorkPersonName" class="easyui-textbox" data-options="disabled:true,required:true,prompt:'请填写交班人姓名'" style="width:70%;">
+
+                </td>
+
+
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver; ">
+                    交班情况：
+
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver; ">
+                    <input id="txtPreWorkContent" class="easyui-textbox" data-options="disabled:true,required:true,prompt:'请填写交班信息',multiline:true,validType:'length[1,1000]'" style="width:80%;height:100px;">最多可以输入1000个汉字！
+                </td>
+
+            </tr>
+            <tr>
+                <td style="border:1px solid silver; text-align:right;width:20%;">
+                    接班时间：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; width:30%;">
+                    <div id="txtNextWorkTime" class="easyui-datetimebox" data-options="disabled:true" style="width:70%;"></div>
+                </td>
+                <td style="text-align: right; border: 1px solid silver; ">
+                    接班班次：
+                </td>
+                <td style="text-align: left; border: 1px solid silver; ">
+                    <input id="txtNextWorkShift" class="easyui-combotree" data-options="disabled:true,required:true,prompt:'请选择一个接班班次'" style="width:70%;">
+
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver;">
+                    接班人姓名：
+                </td>
+                <td style="text-align: left; border: 1px solid silver;">
+                    <input id="txtNextWorkPersonName" class="easyui-textbox" data-options="disabled:true,required:true,prompt:'请填写接班人姓名'" style="width:70%;">
+
+                </td>
+                <td colspan="2"></td>
+
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver; ">
+                    接班情况：
+
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver; ">
+                    <input id="txtNextWorkContent" class="easyui-textbox" data-options="disabled:true,required:true,prompt:'请填写接班信息',multiline:true,validType:'length[1,1000]'" style="width:80%;height:100px;">最多可以输入1000个汉字！
+                </td>
+
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver; ">
+                    备注：
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver; ">
+                    <input id="textRemark" class="easyui-textbox" data-options="disabled:true,prompt:'有附加内容可以填写到此处',multiline:true,validType:'length[0,200]'" style="width:80%;height:100px;">
+                    最多可以输入200个汉字！
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center; border: 1px solid silver;">
+                    <a id="btnclose" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel',onClick:function(){$('#divAdd').window('close');}" style="width:100px">关闭</a>
+
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

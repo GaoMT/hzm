@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-26-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=RYXX" OriUrl="../../TransJson/TransJsonToTreeList?DataType=RYXX">
+  </Properties>
+  <Cols>
+    <Col name="Name"  width="120" align="center">姓名</Col>
+    <Col name="JobCardCode" width="150" align="center">标识卡</Col>
+    <Col name="SimpleName"  width="90" align="center">煤矿名称</Col>
+    <Col name="city" isHide="absTrue"  width="90" align="center">归属城市</Col>
+  </Cols>
+</TreeList>

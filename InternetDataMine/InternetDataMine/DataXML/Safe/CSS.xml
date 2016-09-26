@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<BackGround>
+  <Title>实时数据</Title>
+  <editAble>false</editAble>
+  <bgColor>blue</bgColor>
+  <headerBgColor>#C1FFE4</headerBgColor>
+  <curSelBackColor>#d7f4fc</curSelBackColor>
+  <rowHeight>25</rowHeight>
+  <GridColor>#b4c3c8</GridColor>
+  <HeaderFontIndex>2</HeaderFontIndex>
+  <addRowAble>false</addRowAble>
+  <deleteRowAble>false</deleteRowAble>
+</BackGround>

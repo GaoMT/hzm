@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "ProcessLogQuery";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //对开始时间、结束时间初始化
+        var date = new Date();
+        var myDate = new Date().Format("yyyy-MM-dd");
+        $("#txtStartTime").datetimebox("setText",myDate);
+        $("#txtOverTime").datetimebox("setText", myDate);
+        LoadProcessLogData();
+    });
+
+    //加载日志内容
+    function LoadProcessLogData()
+    {
+        var BeginTime = $('#txtStartTime').datetimebox('getText');
+        var EndTime = $('#txtOverTime').datetimebox('getText');
+        var ProcessName =$("#txtProcessName").val();//操作人姓名
+
+        var url = '../ProcessLog/ProcessLogData?BeginTime=' + BeginTime + '&EndTime=' + EndTime + '&ProcessName=' + escape(ProcessName);
+        $("#dgvMain").datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            singleSelect: false,
+            pagination: true,
+            pageSize1: 30,
+            pageSize:40,
+            url: url,
+            nowrap:false,
+            columns: [[
+                { field: 'ProrcessUserName', title: '操作人',width:50},
+                { field: 'ProcessContent',  title: '日志内容',width:800 },
+                { field: 'ProcessDateTime', title: '操作时间',width:100}
+            ]]
+        });
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+    }
+
+</script>
+<table id="dgvMain" class="easyui-datagrid" data-options="fit:true" title="操作日志查询"></table>
+<div id="toolbar">
+    <table>
+        <tr>
+          <td>操作人
+              <input type="text" id="txtProcessName" class="easyui-textbox" style="width:100px" />
+            </td>
+            <td align="left">
+                开始时间：
+                <input id="txtStartTime" type="text" class="easyui-datetimebox" />
+            </td>
+            <td align="left">
+                结束时间：
+                <input id="txtOverTime" type="text" class="easyui-datetimebox" />
+            </td>
+            <td>
+                <div class="easyui-linkbutton" id="editsubbmit" data-options="iconCls:'icon-search'" style="width:100px;" onclick="LoadProcessLogData();">查询</div>
+            </td>
+        </tr>
+    </table>
+</div>

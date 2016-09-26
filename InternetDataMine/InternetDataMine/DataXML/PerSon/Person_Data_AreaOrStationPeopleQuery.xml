@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<TreeList>
+  <Properties  Title="区域/分站历史人员查询" editAble="false" bgColor="#FFFFFF"  fadeInStep="0"  headerBgColor="#ffffff" curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="5%" align="center">煤矿名称</Col>
+    <Col name="JobCardCode"  width="10%" align="center">标识卡</Col>
+    <Col name="Name"  width="5%" align="center">姓名</Col>
+    <Col name="Position"  isHide="absTrue" width="5%" align="center">职务</Col>
+    <Col name="Department"   width="10%" align="center">部门</Col>
+    <Col name="AreaName"  width="5%" align="center">区域名称</Col>
+    <Col name="StationName"  width="5%" align="center">分站名称</Col> 
+    <Col name="InTime"  width="10%" align="center">下井时间</Col>
+    <Col name="InAreaTime"  width="10%" align="center">进入区域时间</Col>
+    <Col name="InNowStTime"  isHide="absTrue" width="8%" align="center">进入分站时间</Col>
+    <Col name="OrigAddress" width="10%" align="center">应到地点</Col>
+    <Col name="OrigTime" width="10%" align="center">应到时间</Col>
+    <Col name="RealTime"  width="10%" align="center">实到时间</Col>
+    <Col name="State"  width="10%" align="center">状态</Col>
+    <Col name="OutTime" isHide="absTrue" width="10%" align="center">离开分站时间</Col>
+  </Cols>
+</TreeList>

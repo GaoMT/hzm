@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TreeList>
+  <Properties  Title="路线预设" editAble="false" bgColor="#FFFFFF" headerBgColor="#ffffff"  fadeInStep="0"  curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="15%" align="center">煤矿名称</Col>
+    <Col name="JobCardCode" width="15%" align="center">标识卡号</Col>
+    <Col name="Name"  width="15%" align="center">姓名</Col>
+    <Col name="Position"  width="15%" align="center">职务</Col>
+    <Col name="StationsList"  width="25%" align="center">分站和时间点</Col>
+    <Col name="Time" datatype="Time"  width="15%" align="center">最近更新时间</Col>
+  </Cols>
+</TreeList>

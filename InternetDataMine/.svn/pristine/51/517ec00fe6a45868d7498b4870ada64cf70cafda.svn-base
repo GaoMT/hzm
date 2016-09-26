@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "历史预警统计";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+
+<script type="text/javascript">
+    
+    var MineCode = "";
+    $(document).ready(function () {
+        //对开始时间、结束时间初始化
+        var date = new Date();
+        $("#txtStartTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " 00:00:00");
+        $("#txtOverTime").datetimebox("setText", date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+
+        MineCode = getQueryString("MineCode");//获取煤矿编号
+        document.all.tdMineName.style.display = "none";
+        if (MineCode == "" || MineCode == null) {
+            document.all.tdMineName.style.display = "";
+            LoadMineCode();
+        }
+
+        LoadDevType();
+
+        SeachWarn();
+    });
+
+    function LoadMineCode() {
+        var url = '../TransJson/TransJsonToTreeList?DataType=WarnMineName';
+        $('#cmbMineCode').combogrid({
+            url: url,
+            idField: 'MineCode',
+            textField: 'SimpleName',
+            panelWidth: 200,
+            editable: false,
+            columns: [[
+                { field: 'MineCode', title: '煤矿编号', width: 120 },
+                { field: 'SimpleName', title: '煤矿名称', width: 60 }
+            ]]
+        });
+        $('#cmbMineCode').combogrid('setValue', "全部");
+    }
+
+    function LoadDevType() {
+        var url = '../TransJson/TransJsonToTreeList?DataType=WarnDevType';
+        $('#cmbDevType').combogrid({
+            url: url,
+            idField: 'TypeCode',
+            textField: 'TypeName',
+            panelWidth: 200,
+            editable: false,
+            columns: [[
+                { field: 'TypeCode', title: '设备编号', width: 60 },
+                { field: 'TypeName', title: '设备名称', width: 60 },
+                { field: 'Unit', title: '单位', width: 60 }
+            ]]
+        });
+        $('#cmbDevType').combogrid('setValue', "全部");
+    }
+    
+    function SeachWarn() {
+        var mine = "";
+        if (document.all.tdMineName.style.display == "none") {
+            mine = MineCode;
+        } else {
+            mine = $('#cmbMineCode').combogrid('getValue');
+        }
+        var devtype = $('#cmbDevType').combogrid('getValue');
+        var starttime = $('#txtStartTime').datetimebox('getText');
+        var endtime = $('#txtOverTime').datetimebox('getText');
+
+        mine = mine == "全部" ? "" : mine;
+        devtype = devtype == "全部" ? "" : devtype;
+        
+        var url = '../TransJson/TransJsonToTreeList?DataType=WarnAlarmTotal&MineCode=' + escape(mine) + '&SensorNum=' + escape(devtype) + '&ReportName=' + starttime + '&Position=' + endtime;
+        $("#dgvMain").datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            //striped: true,
+            singleSelect: false,
+            pagination: true,
+            pageSize1: 10,
+            //method: 'Post',
+            url: url,
+            columns: [[
+                //{ field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'MineCode', title: '煤矿编号', width: 80 },
+                { field: 'mineName', title: '煤矿名称', width: 80 },
+                { field: 'gz', title: '故障次数', width: 80 },
+                { field: 'bj', title: '报警次数', width: 80 },
+                { field: 'dd', title: '断电次数', width: 80 },
+                { field: 'kd', title: '馈电异常次数', width: 80 },
+                { field: 'gzyc', title: '工作异常次数', width: 80 }
+            ]]
+        });
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+    }
+    
+</script>
+<table id="dgvMain" class="easyui-datagrid" data-options="fit:true" title="预警统计"></table>
+<div id="toolbar">
+    <table>
+        <tr>
+            <td align="left" id="tdMineName">煤矿名称：
+                <select id="cmbMineCode" class="easyui-combogrid" style="width:100px;"></select>  
+            </td>
+            <td align="left">设备名称：
+                <select id="cmbDevType" class="easyui-combogrid" style="width:100px;"></select>  
+            </td>
+            <td align="left">
+                开始时间：
+                <input id="txtStartTime" type="text" class="easyui-datetimebox" ></input> 
+            </td>
+            <td align="left">
+                结束时间：
+                <input id="txtOverTime" type="text" class="easyui-datetimebox"></input> 
+            </td>
+            <td>
+                <div class="easyui-linkbutton" id="editsubbmit" onclick="SeachWarn();">查询</div>
+            </td>
+        </tr>
+    </table>
+</div>

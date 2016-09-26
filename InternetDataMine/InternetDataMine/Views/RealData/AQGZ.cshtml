@@ -1,0 +1,52 @@
+﻿@model InternetDataMine.Models.LoadModel
+@{
+    ViewBag.Title = "AQGZ";
+    Layout = null;
+   
+}
+<script src="~/bundles/supcan?751"></script>
+<script src="~/bundles/jquery"></script>
+<script type="text/javascript" src="../../binary/dynaload.js?20"> </script>
+<script type="text/javascript">
+    //var xmlHttp;
+    //var colNames = Array();
+    //var datas = Array();
+    //var wd;
+    function OnReady(id) {
+        Bar.func("Build", "../DataXML/rbar.xml");
+        DataList.func("Build", "../DataXML/rpque.xml");  
+
+    }
+    function OnEvent(id, Event, p1, p2, p3, p4) {
+        if (id == "Bar") {
+            if (Event == "EditChanged" && p1 == "MineName")
+            {
+                var mineid = Bar.func("getText", p1);
+                var SensorNum = Bar.func("getText", p2);
+                var url = "../TransJson/TransJsonToTreeList?DataType=MineStateHisBB&MineCode=" + mineid;
+                Bar.func("Load", "SensorNum\r\n" + encodeURI(url));
+            }
+            else if (Event == "ButtonClicked" && p1 == "Query")
+            {
+                var urlq = "../TransJson/TransJsonToTreeList?DataType=MineStateHisBB";
+                var tmp = "MineCode=" + Bar.func("getValue", "MineName");
+                urlq = urlq + "&" + tmp;
+                var hBbar = DataList.func("GetHandle", "bBar");
+                DataList.func("setSource", "monthreport \r\n" + urlq);
+                DataList.func("Calc", "mode=asynch;range=current");
+                //DataList.func("Build", "../DataXML/rpque.xml");
+                //DataList.func(hBbar + "SetObjectProp", "ID0\r\n dataURL  \r\n" + encodeURI(urlq) + "\r\n mode=asynch");
+            }
+        }
+    }
+    </script>
+<div style="height:40px">
+    <script type="text/javascript">
+        insertFreeForm('Bar', '');
+    </script>
+</div>
+<div style="height:auto">
+    <script type="text/javascript">
+        insertReport('DataList', '');
+    </script>
+</div>

@@ -1,0 +1,299 @@
+﻿@{
+    ViewBag.Title = "公告管理";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript">
+    var MineCode = "";
+    var Id = "";
+    $(document).ready(function () {
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+
+        MineCode = getQueryString("MineCode");//获取煤矿编号
+        LoadNotice();
+
+        if (MineCode == null || MineCode == "") {
+            document.all.toolbar.style.display = "";
+        } else {
+            document.all.toolbar.style.display = "none";
+        }
+
+    });
+
+    // 公告列表
+    function LoadNotice() {
+        var url = "../TransJson/TransJsonToTreeList?DataType=NoticeList";
+
+        $("#dgvMain").datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            //striped: true,
+            singleSelect: false,
+            pagination: true,
+            pageSize1: 10,
+            //method: 'Post',
+            url: url,
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, width: 100},
+                { field: 'Notice_ID', title: 'Notice_ID', hidden: true, width: 100 },
+                { field: 'Notice_Title', title: '标题', width: 100 },
+                {
+                    field: 'Contents', title: '内容', width: 100, formatter: function (value, row, index) {
+                        if (value.length > 40) {
+                            return value.substr(0, 35) + "......";
+                        } else {
+                            return value;
+                        }
+                    }
+                },
+                { field: 'CreateUser', title: '发布人', width: 100 },
+                { field: 'CreateTime', title: '发布时间', width: 100 }
+            ]], onDblClickRow: function (rowIndex, rowData) {
+                // 查看框
+                var data = rowData;
+                document.all.txtContentsview.innerHTML = data.Contents;
+                $('#txtNotice_Titleview')[0].innerText=data.Notice_Title;
+                //document.all.divFile.innerText = data.FileUpName;
+                var path = data.FileSavePath;
+                if (path != null) {
+                    var abc = "<div onclick=\"DownFile('" + escape(path) + "','" + escape(data.FileUpName) + "');\" style='cursor:pointer;vertical-align: left;width:95%;'>附件：" + data.FileUpName + "&nbsp;&nbsp;&nbsp;&nbsp;<a href='#'>下载</a></div>";
+                    document.all.tdfile.innerHTML = abc;
+                }
+                $('#divNoticeView').dialog('open');
+            }
+        });
+
+        if (MineCode != ""&&MineCode != null && MineCode.toLocaleString()!="null") {
+            $("#dgvMain").datagrid("hideColumn", "ck");
+        }
+    }
+
+    function AddNotice() {
+        document.all.txtContents.innerHTML = "";
+        $('#txtNotice_Title').textbox('setValue', "");
+        $('#divNotice').dialog('open');
+    }
+
+    function UpdateNotice() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.alert("警告", "编辑前，请先选取一行，请选取！");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert("警告", "编辑的时候，只能选取一行，请重新选择！");
+        } else {
+            var data = rows[0];
+            document.all.txtContents.innerHTML = data.Contents;
+            $('#txtNotice_Title').textbox('setValue', data.Notice_Title.replace("<br/>","\n"));
+            Id = data.Notice_ID;
+            $('#divNotice').dialog('open');
+        }
+    }
+
+    // 删除公告
+    function DelNotice() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+
+        $.messager.confirm('提示', '确认要删除所选项吗？', function (result) {
+            if (result) {
+                var condition = "";
+                var index = 0;
+                for (index = 0; index < rows.length; index++) {
+                    if (index == rows.length - 1) {
+                        condition += "'" + rows[index].Notice_ID + "'";
+                    } else {
+                        condition += "'" + rows[index].Notice_ID + "',";
+                    }
+                }
+                var url = "../TransJson/TransJsonToTreeList?DataType=NoticeDelete&MineCode=" + condition;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    datatype: "json",
+                    url: url,
+                    success: function (data) {
+                        if (data == "True") {
+
+                            AddProcessLogGlobal("删除了公告信息！");
+
+                            $.messager.confirm('提示', '删除成功！');
+                            $('#dgvMain').datagrid('reload');
+                        } else {
+                            $.messager.confirm('提示', '删除失败！');
+                        }
+                    },
+                    error: function () {
+                        $.messager.confirm('提示', '错误！');
+                    }
+                });
+            }
+        });
+
+    }
+
+    function Save() {
+        if (Id == "") {// 添加
+            Add();
+        } else {
+
+        }
+    }
+
+    // 添加保存
+    function Add() {
+        if ($("#txtFile")[0].value == "")
+        {
+            $.messager.alert("提示","请添加附件！","warning");
+            return;
+        }
+        var username = readCookie('UserName');
+        var title = $('#txtNotice_Title').textbox('getValue');
+        var contents = $("#txtContents").textbox("getText").replace(/\n/g, "shine998");
+        //var contents = escape(document.all.txtContents.innerHTML);
+        //var url = "../Notice/NoticeFileUpLoad?title=" + escape(title) + "&username=" + escape(username) + "&contents=" + escape(contents);
+        var url = "../Notice/NoticeFileUpLoad";
+        $("#ffedit").form('submit', {
+            onSubmit: function () {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                else {
+                    $.ajaxFileUpload(
+                        {
+                              type:'post',
+                              url: url, //用于文件上传的服务器端请求地址
+                              secureuri: false, //一般设置为false
+                              fileElementId: 'txtFile', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                              dataType: 'json', //返回值类型 一般设置为json
+                              data:{
+                                  title:escape(title),
+                                  username:escape(username),
+                                  contents:escape(contents)
+                              },
+                              success: function (data, status)  //服务器成功响应处理函数
+                              {
+                                  if (typeof (data.error) != 'undefined') {
+                                      if (data.error != '') {
+                                          $.messager.progress("close");
+                                          $.messager.alert("警告", data.error, "error");
+                                      } else {
+
+                                          AddProcessLogGlobal("添加了公告！");
+
+                                          $('#dgvMain').datagrid("reload");
+                                          $('#divNotice').dialog('close');
+                                          $.messager.progress("close");
+                                          $.messager.alert("提示", data.msg, "info");
+
+                                      }
+                                  }
+                              },
+                              error: function (data, status, e)//服务器响应失败处理函数
+                              {
+                                  alert("error");
+                              }
+                          }
+                      );
+                }
+            }
+        });
+    }
+
+    function DownFile(path, name) {
+        var Url = "../Notice/FileDownLoad?FilePath=" + path + "&FileName=" + name;
+        downloadFile(Url);
+    }
+
+</script>
+
+<table id="dgvMain" class="easyui-datagrid" data-options="fit:true" title="公告信息"></table>
+<div id="toolbar">
+    <table>
+        <tr>
+            <td>
+                <div class="easyui-linkbutton" id="btnAdd" style="width:80px;" data-options="iconCls:'icon-add',plain:true" onclick="AddNotice();">添加</div>
+                |
+                @*<div class="easyui-linkbutton" id="btnUpdate" onclick="UpdateNotice();">修改</div>*@
+                <div class="easyui-linkbutton" id="btnDel" style="width:80px;" data-options="iconCls:'icon-remove',plain:true" onclick="DelNotice();">删除</div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+<div id="divNotice" class="easyui-dialog" data-options="closed:true,fit:true" title="公告信息" style="width: 580px; height: 300px; padding: 10px">
+    <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width: 100%;height:100%;">
+            <tr>
+                <td align="left">标题：</td>
+                <td align="left">
+                    <input id="txtNotice_Title" class="easyui-textbox" data-options="required:true" style="width: 80%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="left">公告内容：</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @*<div id="PageAdmin_NoticeContents" style='width: 95%; height:100%; font-family: 宋体; font-size: 12px; overflow: auto; border: dashed 1px #3399ff;'>*@
+                    <div class="easyui-textbox" id="txtContents" style="height:300px; width:80%;" data-options="required:true,multiline:true"></div>
+
+                    @*</div>*@
+                </td>
+            </tr>
+            <tr>
+                <td align="left">附件：</td>
+                <td align="left">
+                    <input id="txtFile" style="width:30%;" name="filename" type="file" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-top: 5px; text-align: center; vertical-align: middle;">
+                    <div style="width: 80px;" class="easyui-linkbutton" id="editsubbmit" onclick="Save();">保存</div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+
+<div id="divNoticeView" class="easyui-dialog" data-options="closed:true,fit:true" title="公告详情" >
+    <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="text-align:left ;border:1px solid silver; border-collapse:collapse; width: 100%; padding: 5px 10px 5px 10px;">
+            <tr>
+                <td style="border: 1px solid silver; border-collapse: collapse; text-align:center;height:35px; vertical-align:middle;">
+                    <label id="txtNotice_Titleview"></label>
+                    @*<input id="txtNotice_Titleview" class="easyui-textbox" data-options="required:true" disabled="disabled" style="width: 95%; height: 20px;" />*@
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid silver; border-collapse: collapse; height: 350px;">
+                    @*<div id="PageAdmin_NoticeContents" style='width: 95%; height: 125px; '>*@
+                        <div id="txtContentsview" style="height: 100%; width: 100%; margin: 0 0 0 0;">
+                        </div>
+                    @*</div>*@
+                </td>
+            </tr>
+            <tr>
+                <td  align="left" id="tdfile" style="border: 1px solid silver; border-collapse: collapse; ">
+                    @*<div id="divFile" onclick="DownFile();" style="background-color:red;cursor:pointer;height: 30px;vertical-align: middle;">可以下载的文件</div>*@
+                </td>
+            </tr>
+            <tr>
+                <td  style=" border: 1px solid silver; padding-top: 5px; text-align: center; vertical-align: middle; border-collapse: collapse;">
+                    <div style="width: 80px;" class="easyui-linkbutton" onclick="$('#divNoticeView').dialog('close');">关闭</div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

@@ -1,0 +1,727 @@
+﻿@{
+    ViewBag.Title = "企业基本信息编辑";
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript">
+
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    var mineCode = "";
+    $(document).ready(function (e) {
+        mineCode = getQueryString("MineCode");
+        $('#colliery_no').textbox('setText', mineCode);
+    });
+
+    $(document).ready(function () {
+        var Flag = getQueryString("OperationType");
+        $('#SaveorAdd').textbox('setValue', Flag);
+        if (Flag == "1") {
+            InputEabled(true);
+            Clearcache();
+          
+        }
+        else if(Flag=="0")
+        {
+            LoadData();
+            InputEabled(true);
+        }
+        else if(Flag=="2")
+        {
+            InputEabled(false);
+            LoadData();
+           
+            
+        }
+    });
+
+
+    //所有COMBOBOX及文本框可填写或不可写
+    function InputEabled(enable) {
+        if (enable) {
+            //所有COMBOBOX及文本框可填写
+            var textboxes = $(".easyui-textbox");
+            $(textboxes).each(function (i, item) {
+                $("#" + item.id).textbox("enable");
+            });
+
+            var combobox = $(".easyui-combobox");
+            $(combobox).each(function (i, item) {
+                $("#" + item.id).combobox("enable");
+            });
+
+            var datebox = $(".easyui-datebox");
+            $(datebox).each(function (i, item) {
+                $("#" + item.id).datebox("enable");
+            });
+            $("#subbmit")[0].style.display = "inline";
+
+            $('#colliery_no').textbox("disable", true);
+        }
+        else {
+            //是所有COMBOBOX及文本框不可用
+            var textboxes = $(".easyui-textbox");
+            $(textboxes).each(function (i, item) {
+                $("#" + item.id).textbox("disable");
+            });
+
+            var combobox = $(".easyui-combobox");
+            $(combobox).each(function (i, item) {
+                $("#" + item.id).combobox("disable");
+            });
+
+            var datebox = $(".easyui-datebox");
+            $(datebox).each(function (i, item) {
+                $("#" + item.id).datebox("disable");
+            });
+
+            $("#comboMineCode").combobox("enable");
+
+            $("#subbmit")[0].style.display = "none";
+        }
+    }
+
+
+    function LoadData()
+    {
+        var ID = getQueryString("id");
+        $('#id').textbox('setValue', ID);
+        $.ajax({
+            cache: false,
+            method: "POST",
+            datatype: "text",
+            url: '../CompanyInfoManager/TransCompanyData?type=JBXXByID&ID=' + ID+getUrlStafix(),
+            success: function (data) {
+                var Items = new Array(data.split(','));
+                for (var i = 1; i < Items[0].length; i++) {
+                    var item = "";
+                    item = Items[0][i];
+                    var myvalue = new Array(item.split('|'));
+                    if (myvalue[0][1] != null && myvalue[0][0] != "six_system") {
+                        var controlID = "";
+                        controlID = "#" + myvalue[0][0];
+                        switch ($(controlID)[0].className) {
+                            case "easyui-textbox textbox-f":
+                                $(controlID).textbox("setText", myvalue[0][1]);
+                                break;
+                            case "easyui-combobox combobox-f combo-f textbox-f":
+                                $(controlID).combobox("select", myvalue[0][1]);
+                                break;
+                            case "easyui-datebox datebox-f combo-f textbox-f":
+                                $(controlID).datebox("setText", myvalue[0][1]);
+                                break;
+                        }
+                    }
+                }
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+</script>
+<form id="ff"  method="post" >
+    <table border="1" style="width:100%;height:100%;border-collapse:collapse;border-bottom-style:none;font-size:12px;padding-left:10px">
+        <tr>
+            <td align="right" style="width:10%;">
+                企业编码：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="colliery_no" class="easyui-textbox" data-options="required:true,disabled:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+              矿井名称：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="col_name" class="easyui-textbox" data-options="required:true" style="width: 80%; height: 20px" />
+            </td>
+            <td align="right" style="width:10%">
+               行政辖区：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="areano" class="easyui-textbox" data-options="required:true" style="width: 80%; height: 20px" />
+            </td>
+            <td align="right" style="width:10%">
+                邮政编码：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="postalcode" class="easyui-textbox" style="width: 80%; height: 20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%;">
+                经    度：
+            </td>
+            <td align="left" style="width:15%;">
+                <input id="latitude" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                纬    度：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="longitude" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                集团编码：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="dep_no" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                经营性质：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="col_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                建设工期：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="built_cycle" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                投产日期：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="invest_date" class="easyui-datebox" data-options="showSeconds:false" value="=now()" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                开采年限：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="length_service" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                质量标准化等级：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="standard_grade" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                法    人：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="lawyer" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                法人电话：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="lawyer_phone" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                主要负责人：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="manager" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                主要负责人电话：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="manager_phone" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                调度室电话：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="dds_phone1" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                调度室传真：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="dds_phone2" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                安监站编码：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="ajz_code" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                安监站站长：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="ajzz" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                 安监站站长电话：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="ajzz_phone" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                矿井状态：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="col_status" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                矿井类型：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="mine_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                地质储量(万吨)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="geology_reserves" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                可采储量(万吨)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="mine_reserves" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                采区面积(平方米)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="mining_area" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                投资金额（万元）：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="tzje" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td colspan="2" style="visibility: hidden; display: none;">
+                <input id="SaveorAdd" class="easyui-textbox" />
+                <input id="id" class="easyui-textbox"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:12%" colspan="2">
+                设计生产能力(万吨/年)：
+            </td>
+            <td align="left" style="width:13%" colspan="2">
+                <input id="design_capacity" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:12%" colspan="2">
+                核定生产能力(万吨/年)：
+            </td>
+            <td align="left" style="width:13%" colspan="2">
+                <input id="check_capacity" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                上半年产量(吨)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="year_w" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                六大系统建设情况：
+            </td>
+            <td align="left" style="width:40%" colspan="3">
+                <input type="checkbox" name="checkbox1" value="1" checked />监测监控
+                <input type="checkbox" name="checkbox1" value="2" checked />人员管理
+                <input type="checkbox" name="checkbox1" value="3" checked />通讯联络
+                <input type="checkbox" name="checkbox1" value="4" checked />紧急避险
+                <input type="checkbox" name="checkbox1" value="5" checked />压风自救
+                <input type="checkbox" name="checkbox1" value="6" checked />供水施救
+            </td>
+            <td align="right" style="width:10%">
+                瓦斯抽采系统：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="ws_system" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                物探设备：
+            </td>
+            <td align="left" style="width:15%" colspan="3">
+                <input id="wtsb" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                主要煤种：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="coal_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+                上年度瓦斯抽采量(万m³)：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="wsccl" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                上年度瓦斯利用量(万m³)：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="wslyl" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                可采煤层：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="coal_seam" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                解放层开采情况：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="jfckcqk" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                开拓方式：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="tunnel_mode" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                采煤工艺：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="coal_mine" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td colspan="4"></td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                运输方式：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="mode_of_ship" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                架空乘人装置：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="walk_system" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                矿井供电方式：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="power_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                突出危险性鉴定：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="gas_brust" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                瓦斯等级：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="gas_level" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                煤层间距(米)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="coal_seam_space" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                煤层倾角(度)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="coal_seam_angle" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                煤层自燃等级：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="self_iginte" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                煤层爆炸性：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="explosion_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                煤层顶底板岩性：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="rock_behavio" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                开拓巷道支护方式：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="lw_shoring_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                采面支护方式：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="me_shoring_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                水文地质调查：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="hydrology_survey" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                矿井通风方式：
+            </td>
+            <td align="left" style="width:15%" colspan="3">
+                <input id="tffs" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                掘进工作面个数(个)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="jjgzm_cou" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                掘进工作面名称：
+            </td>
+            <td align="left" style="width:15%" colspan="5">
+                <input id="jjgzm_name" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                采煤工作面个数(个)：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="cmgzm_cou" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                采煤工作面名称：
+            </td>
+            <td align="left" style="width:15%" colspan="5">
+                <input id="cmgzm_name" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+                颁证机构：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="award_dep" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                 颁证日期：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="award_date" class="easyui-datebox" data-options="showSeconds:false" value="=now()" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+                安全生产许可证编号：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="certificate_no1" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+               安全生产许可证截止日期：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="dead_line6" class="easyui-datebox" data-options="showSeconds:false" value="=now()" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+                工商营业执照编号：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="certificate_no2" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                工商有效期截止日期：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="deadline1" class="easyui-datebox" data-options="showSeconds:false" value="=now()" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+               采矿许可证编号：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="certificate_no3" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                 采矿有效期截止日期：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="deadline2" class="easyui-datebox" data-options="showSeconds:false" value="=now()" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+               矿长安全资格许可证：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="certificate_no6" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                矿长安全资格许可证有效截止日期：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="dead_line5" class="easyui-datebox" data-options="showSeconds:false" value="=now()" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                 矿长姓名：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="undermanager" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                 矿长资格证书编号：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="certificate_no5" class="easyui-textbox" data-options="required:true" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                矿长资格证书有效截止日期：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="deadline4" class="easyui-datebox" data-options="showSeconds:false" value="=now()" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+                开采方案设计单位：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="kcfa_dep" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                开采方案设计单位批复文号：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="kcfa_no" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%" colspan="2">
+                安全设施设计单位：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="aqss_dep" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%" colspan="2">
+                安全设施设计单位批复文号：
+            </td>
+            <td align="left" style="width:15%" colspan="2">
+                <input id="aqss_no" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                建设工期：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="jsgq" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:13%">
+                新建或改扩建情况描述：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="new_remark" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                施工单位：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="sg_dep" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                施工单位资质：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="sg_zz" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                监理单位：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="jl_dep" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                监理单位资质：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="jl_zz" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                救护队情况：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="jfdqk" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                矿群矛盾情况：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="kqmdqk" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="width:10%">
+                事故类型：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="accident_type" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                有无伤亡：
+            </td>
+            <td align="left" style="width:15%">
+                <select id="have_casualty" class="easyui-combobox" style="width:80%;height:20px" />
+            </td>
+            <td align="right" style="width:10%">
+                伤亡人数：
+            </td>
+            <td align="left" style="width:15%">
+                <input id="casualty" class="easyui-textbox" style="width:80%;height:20px" />
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="8" align="center">
+                <a href="javascript:SaveInfo();" style="width:150px" class="easyui-linkbutton" id="subbmit" data-options="iconCls:'icon-save'">保存</a>
+            </td>
+        </tr>
+    </table>
+</form>
+

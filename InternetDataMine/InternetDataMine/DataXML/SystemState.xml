@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TreeList>
+  <Properties dataURL="../TransJson/TransJsonToTreeList?DataType=MineState">
+  </Properties>
+  <Cols>
+    <Col name="MineCode" isHide="absTrue" width="90" align="center">煤矿编号</Col>
+    <Col name="SystemMACode" width="90" align="center">系统编码</Col>
+    <Col name="TypeName"  width="120" align="center">系统名称</Col>
+    <Col name="IsEnabled" isHide="absTrue" width="90" align="center">启用状态</Col>
+    <Col name="Supplier" isHide="absTrue" width="90" align="center">系统厂商</Col>
+    <Col name="Maintainer" isHide="absTrue" width="90" align="center">维护人员</Col>
+    <Col name="Phone" isHide="absTrue" width="90" align="center">联系方式</Col>
+    <Col name="IP" isHide="absTrue" width="90" align="center">传输IP</Col>
+    <Col name="StateCode"  width="90" align="center">传输状态</Col>
+  </Cols>
+</TreeList>

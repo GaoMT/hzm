@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TreeList>
+  <Properties  Title="实时断电(开关量)" editAble="false" bgColor="#FFFFFF" headerBgColor="#ffffff"  fadeInStep="0"  curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="15%" align="center">煤矿名称</Col>
+    <Col name="SensorNum"  width="14%" align="center">测点编号</Col>
+    <Col name="Place"  width="11%" align="center">安装地点</Col>
+    <Col name="TypeName"  width="10%" align="center">设备名</Col>
+    <Col name="ShowValue"  width="5%" align="center">显示值</Col>
+    <Col name="ZeroMeaning"  width="10%" align="center">0态含义</Col>
+    <Col name="ZeroIsPower"  width="5%" align="center">0态是否断电</Col>
+    <Col name="OneMeaning"  width="10%" align="center">1态含义</Col>
+    <Col name="OneIsPower"  width="5%" align="center">1态是否断电</Col>
+    <Col name="TwoMeaning"  width="10%" align="center">2态含义</Col>
+    <Col name="TwoIsPower"  width="5%" align="center">2态是否断电</Col>
+  </Cols>
+</TreeList>

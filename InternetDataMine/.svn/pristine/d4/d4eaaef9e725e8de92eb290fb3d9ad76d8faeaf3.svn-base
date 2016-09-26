@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<freeform>
+  <Properties>
+    <backGround bgColor="#ffffff"/>
+    <Expresses>
+      <Express>total=round(price*num,2)</Express>
+      <Express>price=round(total/num,4)</Express>
+    </Expresses>
+  </Properties>
+  <Fonts>
+    <Font faceName="微软雅黑" charSet="134" height="-13"/>
+    <Font faceName="微软雅黑" charSet="134" height="14"/>
+    <Font faceName="微软雅黑" charSet="134" height="-24" weight="700" isAntiAlias="true" ShadowAlpha="118" ShadowBlur="13" ShadowX="3" ShadowY="3"/>
+  </Fonts>
+  <Objects>
+    <Text x="0" y="10" width="100%" height="30" fontIndex="2" text="货 运 单" align="center"/>
+    <Line x1="30%" y1="54" x2="70%" y2="54" color="#0000AA" thick="2" style="dash"/>
+    <TableLayout id="layout1" y=".bottom + 20" width="100%">
+      <col width="20%"/>
+      <col width="4"/>
+      <col width="10%"/>
+      <col width="11%"/>
+      <col width="4%"/>
+      <col width="15%"/>
+      <col width="4"/>
+      <col width="0.10"/>
+      <col width="15%"/>
+      <tr height="24">
+        <td>
+          <Input id="id" width="4" type="Edit" tabOrder="0" align="left" leftText="单证号:" leftTextAlign="right" leftSize="1" value="K3301"/>
+        </td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td>
+          <Input id="cust" width="3" type="DropTreelist" tabOrder="1" align="left" leftText="客户:" leftTextAlign="right" value="ANATR" droplistID="customer"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="dt" width="4" type="Edit" tabOrder="2" defaultValue="=now()" align="center" leftText="发货日期:" leftTextAlign="right" leftSize="1" value="2014.04.03" datatype="date" editMask="YYYY-MM-DD"/>
+        </td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td>
+          <Input id="city" width="3" type="DropTreelist" tabOrder="3" align="left" leftText="城市:" leftTextAlign="right" value="Salzburg" droplistID="citys"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="passdt" width="4" type="Edit" tabOrder="4" align="center" leftText="受检时刻:" leftTextAlign="right" leftSize="1" value="2009.11.01 16:12:11" datatype="dateTime" editMask="YYYY-MM-DD hh:mm:ss"/>
+        </td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td>
+          <Input id="country" width="3" type="Droplist" tabOrder="5" align="left" leftText="国家:" leftTextAlign="right" value="8" droplistID="country"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="price" width="4" type="Edit" tabOrder="6" align="right" leftText="单价:" leftTextAlign="right" leftSize="1" value="330000.00" datatype="double" editMask="#,###.00"/>
+        </td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td>
+          <Text text="图样:" align="right" vAlign="center"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="num" width="4" type="Edit" tabOrder="7" align="right" leftText="数量:" leftTextAlign="right" leftSize="1" value="2.00" datatype="double" editMask="#,###.00"/>
+        </td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td>
+          <Image src="../treelistdata/5.jpg" isUseOriSize="true" alpha="255"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="total" width="4" type="Edit" tabOrder="8" align="right" leftText="总价:" leftTextAlign="right" leftSize="1" value="660000.00" datatype="double" editMask="#,###.00"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="isPass" width="4" type="Checkbox" tabOrder="9" leftText="是否检测：" leftTextAlign="right" leftSize="1" text="通过检测"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="by1" width="3" type="RadioButton" tabOrder="10" leftText="货运途经：" leftTextAlign="right" text="空运" GroupID="by" selectValue="air"/>
+        </td>
+        <td/>
+        <td/>
+        <td>
+          <Input id="by2" width="2" type="RadioButton" tabOrder="11" leftTextAlign="right" value="1" text="水运" GroupID="by" selectValue="sea"/>
+        </td>
+      </tr>
+      <tr height="4"/>
+      <tr height="24">
+        <td>
+          <Input id="db1" width="3" type="RadioButton" tabOrder="12" leftText="运费支付：" leftTextAlign="right" text="银行贷款" GroupID="db" selectValue="lon"/>
+        </td>
+        <td/>
+        <td/>
+        <td>
+          <Input id="db2" width="2" type="RadioButton" tabOrder="13" leftTextAlign="right" text="货款付乞" GroupID="db" selectValue="pay"/>
+        </td>
+      </tr>
+    </TableLayout>
+  </Objects>
+  <Droplists>
+    <Droplist id="citys" treelistURL="city.xml" dataCol="city" displayCol="city"/>
+    <Droplist id="customer" treelistURL="customer.xml" dataCol="customerid" displayCol="companyname"/>
+    <Droplist id="country">
+      <item key="1">France</item>
+      <item key="2">Germany</item>
+      <item key="3">Brazil</item>
+      <item key="4">Belgium</item>
+      <item key="8">Switzerland</item>
+      <item key="11">Venezuela</item>
+      <item key="23">Austria</item>
+      <item key="21">Mexico</item>
+      <item key="9">USA</item>
+      <item key="0">Sweden</item>
+      <item key="34">Finland</item>
+    </Droplist>
+  </Droplists>
+</freeform>

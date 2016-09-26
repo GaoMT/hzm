@@ -1,0 +1,1253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{37CA0294-EE2A-4B92-9E95-3180FA1DB539}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InternetDataMine</RootNamespace>
+    <AssemblyName>InternetDataMine</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="BruTile">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.dll</HintPath>
+    </Reference>
+    <Reference Include="BruTile.Desktop">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="BruTile.Serialization">
+      <HintPath>..\packages\BruTile.0.7.4.4\lib\net40\BruTile.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="gdalconst_csharp">
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\gdalconst_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="gdal_csharp">
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\gdal_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\packages\Npgsql.2.0.14.3\lib\net45\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ogr_csharp">
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\ogr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="osr_csharp">
+      <HintPath>..\packages\GDAL.1.9.2\lib\net40\osr_csharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.2\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CenterController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\ChartController.cs" />
+    <Compile Include="Controllers\CompanyInfoManagerController.cs" />
+    <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="Controllers\DataOrganizationController.cs" />
+    <Compile Include="Controllers\Default1Controller.cs" />
+    <Compile Include="Controllers\EditerController.cs" />
+    <Compile Include="Controllers\HiddenTroubleController.cs" />
+    <Compile Include="Controllers\NetDiskController.cs" />
+    <Compile Include="Controllers\NoticeController.cs" />
+    <Compile Include="Controllers\PersonController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\ProcessLogController.cs" />
+    <Compile Include="Controllers\RealDataController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\TransJsonController.cs" />
+    <Compile Include="Controllers\WarnAlarmController.cs" />
+    <Compile Include="Controllers\WorkShiftController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BaseInfoModel.cs" />
+    <Compile Include="Models\Config\MineConfigModel.cs" />
+    <Compile Include="Models\Config\SubSystemConfigModel.cs" />
+    <Compile Include="Models\DataService\CreateReportXML.cs" />
+    <Compile Include="Models\DataService\DataBLL.cs" />
+    <Compile Include="Models\DataService\DataDAL.cs" />
+    <Compile Include="Models\DataService\ReadConfig.cs" />
+    <Compile Include="Models\DataService\ReportDataBLL.cs" />
+    <Compile Include="Models\DataService\ReportDataDAL.cs" />
+    <Compile Include="Models\DataService\SQLDataServer.cs" />
+    <Compile Include="Models\NetDiskModel.cs" />
+    <Compile Include="Models\ProcessLogInfoModel.cs" />
+    <Compile Include="Models\TroubleCheckModel.cs" />
+    <Compile Include="Models\LoadModel.cs" />
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\PersonModel.cs" />
+    <Compile Include="Models\RealDataModel.cs" />
+    <Compile Include="Models\TestModel.cs" />
+    <Compile Include="Models\ToolModel.cs" />
+    <Compile Include="Models\TransCompanyModel.cs" />
+    <Compile Include="Models\TransJsonToTreeListModel.cs" />
+    <Compile Include="Models\TroubleProcessModel.cs" />
+    <Compile Include="Models\TroubleRecheckModel.cs" />
+    <Compile Include="Models\UserAndPower\BaseModel.cs" />
+    <Compile Include="Models\UserAndPower\DataSaveModel.cs" />
+    <Compile Include="Models\UserAndPower\MenusModel.cs" />
+    <Compile Include="Models\UserAndPower\RoleModel.cs" />
+    <Compile Include="Models\UserAndPower\TransDataModel.cs" />
+    <Compile Include="Models\UserAndPower\UserGroupModel.cs" />
+    <Compile Include="Models\UserAndPower\UserModel.cs" />
+    <Compile Include="Models\WorkShiftModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="binary\dynaload.js" />
+    <Content Include="binary\dynaloadNG.js" />
+    <Content Include="binary\readme.txt" />
+    <Content Include="binary\supcan%28带注释%29.xml" />
+    <Content Include="binary\supcan.xml" />
+    <Content Include="binary\supcan2.cab" />
+    <Content Include="binary\supcan2.x64.cab" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.base.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\themes\black\easyui.css" />
+    <Content Include="Content\themes\black\images\accordion_arrows.png" />
+    <Content Include="Content\themes\black\images\blank.gif" />
+    <Content Include="Content\themes\black\images\calendar_arrows.png" />
+    <Content Include="Content\themes\black\images\combo_arrow.png" />
+    <Content Include="Content\themes\black\images\datagrid_icons.png" />
+    <Content Include="Content\themes\black\images\datebox_arrow.png" />
+    <Content Include="Content\themes\black\images\layout_arrows.png" />
+    <Content Include="Content\themes\black\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\black\images\loading.gif" />
+    <Content Include="Content\themes\black\images\menu_arrows.png" />
+    <Content Include="Content\themes\black\images\messager_icons.png" />
+    <Content Include="Content\themes\black\images\pagination_icons.png" />
+    <Content Include="Content\themes\black\images\panel_tools.png" />
+    <Content Include="Content\themes\black\images\searchbox_button.png" />
+    <Content Include="Content\themes\black\images\slider_handle.png" />
+    <Content Include="Content\themes\black\images\spinner_arrows.png" />
+    <Content Include="Content\themes\black\images\tabs_icons.png" />
+    <Content Include="Content\themes\black\images\tree_icons.png" />
+    <Content Include="Content\themes\black\images\validatebox_warning.png" />
+    <Content Include="Content\themes\bootstrap\easyui.css" />
+    <Content Include="Content\themes\bootstrap\images\accordion_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\blank.gif" />
+    <Content Include="Content\themes\bootstrap\images\calendar_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\combo_arrow.png" />
+    <Content Include="Content\themes\bootstrap\images\datagrid_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\datebox_arrow.png" />
+    <Content Include="Content\themes\bootstrap\images\layout_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\bootstrap\images\loading.gif" />
+    <Content Include="Content\themes\bootstrap\images\menu_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\messager_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\pagination_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\panel_tools.png" />
+    <Content Include="Content\themes\bootstrap\images\searchbox_button.png" />
+    <Content Include="Content\themes\bootstrap\images\slider_handle.png" />
+    <Content Include="Content\themes\bootstrap\images\spinner_arrows.png" />
+    <Content Include="Content\themes\bootstrap\images\tabs_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\tree_icons.png" />
+    <Content Include="Content\themes\bootstrap\images\validatebox_warning.png" />
+    <Content Include="Content\themes\color.css" />
+    <Content Include="Content\themes\default\easyui.css" />
+    <Content Include="Content\themes\default\images\accordion_arrows.png" />
+    <Content Include="Content\themes\default\images\blank.gif" />
+    <Content Include="Content\themes\default\images\calendar_arrows.png" />
+    <Content Include="Content\themes\default\images\combo_arrow.png" />
+    <Content Include="Content\themes\default\images\datagrid_icons.png" />
+    <Content Include="Content\themes\default\images\datebox_arrow.png" />
+    <Content Include="Content\themes\default\images\layout_arrows.png" />
+    <Content Include="Content\themes\default\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\default\images\loading.gif" />
+    <Content Include="Content\themes\default\images\menu_arrows.png" />
+    <Content Include="Content\themes\default\images\messager_icons.png" />
+    <Content Include="Content\themes\default\images\pagination_icons.png" />
+    <Content Include="Content\themes\default\images\panel_tools.png" />
+    <Content Include="Content\themes\default\images\searchbox_button.png" />
+    <Content Include="Content\themes\default\images\slider_handle.png" />
+    <Content Include="Content\themes\default\images\spinner_arrows.png" />
+    <Content Include="Content\themes\default\images\tabs_icons.png" />
+    <Content Include="Content\themes\default\images\tree_icons.png" />
+    <Content Include="Content\themes\default\images\validatebox_warning.png" />
+    <Content Include="Content\themes\gray\easyui.css" />
+    <Content Include="Content\themes\gray\images\accordion_arrows.png" />
+    <Content Include="Content\themes\gray\images\blank.gif" />
+    <Content Include="Content\themes\gray\images\calendar_arrows.png" />
+    <Content Include="Content\themes\gray\images\combo_arrow.png" />
+    <Content Include="Content\themes\gray\images\datagrid_icons.png" />
+    <Content Include="Content\themes\gray\images\datebox_arrow.png" />
+    <Content Include="Content\themes\gray\images\layout_arrows.png" />
+    <Content Include="Content\themes\gray\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\gray\images\loading.gif" />
+    <Content Include="Content\themes\gray\images\menu_arrows.png" />
+    <Content Include="Content\themes\gray\images\messager_icons.png" />
+    <Content Include="Content\themes\gray\images\pagination_icons.png" />
+    <Content Include="Content\themes\gray\images\panel_tools.png" />
+    <Content Include="Content\themes\gray\images\searchbox_button.png" />
+    <Content Include="Content\themes\gray\images\slider_handle.png" />
+    <Content Include="Content\themes\gray\images\spinner_arrows.png" />
+    <Content Include="Content\themes\gray\images\tabs_icons.png" />
+    <Content Include="Content\themes\gray\images\tree_icons.png" />
+    <Content Include="Content\themes\gray\images\validatebox_warning.png" />
+    <Content Include="Content\themes\icon.css" />
+    <Content Include="Content\themes\icons\arrow_down.png" />
+    <Content Include="Content\themes\icons\arrow_up.png" />
+    <Content Include="Content\themes\icons\back.png" />
+    <Content Include="Content\themes\icons\blank.gif" />
+    <Content Include="Content\themes\icons\cancel.png" />
+    <Content Include="Content\themes\icons\clear.png" />
+    <Content Include="Content\themes\icons\colorlock.png" />
+    <Content Include="Content\themes\icons\cut.png" />
+    <Content Include="Content\themes\icons\edit_add.png" />
+    <Content Include="Content\themes\icons\edit_remove.png" />
+    <Content Include="Content\themes\icons\error.png" />
+    <Content Include="Content\themes\icons\filesave.png" />
+    <Content Include="Content\themes\icons\filter.png" />
+    <Content Include="Content\themes\icons\flag_blue.png" />
+    <Content Include="Content\themes\icons\flag_green.png" />
+    <Content Include="Content\themes\icons\help.png" />
+    <Content Include="Content\themes\icons\large_chart.png" />
+    <Content Include="Content\themes\icons\large_clipart.png" />
+    <Content Include="Content\themes\icons\large_picture.png" />
+    <Content Include="Content\themes\icons\large_shapes.png" />
+    <Content Include="Content\themes\icons\large_smartart.png" />
+    <Content Include="Content\themes\icons\lock.png" />
+    <Content Include="Content\themes\icons\man.png" />
+    <Content Include="Content\themes\icons\mini_add.png" />
+    <Content Include="Content\themes\icons\mini_edit.png" />
+    <Content Include="Content\themes\icons\mini_refresh.png" />
+    <Content Include="Content\themes\icons\no.png" />
+    <Content Include="Content\themes\icons\ok.png" />
+    <Content Include="Content\themes\icons\Page_previewy.png" />
+    <Content Include="Content\themes\icons\pencil.png" />
+    <Content Include="Content\themes\icons\phone.png" />
+    <Content Include="Content\themes\icons\print.png" />
+    <Content Include="Content\themes\icons\redo.png" />
+    <Content Include="Content\themes\icons\reload.png" />
+    <Content Include="Content\themes\icons\search.png" />
+    <Content Include="Content\themes\icons\sum.png" />
+    <Content Include="Content\themes\icons\tag_blue.png" />
+    <Content Include="Content\themes\icons\tag_green.png" />
+    <Content Include="Content\themes\icons\tip.png" />
+    <Content Include="Content\themes\icons\undo.png" />
+    <Content Include="Content\themes\Image\aqjk.png" />
+    <Content Include="Content\themes\Image\arror.png" />
+    <Content Include="Content\themes\Image\backGroundImage.png" />
+    <Content Include="Content\themes\Image\backGroundImage_black.png" />
+    <Content Include="Content\themes\Image\backGroundImage_blank.png" />
+    <Content Include="Content\themes\Image\backGroundImage_blue.png" />
+    <Content Include="Content\themes\Image\backGroundImage_green.png" />
+    <Content Include="Content\themes\Image\backGroundImage_middle.png" />
+    <Content Include="Content\themes\Image\backGroundImage_orange.png" />
+    <Content Include="Content\themes\Image\backGroundImage_red.png" />
+    <Content Include="Content\themes\Image\Book.png" />
+    <Content Include="Content\themes\Image\chart.png" />
+    <Content Include="Content\themes\Image\chart1.png" />
+    <Content Include="Content\themes\Image\Clock.png" />
+    <Content Include="Content\themes\Image\closepage.png" />
+    <Content Include="Content\themes\Image\curve.png" />
+    <Content Include="Content\themes\Image\enterprisemanage.png" />
+    <Content Include="Content\themes\Image\LawInstruments.png" />
+    <Content Include="Content\themes\Image\logout.png" />
+    <Content Include="Content\themes\Image\Manager.png" />
+    <Content Include="Content\themes\Image\modem.png" />
+    <Content Include="Content\themes\Image\Notice.png" />
+    <Content Include="Content\themes\Image\pda.png" />
+    <Content Include="Content\themes\Image\PreviewAlarm.png" />
+    <Content Include="Content\themes\Image\ruler.png" />
+    <Content Include="Content\themes\Image\rygl.png" />
+    <Content Include="Content\themes\Image\scanner.png" />
+    <Content Include="Content\themes\Image\setting.png" />
+    <Content Include="Content\themes\Image\stars.png" />
+    <Content Include="Content\themes\Image\stars1.png" />
+    <Content Include="Content\themes\Image\stars2.png" />
+    <Content Include="Content\themes\Image\systemconfig.png" />
+    <Content Include="Content\themes\Image\tablet.png" />
+    <Content Include="Content\themes\Image\Timer.png" />
+    <Content Include="Content\themes\Image\troublemanage.PNG" />
+    <Content Include="Content\themes\Image\Worker.png" />
+    <Content Include="Content\themes\Image\anjianjutubiao.png" />
+    <Content Include="Content\themes\Image\workshift.png" />
+    <Content Include="Content\themes\metro-blue\easyui.css" />
+    <Content Include="Content\themes\metro-blue\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\BgImage.png" />
+    <Content Include="Content\themes\metro-blue\images\blank.gif" />
+    <Content Include="Content\themes\metro-blue\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-blue\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-blue\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-blue\images\loading.gif" />
+    <Content Include="Content\themes\metro-blue\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-blue\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-blue\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-blue\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-blue\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-blue\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-gray\easyui.css" />
+    <Content Include="Content\themes\metro-gray\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\BgImage.png" />
+    <Content Include="Content\themes\metro-gray\images\bgimage_left.png" />
+    <Content Include="Content\themes\metro-gray\images\bgimage_middle.png" />
+    <Content Include="Content\themes\metro-gray\images\bgimage_right.png" />
+    <Content Include="Content\themes\metro-gray\images\blank.gif" />
+    <Content Include="Content\themes\metro-gray\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-gray\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-gray\images\Exite.png" />
+    <Content Include="Content\themes\metro-gray\images\fen.gif" />
+    <Content Include="Content\themes\metro-gray\images\fen2.gif" />
+    <Content Include="Content\themes\metro-gray\images\Home.png" />
+    <Content Include="Content\themes\metro-gray\images\hua.gif" />
+    <Content Include="Content\themes\metro-gray\images\hua2.gif" />
+    <Content Include="Content\themes\metro-gray\images\hui.gif" />
+    <Content Include="Content\themes\metro-gray\images\hui2.gif" />
+    <Content Include="Content\themes\metro-gray\images\lan.gif" />
+    <Content Include="Content\themes\metro-gray\images\lan2.gif" />
+    <Content Include="Content\themes\metro-gray\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-gray\images\loading.gif" />
+    <Content Include="Content\themes\metro-gray\images\logout.png" />
+    <Content Include="Content\themes\metro-gray\images\lv.gif" />
+    <Content Include="Content\themes\metro-gray\images\lv2.gif" />
+    <Content Include="Content\themes\metro-gray\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-gray\images\PwdSet.png" />
+    <Content Include="Content\themes\metro-gray\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-gray\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-gray\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-gray\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\tag_alinkleft.png" />
+    <Content Include="Content\themes\metro-gray\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-gray\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-green\easyui.css" />
+    <Content Include="Content\themes\metro-green\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\bgimage_middle.png" />
+    <Content Include="Content\themes\metro-green\images\bgimage_right.png" />
+    <Content Include="Content\themes\metro-green\images\blank.gif" />
+    <Content Include="Content\themes\metro-green\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-green\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-green\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-green\images\Exite.png" />
+    <Content Include="Content\themes\metro-green\images\fen.gif" />
+    <Content Include="Content\themes\metro-green\images\fen2.gif" />
+    <Content Include="Content\themes\metro-green\images\Home.png" />
+    <Content Include="Content\themes\metro-green\images\hua.gif" />
+    <Content Include="Content\themes\metro-green\images\hua2.gif" />
+    <Content Include="Content\themes\metro-green\images\hui.gif" />
+    <Content Include="Content\themes\metro-green\images\hui2.gif" />
+    <Content Include="Content\themes\metro-green\images\lan.gif" />
+    <Content Include="Content\themes\metro-green\images\lan2.gif" />
+    <Content Include="Content\themes\metro-green\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-green\images\loading.gif" />
+    <Content Include="Content\themes\metro-green\images\logout.png" />
+    <Content Include="Content\themes\metro-green\images\lv.gif" />
+    <Content Include="Content\themes\metro-green\images\lv2.gif" />
+    <Content Include="Content\themes\metro-green\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-green\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-green\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-green\images\PwdSet.png" />
+    <Content Include="Content\themes\metro-green\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-green\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-green\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-green\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-green\images\bgimage_left.png" />
+    <Content Include="Content\themes\metro-green\images\tag_alinkleft.png" />
+    <Content Include="Content\themes\metro-green\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-green\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-orange\easyui.css" />
+    <Content Include="Content\themes\metro-orange\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\backGroundImage_black.png" />
+    <Content Include="Content\themes\metro-orange\images\backGroundImage_blank.png" />
+    <Content Include="Content\themes\metro-orange\images\backGroundImage_blue.png" />
+    <Content Include="Content\themes\metro-orange\images\backGroundImage_green.png" />
+    <Content Include="Content\themes\metro-orange\images\backGroundImage_middle.png" />
+    <Content Include="Content\themes\metro-orange\images\backGroundImage_orange.png" />
+    <Content Include="Content\themes\metro-orange\images\backGroundImage_red.png" />
+    <Content Include="Content\themes\metro-orange\images\bgimage_middle.png" />
+    <Content Include="Content\themes\metro-orange\images\bgimage_right.png" />
+    <Content Include="Content\themes\metro-orange\images\blank.gif" />
+    <Content Include="Content\themes\metro-orange\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-orange\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-orange\images\Exite.png" />
+    <Content Include="Content\themes\metro-orange\images\fen.gif" />
+    <Content Include="Content\themes\metro-orange\images\fen2.gif" />
+    <Content Include="Content\themes\metro-orange\images\Home.png" />
+    <Content Include="Content\themes\metro-orange\images\hua.gif" />
+    <Content Include="Content\themes\metro-orange\images\hua2.gif" />
+    <Content Include="Content\themes\metro-orange\images\hui.gif" />
+    <Content Include="Content\themes\metro-orange\images\hui2.gif" />
+    <Content Include="Content\themes\metro-orange\images\lan.gif" />
+    <Content Include="Content\themes\metro-orange\images\lan2.gif" />
+    <Content Include="Content\themes\metro-orange\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-orange\images\loading.gif" />
+    <Content Include="Content\themes\metro-orange\images\logout.png" />
+    <Content Include="Content\themes\metro-orange\images\lv.gif" />
+    <Content Include="Content\themes\metro-orange\images\lv2.gif" />
+    <Content Include="Content\themes\metro-orange\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-orange\images\PwdSet.png" />
+    <Content Include="Content\themes\metro-orange\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-orange\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-orange\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-orange\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\bgimage_left.png" />
+    <Content Include="Content\themes\metro-orange\images\tag_alinkleft.png" />
+    <Content Include="Content\themes\metro-orange\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-orange\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro-red\easyui.css" />
+    <Content Include="Content\themes\metro-red\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\bgimage_middle.png" />
+    <Content Include="Content\themes\metro-red\images\bgimage_right.png" />
+    <Content Include="Content\themes\metro-red\images\blank.gif" />
+    <Content Include="Content\themes\metro-red\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro-red\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro-red\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro-red\images\Exite.png" />
+    <Content Include="Content\themes\metro-red\images\fen.gif" />
+    <Content Include="Content\themes\metro-red\images\fen2.gif" />
+    <Content Include="Content\themes\metro-red\images\Home.png" />
+    <Content Include="Content\themes\metro-red\images\hua.gif" />
+    <Content Include="Content\themes\metro-red\images\hua2.gif" />
+    <Content Include="Content\themes\metro-red\images\hui.gif" />
+    <Content Include="Content\themes\metro-red\images\hui2.gif" />
+    <Content Include="Content\themes\metro-red\images\lan.gif" />
+    <Content Include="Content\themes\metro-red\images\lan2.gif" />
+    <Content Include="Content\themes\metro-red\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro-red\images\loading.gif" />
+    <Content Include="Content\themes\metro-red\images\Logout.png" />
+    <Content Include="Content\themes\metro-red\images\lv.gif" />
+    <Content Include="Content\themes\metro-red\images\lv2.gif" />
+    <Content Include="Content\themes\metro-red\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\messager_icons.png" />
+    <Content Include="Content\themes\metro-red\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro-red\images\panel_tools.png" />
+    <Content Include="Content\themes\metro-red\images\PwdSet.png" />
+    <Content Include="Content\themes\metro-red\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro-red\images\slider_handle.png" />
+    <Content Include="Content\themes\metro-red\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro-red\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro-red\images\bgimage_left.png" />
+    <Content Include="Content\themes\metro-red\images\tag_alinkleft.png" />
+    <Content Include="Content\themes\metro-red\images\tree_icons.png" />
+    <Content Include="Content\themes\metro-red\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro\easyui.css" />
+    <Content Include="Content\themes\metro\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro\images\blank.gif" />
+    <Content Include="Content\themes\metro\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro\images\loading.gif" />
+    <Content Include="Content\themes\metro\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro\images\messager_icons.png" />
+    <Content Include="Content\themes\metro\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro\images\panel_tools.png" />
+    <Content Include="Content\themes\metro\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro\images\slider_handle.png" />
+    <Content Include="Content\themes\metro\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro\images\tree_icons.png" />
+    <Content Include="Content\themes\metro\images\validatebox_warning.png" />
+    <Content Include="Content\themes\ui-cupertino\easyui.css" />
+    <Content Include="Content\themes\ui-cupertino\images\accordion_arrows.png" />
+    <Content Include="Content\themes\ui-cupertino\images\bgimage_middle.png" />
+    <Content Include="Content\themes\ui-cupertino\images\bgimage_right.png" />
+    <Content Include="Content\themes\ui-cupertino\images\blank.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\calendar_arrows.png" />
+    <Content Include="Content\themes\ui-cupertino\images\combo_arrow.png" />
+    <Content Include="Content\themes\ui-cupertino\images\datagrid_icons.png" />
+    <Content Include="Content\themes\ui-cupertino\images\datebox_arrow.png" />
+    <Content Include="Content\themes\ui-cupertino\images\Exite.png" />
+    <Content Include="Content\themes\ui-cupertino\images\fen.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\fen2.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\Home.png" />
+    <Content Include="Content\themes\ui-cupertino\images\hua.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\hua2.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\hui.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\hui2.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\lan.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\lan2.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\layout_arrows.png" />
+    <Content Include="Content\themes\ui-cupertino\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\ui-cupertino\images\loading.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\logout.png" />
+    <Content Include="Content\themes\ui-cupertino\images\lv.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\lv2.gif" />
+    <Content Include="Content\themes\ui-cupertino\images\menu_arrows.png" />
+    <Content Include="Content\themes\ui-cupertino\images\messager_icons.png" />
+    <Content Include="Content\themes\ui-cupertino\images\pagination_icons.png" />
+    <Content Include="Content\themes\ui-cupertino\images\panel_tools.png" />
+    <Content Include="Content\themes\ui-cupertino\images\PwdSet.png" />
+    <Content Include="Content\themes\ui-cupertino\images\searchbox_button.png" />
+    <Content Include="Content\themes\ui-cupertino\images\slider_handle.png" />
+    <Content Include="Content\themes\ui-cupertino\images\spinner_arrows.png" />
+    <Content Include="Content\themes\ui-cupertino\images\tabs_icons.png" />
+    <Content Include="Content\themes\ui-cupertino\images\bgimage_left.png" />
+    <Content Include="Content\themes\ui-cupertino\images\tag_alinkleft.png" />
+    <Content Include="Content\themes\ui-cupertino\images\tree_icons.png" />
+    <Content Include="Content\themes\ui-cupertino\images\validatebox_warning.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\BgImage.png" />
+    <Content Include="Content\themes\ui-dark-hive\easyui.css" />
+    <Content Include="Content\themes\ui-dark-hive\images\accordion_arrows.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\bgimage_middle.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\bgimage_right.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\blank.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\calendar_arrows.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\combo_arrow.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\datagrid_icons.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\datebox_arrow.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\Exite.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\fen.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\fen2.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\Home.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\hua.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\hua2.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\hui.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\hui2.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\lan.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\lan2.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\layout_arrows.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\loading.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\logout.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\lv.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\lv2.gif" />
+    <Content Include="Content\themes\ui-dark-hive\images\menu_arrows.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\messager_icons.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\pagination_icons.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\panel_tools.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\PwdSet.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\searchbox_button.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\slider_handle.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\spinner_arrows.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\tabs_icons.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\bgimage_left.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\tag_alinkleft.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\tree_icons.png" />
+    <Content Include="Content\themes\ui-dark-hive\images\validatebox_warning.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\easyui.css" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\accordion_arrows.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\bgimage_left.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\bgimage_middle.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\bgimage_right.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\blank.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\calendar_arrows.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\combo_arrow.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\datagrid_icons.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\datebox_arrow.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\Exite.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\fen.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\fen2.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\hua.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\hua2.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\hui.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\hui2.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\lan.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\lan2.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\layout_arrows.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\loading.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\Logout.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\lv.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\lv2.gif" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\menu_arrows.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\messager_icons.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\pagination_icons.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\panel_tools.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\BgImage.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\searchbox_button.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\slider_handle.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\spinner_arrows.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\tabs_icons.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\tree_icons.png" />
+    <Content Include="Content\themes\ui-pepper-grinder\images\validatebox_warning.png" />
+    <Content Include="Content\themes\ui-sunny\easyui.css" />
+    <Content Include="Content\themes\ui-sunny\images\accordion_arrows.png" />
+    <Content Include="Content\themes\ui-sunny\images\blank.gif" />
+    <Content Include="Content\themes\ui-sunny\images\calendar_arrows.png" />
+    <Content Include="Content\themes\ui-sunny\images\combo_arrow.png" />
+    <Content Include="Content\themes\ui-sunny\images\datagrid_icons.png" />
+    <Content Include="Content\themes\ui-sunny\images\datebox_arrow.png" />
+    <Content Include="Content\themes\ui-sunny\images\Exite.png" />
+    <Content Include="Content\themes\ui-sunny\images\fen.gif" />
+    <Content Include="Content\themes\ui-sunny\images\fen2.gif" />
+    <Content Include="Content\themes\ui-sunny\images\hua.gif" />
+    <Content Include="Content\themes\ui-sunny\images\hua2.gif" />
+    <Content Include="Content\themes\ui-sunny\images\hui.gif" />
+    <Content Include="Content\themes\ui-sunny\images\hui2.gif" />
+    <Content Include="Content\themes\ui-sunny\images\lan.gif" />
+    <Content Include="Content\themes\ui-sunny\images\lan2.gif" />
+    <Content Include="Content\themes\ui-sunny\images\layout_arrows.png" />
+    <Content Include="Content\themes\ui-sunny\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\ui-sunny\images\loading.gif" />
+    <Content Include="Content\themes\ui-sunny\images\logout.png" />
+    <Content Include="Content\themes\ui-sunny\images\lv.gif" />
+    <Content Include="Content\themes\ui-sunny\images\lv2.gif" />
+    <Content Include="Content\themes\ui-sunny\images\menu_arrows.png" />
+    <Content Include="Content\themes\ui-sunny\images\messager_icons.png" />
+    <Content Include="Content\themes\ui-sunny\images\bgimage_middle.png" />
+    <Content Include="Content\themes\ui-sunny\images\bgimage_right.png" />
+    <Content Include="Content\themes\ui-sunny\images\pagination_icons.png" />
+    <Content Include="Content\themes\ui-sunny\images\panel_tools.png" />
+    <Content Include="Content\themes\ui-sunny\images\searchbox_button.png" />
+    <Content Include="Content\themes\ui-sunny\images\slider_handle.png" />
+    <Content Include="Content\themes\ui-sunny\images\spinner_arrows.png" />
+    <Content Include="Content\themes\ui-sunny\images\tabs_icons.png" />
+    <Content Include="Content\themes\ui-sunny\images\bgimage_left.png" />
+    <Content Include="Content\themes\ui-sunny\images\tree_icons.png" />
+    <Content Include="Content\themes\ui-sunny\images\validatebox_warning.png" />
+    <Content Include="DataXML\AQGZ.xml" />
+    <Content Include="DataXML\Bar.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\DevName.xml" />
+    <Content Include="DataXML\DoubleKill.xml" />
+    <Content Include="DataXML\freeformpager.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\freeformpager2.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_CY.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\PerSon\Person_Bar_CY_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_His.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_HisTrack.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_HisTrackInfo.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_HisTrackInfo_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_HisTrack_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_His_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_PathInfo.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_PathInfo_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_PersonInfo.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_PersonInfo_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_RealTransState.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_RealTransState_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_RT.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_RT_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_RYArea.xml" />
+    <Content Include="DataXML\PerSon\Person_Bar_RYArea_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_AreaOrStationPeopleQuery.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_AreaOrStationPeopleQuery_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_CY.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_CYXZ.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_CYXZ_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_CY_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisCS.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisCS_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisCY.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisCY_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTrackInfo_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTrack_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTXState.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTXState_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTZYC.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTrack.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTrackInfo.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisTZYC_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_HisXZ.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\PerSon\Person_Data_HisXZ_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_PathInfo.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_PathInfo_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_PersonInfo.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\PerSon\Person_Data_PersonInfo_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_PreRoute.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_PreRoute_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_RealInPeople.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_RealInPeople_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_RealTXState.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_RealTXState_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_RecordStation.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\PerSon\Person_Data_RecordStation_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_RYArea.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_RYArea_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_SSCS.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_SSCS_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_TZYC.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_TZYC_Mine.xml" />
+    <Content Include="DataXML\PerSon\Person_DropList_AreaInfo.xml" />
+    <Content Include="DataXML\PerSon\Person_DropList_CardSelect.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\PerSon\Person_DropList_NameSelect.xml" />
+    <Content Include="DataXML\PerSon\Person_DropList_RYStation.xml" />
+    <Content Include="DataXML\PerSon\Person_Report_Track.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\PerSon\Person_DropList_RatedNumber.xml" />
+    <Content Include="DataXML\PerSon\Person_DropList_Department.xml" />
+    <Content Include="DataXML\Public\Public_Bar_MineSelect.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Public\Public_Title.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\rbar.xml" />
+    <Content Include="DataXML\RealData.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\RealDataBar.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Report\Public\Public_Bar_MineSelect.xml" />
+    <Content Include="DataXML\Report\Public\Public_Title.xml" />
+    <Content Include="DataXML\Report\Report_DD.xml" />
+    <Content Include="DataXML\Report\Report_KD.xml" />
+    <Content Include="DataXML\Report\Report_RYCSBB.xml" />
+    <Content Include="DataXML\Report\Report_RYCSBB_B.xml" />
+    <Content Include="DataXML\Report\Report_RYCYBB.xml" />
+    <Content Include="DataXML\Report\Report_RYSXJBB.xml" />
+    <Content Include="DataXML\Report\Report_RYTXYC.xml" />
+    <Content Include="DataXML\Report\Report_SBGZ.xml" />
+    <Content Include="DataXML\Report\Report_BJ.xml" />
+    <Content Include="DataXML\Report_Day.xml" />
+    <Content Include="DataXML\rpque.xml" />
+    <Content Include="DataXML\Safe\CSS.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_AQKGL_Mine.xml" />
+    <Content Include="DataXML\Safe\safe_Bar_Day.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_AQKGL.xml" />
+    <Content Include="DataXML\Safe\safe_Bar_Day_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_His.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Bar_HisLine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_HisLine_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_His_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_MineInfo.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Bar_MineInfo_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_MineStateHis.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_MineStateHis_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_PointSet.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Bar_PointSet_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_ReportDay.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Bar_ReportDay_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_RT.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_RT_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQBJHis.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Data_AQBJHis_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQBJ_NotSwitching.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Data_AQBJ_NotSwitching_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQBJ_Switching.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQBJ_Switching_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQDDHis.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQDDHis_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQDD_NotSwitching.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Data_AQDD_NotSwitching_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQDD_Switching.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQDD_Switching_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQGZ.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQGZHis.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQGZHis_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQGZ_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQKD.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQKDHis.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Data_AQKDHis_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQKD_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQKGL.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQKGL_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQMNL_Day.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQMNL_Day_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQMNL_Minute.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQMNL_Minute_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQMT.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQMT_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQSS.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_AQSS_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_ChildSystemSet.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_ChildSystemSet_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_MineInfo.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_MineInfo_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_MineState.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_MineStateHis.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_MineStateHis_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_MineState_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_PointSet.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Data_PointSet_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_RealData.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_Data_RealData_Mine.xml" />
+    <Content Include="DataXML\Safe\Safe_DropList_PointNumSelect.xml" />
+    <Content Include="DataXML\Safe\Safe_DropList_PointType.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Safe\Safe_DropList_SensorNumSelect.xml" />
+    <Content Include="DataXML\Safe\Safe_DropList_SensorTypeSelect.xml" />
+    <Content Include="DataXML\Styles\OrangeFreeFormStyle.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\Styles\OrangeStyle.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="DataXML\SystemState.xml" />
+    <Content Include="DataXML\TestList.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Files\Icon\sound_blue.png" />
+    <Content Include="Files\Icon\sound_red.png" />
+    <Content Include="Files\Wma\sound_alarm.wma" />
+    <Content Include="Files\Wma\一氧化碳.wma" />
+    <Content Include="Files\Wma\三态开停.wma" />
+    <Content Include="Files\Wma\主扇.wma" />
+    <Content Include="Files\Wma\久兴煤矿.wma" />
+    <Content Include="Files\Wma\事件未处理报警.wma" />
+    <Content Include="Files\Wma\二态开停.wma" />
+    <Content Include="Files\Wma\二氧化碳.wma" />
+    <Content Include="Files\Wma\产量.wma" />
+    <Content Include="Files\Wma\人员管理系统.wma" />
+    <Content Include="Files\Wma\传感器.wma" />
+    <Content Include="Files\Wma\传输异常报警.wma" />
+    <Content Include="Files\Wma\低浓度甲烷.wma" />
+    <Content Include="Files\Wma\低负压机组开停.wma" />
+    <Content Include="Files\Wma\兴发煤矿.wma" />
+    <Content Include="Files\Wma\兴富煤矿.wma" />
+    <Content Include="Files\Wma\其他开停.wma" />
+    <Content Include="Files\Wma\其他模拟量.wma" />
+    <Content Include="Files\Wma\其他累计量.wma" />
+    <Content Include="Files\Wma\凹子冲煤矿.wma" />
+    <Content Include="Files\Wma\压力.wma" />
+    <Content Include="Files\Wma\压差.wma" />
+    <Content Include="Files\Wma\安全监控系统.wma" />
+    <Content Include="Files\Wma\富兴煤矿.wma" />
+    <Content Include="Files\Wma\局扇.wma" />
+    <Content Include="Files\Wma\工作异常报警.wma" />
+    <Content Include="Files\Wma\工况混合量.wma" />
+    <Content Include="Files\Wma\工况纯流量.wma" />
+    <Content Include="Files\Wma\开停.wma" />
+    <Content Include="Files\Wma\承龙煤矿.wma" />
+    <Content Include="Files\Wma\报警.wma" />
+    <Content Include="Files\Wma\故障报警.wma" />
+    <Content Include="Files\Wma\断电器.wma" />
+    <Content Include="Files\Wma\断电报警.wma" />
+    <Content Include="Files\Wma\朝阳煤矿.wma" />
+    <Content Include="Files\Wma\标况混合量.wma" />
+    <Content Include="Files\Wma\标况纯流量.wma" />
+    <Content Include="Files\Wma\氧气.wma" />
+    <Content Include="Files\Wma\水位.wma" />
+    <Content Include="Files\Wma\温度.wma" />
+    <Content Include="Files\Wma\烟雾.wma" />
+    <Content Include="Files\Wma\煤位.wma" />
+    <Content Include="Files\Wma\瓦斯.wma" />
+    <Content Include="Files\Wma\电压.wma" />
+    <Content Include="Files\Wma\电流.wma" />
+    <Content Include="Files\Wma\管道一氧化碳.wma" />
+    <Content Include="Files\Wma\管道温度.wma" />
+    <Content Include="Files\Wma\管道甲烷.wma" />
+    <Content Include="Files\Wma\管道负压.wma" />
+    <Content Include="Files\Wma\粉尘.wma" />
+    <Content Include="Files\Wma\累计时间.wma" />
+    <Content Include="Files\Wma\网络中断报警.wma" />
+    <Content Include="Files\Wma\证书过期报警.wma" />
+    <Content Include="Files\Wma\负压.wma" />
+    <Content Include="Files\Wma\超员报警.wma" />
+    <Content Include="Files\Wma\超强煤矿.wma" />
+    <Content Include="Files\Wma\超时报警.wma" />
+    <Content Include="Files\Wma\超限报警.wma" />
+    <Content Include="Files\Wma\转速.wma" />
+    <Content Include="Files\Wma\通讯中断报警.wma" />
+    <Content Include="Files\Wma\钩数.wma" />
+    <Content Include="Files\Wma\隐患越期报警.wma" />
+    <Content Include="Files\Wma\雄新煤矿.wma" />
+    <Content Include="Files\Wma\频率.wma" />
+    <Content Include="Files\Wma\风向.wma" />
+    <Content Include="Files\Wma\风筒.wma" />
+    <Content Include="Files\Wma\风速.wma" />
+    <Content Include="Files\Wma\风门.wma" />
+    <Content Include="Files\Wma\馈电.wma" />
+    <Content Include="Files\Wma\馈电异常报警.wma" />
+    <Content Include="Files\Wma\高低浓度甲烷.wma" />
+    <Content Include="Files\Wma\高浓度甲烷.wma" />
+    <Content Include="Files\Wma\高负压机组开停.wma" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="HtmlPage1.html" />
+    <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\CompanyInfo.js" />
+    <Content Include="Scripts\datagrid-detailview.js" />
+    <Content Include="Scripts\datamanager.js" />
+    <Content Include="Scripts\easyloader.js" />
+    <Content Include="Scripts\easyuilangzhCN.js" />
+    <Content Include="Scripts\echarts-all.js" />
+    <Content Include="Scripts\jqueryeasyuimin.js" />
+    <Content Include="Scripts\jqueryeasyuimini.js" />
+    <Content Include="Scripts\jquerymin.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\UpLoadFiles.js" />
+    <Content Include="Views\Person\Index.cshtml" />
+    <Content Include="binary\BCV1.bin" />
+    <Content Include="binary\BCV1.x64.bin" />
+    <Content Include="binary\BCV4.bin" />
+    <Content Include="binary\BCV4.x64.bin" />
+    <Content Include="binary\gzip.bin" />
+    <Content Include="binary\license.bin" />
+    <Content Include="binary\LuxForm.bin" />
+    <Content Include="binary\LuxForm.x64.bin" />
+    <Content Include="binary\LuxFormC.bin" />
+    <Content Include="binary\LuxFormC.x64.bin" />
+    <Content Include="binary\msoffice.bin" />
+    <Content Include="binary\msoffice.x64.bin" />
+    <Content Include="binary\supcan.crx" />
+    <Content Include="binary\supcan.xpi" />
+    <Content Include="binary\WebFile.bin" />
+    <Content Include="binary\WebFile.x64.bin" />
+    <Content Include="DataXML\Sample.json" />
+    <Content Include="Views\Multiple\Index.cshtml" />
+    <Content Include="Views\Multiple\View1.cshtml" />
+    <Content Include="Views\Chart\MCDay.cshtml" />
+    <Content Include="Views\Shared\_Charts.cshtml" />
+    <Content Include="DataXML\PerSon\Person_DropList_Duty.xml" />
+    <Content Include="binary\Gantt.bin" />
+    <Content Include="binary\supcan_.crx" />
+    <None Include=".bin\node.cmd" />
+    <None Include="Properties\PublishProfiles\DataMineWeb.pubxml" />
+    <None Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.8.2.js" />
+    <Content Include="Scripts\jquery-1.8.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.8.24.js" />
+    <Content Include="Scripts\jquery-ui-1.8.24.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-2.2.0.debug.js" />
+    <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Person\DEY.cshtml" />
+    <Content Include="Views\Notice\SupcanTest.cshtml" />
+    <Content Include="Views\RealData\RealDataTest.cshtml" />
+    <Content Include="Views\RealData\Index.cshtml" />
+    <Content Include="Views\Person\RealTimePersonInMine.cshtml" />
+    <Content Include="Views\TransJson\TransJsonToTreeList.cshtml" />
+    <Content Include="Views\Center\ShowData.cshtml" />
+    <Content Include="Views\RealData\AQGZ.cshtml" />
+    <Content Include="Views\Center\Index.cshtml" />
+    <Content Include="Views\Shared\_Login.cshtml" />
+    <Content Include="Views\Center\Test.cshtml" />
+    <Content Include="Views\Center\ShowTest.cshtml" />
+    <Content Include="Views\Center\dataReader.cshtml" />
+    <Content Include="Views\Editer\UserManager.cshtml" />
+    <Content Include="Views\Shared\_LayoutEditer.cshtml" />
+    <Content Include="Views\Editer\MyDataSource.cshtml" />
+    <Content Include="Views\Editer\SaveData.cshtml" />
+    <Content Include="Views\Editer\testcombogrid.cshtml" />
+    <Content Include="Views\Editer\MenusManager.cshtml" />
+    <Content Include="Views\Editer\TransData.cshtml" />
+    <Content Include="Views\Editer\RoleManager.cshtml" />
+    <Content Include="Views\Editer\UserGroupManager.cshtml" />
+    <Content Include="Views\Editer\RolesPowerManager.cshtml" />
+    <Content Include="Views\Center\Video.cshtml" />
+    <Content Include="Views\Center\Portal.cshtml" />
+    <Content Include="Views\RealData\MainPage.cshtml" />
+    <Content Include="Views\Shared\_LayoutMain.cshtml" />
+    <Content Include="Views\CompanyInfoManager\AQJG.cshtml" />
+    <Content Include="Views\CompanyInfoManager\CZRY.cshtml" />
+    <Content Include="Views\CompanyInfoManager\JBXX.cshtml" />
+    <Content Include="Views\CompanyInfoManager\MKSB.cshtml" />
+    <Content Include="Views\CompanyInfoManager\QYTZ.cshtml" />
+    <Content Include="Views\CompanyInfoManager\QYZZ.cshtml" />
+    <Content Include="Views\CompanyInfoManager\TransCompanyData.cshtml" />
+    <Content Include="Views\CompanyInfoManager\XGZL.cshtml" />
+    <Content Include="Views\CompanyInfoManager\JBXXEdit.cshtml" />
+    <Content Include="Views\HiddenTrouble\HiddenTroubleSelfCensor.cshtml" />
+    <Content Include="Views\HiddenTrouble\HiddenMonitorCensor.cshtml" />
+    <Content Include="Views\HiddenTrouble\HiddenTroubleSelfProcess.cshtml" />
+    <Content Include="Views\WorkShift\WorkShiftManage.cshtml" />
+    <Content Include="Views\Center\ShowAQJKRTData.cshtml" />
+    <Content Include="Views\HiddenTrouble\HiddenTroubleSelfRecheck.cshtml" />
+    <Content Include="Views\HiddenTrouble\HiddenMonitorProcess.cshtml" />
+    <Content Include="Views\HiddenTrouble\HiddenMonitorRecheck.cshtml" />
+    <Content Include="Views\Center\AQJKRTData.cshtml" />
+    <Content Include="Views\Config\MineConfig.cshtml" />
+    <Content Include="Views\Config\SubSystemConfig.cshtml" />
+    <Content Include="Views\NetDisk\NetDiskManage.cshtml" />
+    <Content Include="Views\Person\RealTimePersonInMineForMain.cshtml" />
+    <Content Include="Views\HiddenTrouble\HiddenMonitorEnterpriseRecheck.cshtml" />
+    <Content Include="Views\WorkShift\WorkShiftQuery.cshtml" />
+    <Content Include="Views\WarnAlarm\WarnAlarmHis.cshtml" />
+    <Content Include="Views\WarnAlarm\WarnAlarmManage.cshtml" />
+    <Content Include="Views\WarnAlarm\WarnAlarmTotal.cshtml" />
+    <Content Include="Views\Notice\NoticeManage.cshtml" />
+    <Content Include="Views\Chart\AnalogQantity.cshtml" />
+    <Content Include="Views\ProcessLog\ProcessLogQuery.cshtml" />
+    <Content Include="Views\Chart\SwitchQantity.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\DataOrganization\" />
+    <Folder Include="Views\Safe\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>5549</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:5549/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

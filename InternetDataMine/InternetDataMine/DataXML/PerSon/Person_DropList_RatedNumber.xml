@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=RatedNumber" OriUrl="../../TransJson/TransJsonToTreeList?DataType=RatedNumber">
+  </Properties>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="Workers"  width="100%" align="center">额定人数</Col>
+  </Cols>
+</TreeList>

@@ -1,0 +1,313 @@
+﻿@{
+    ViewBag.Title = "相关资料管理";
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script>
+    var Operation = "";
+    var URL = "";
+    var ID = "";
+
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    var mineCode = "";
+    $(document).ready(function (e) {
+        mineCode = getQueryString("MineCode");
+        if (mineCode == null)
+        {
+            mineCode = "";
+        }
+        $('#colliery_no').textbox('setText', mineCode);
+
+        //加载煤矿信息列表
+        loadMineInfo();
+        //根据煤矿编号是否为空来加载不同的按钮
+        if (mineCode == "")
+        {
+            $("#btnAdd").hide();
+            $("#btnAlter").hide();
+            $("#btnDelete").hide();
+        }
+        else
+        {
+            $("#lblminecode").hide();
+            $("#comboMineCode + .combo").hide();
+            $("#btnQuery").hide();
+        }
+
+    });
+
+    ///表格准备好后，加载表格数据
+    $('#XGZL').ready(function () {
+        LoadData();
+    });
+
+    //加载表格数据
+    function LoadData()
+    {
+        mineCode = readCookie('MineCode');
+        if (mineCode == null | mineCode == "null") {
+
+            mineCode = "";
+        }
+
+        if (mineCode == "") {
+            mineCode = $("#comboMineCode").combobox("getValue");
+        }
+
+        $('#XGZL').datagrid({
+            toolbar: '#tb',
+            fitColumns: true,
+            striped: true,
+            singleSelect: false,
+            method: 'Post',
+            url: '../CompanyInfoManager/TransCompanyData?type=XGZL&MineCode=' + mineCode,
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'id', title: '编号', width: 100 ,hidden:true},
+                  { field: 'colliery_no', title: '企业编码', width: 100 },
+                { field: 'simpleName', title: '企业名称', width: 100 },
+                { field: 'filename', title: '文件名', width: 100 },
+                { field: 'Value', title: '文件类型', width: 100 }
+            ]]
+        });
+    }
+
+    ///加载combobox
+    $('#attachmenttype').ready(function () {
+        $('#attachmenttype').combobox({
+            url: '../CompanyInfoManager/TransCompanyData?type=XGZLattachmenttype',
+            valueField: 'id',
+            textField: 'text'
+        });
+    });
+
+    //函数 修改数据
+    function alter() {
+        Operation = "alter";
+        $('#filename')[0].value = "";
+        if ($('#XGZL').datagrid('getSelected') != null) {
+            $('#dlg').dialog('open');
+            ID = $('#XGZL').datagrid('getSelected')['id'];
+            $('#colliery_no').textbox('setText', $('#XGZL').datagrid('getSelected')['colliery_no']);
+            $('#filename')[0].value="";
+            $('#notes').textbox('setText', $('#XGZL').datagrid('getSelected')['notes']);
+            $('#attachmenttype').combobox('select', $('#XGZL').datagrid('getSelected')['attachmenttype']);
+            //$.parser.parse('#dlg');
+        }
+    }
+
+    //函数 删除数据
+    function del(index) {
+        var rows = $("#XGZL").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+
+        $.messager.confirm("确认", "确认要删除数据吗？", function(data) {
+            if (data) {
+                var condition = "";
+                var index = 0;
+                for (index = 0; index < rows.length; index++) {
+                    if (index == rows.length - 1) {
+                        condition += rows[index].id;
+                    } else {
+                        condition += rows[index].id + ",";
+                    }
+                }
+
+                $.ajax({
+                    cache: false,
+                    method: "POST",
+                    datatype: "json",
+                    url: '../CompanyInfoManager/TransCompanyData?type=DelXGZL&ID=' + condition,
+                    success: function(data) {
+                        if (data == "True") {
+                            AddProcessLogGlobal("删除了企业相关资料！");
+                            $.messager.alert('提示', '删除成功！');
+                            LoadData();
+                        } else {
+                            $.messager.alert('提示', '删除失败！');
+                        }
+                    },
+                    error: function() {
+                        $.messager.alert('提示', '删除数据时出错！');
+                    }
+                });
+            }
+        });
+    }
+
+    //函数 打开编辑窗口
+    function AddInfo() {
+        Operation = "Add";
+        
+        $('#colliery_no').textbox("setText", "");
+        $('#notes').textbox("setText", "");
+        $('#filename')[0].value="";
+        $('#colliery_no').textbox('setText', mineCode);
+        $('#attachmenttype').combobox('setText', '');
+        $('#dlg').dialog('open');
+    }
+
+    //函数 拼接URL
+    function ContentURL() {
+        URL = "";
+        URL += "colliery_no|" + $('#colliery_no').textbox('getText');
+        URL += ",filename|" + $('#filename')[0].value;
+        URL += ",notes|" + $('#notes').textbox('getText');
+        URL += ",attachmenttype|" + $('#attachmenttype').combobox('getValue');
+    }
+
+    //文件上传
+    function ajaxFileUpload() {
+        var isValidate = $("#ff").form('validate');
+        if (!isValidate) {
+            return;
+        }
+        $.messager.progress();
+        var myurl = '../CompanyInfoManager/TransCompanyData?type=';
+        ContentURL();
+
+        if (Operation == "Add") {
+            myurl += 'AddXGZL';
+        }
+        else {
+            myurl += 'AlterXGZL&ID=' + ID;
+        }
+        $.ajaxFileUpload
+        (
+            {
+                url: myurl + '&Info=' + encodeURI(URL), //用于文件上传的服务器端请求地址
+                secureuri: false, //一般设置为false
+                fileElementId: 'filename', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    if (typeof (data.error) != 'undefined') {
+                        if (data.error != '') {
+                            $.messager.progress("close");
+                            $.messager.alert("警告", data.error, "error");
+                        } else {
+                            AddProcessLogGlobal("保存了企业相关资料！");
+                            $.messager.progress("close");
+                            $.messager.alert("提示", data.msg, "info");
+                            LoadData();
+                        }
+                    }
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert("error");
+                }
+            }
+        )
+        return false;
+    }
+
+    function download() {
+        var rows = $("#XGZL").datagrid("getChecked");
+        if (rows.length < 1 | rows.length > 1) {
+            $.messager.alert("提示", "下载时，请选择一个文件下载，不选或多选都无法进行操作，请选择！", "error");
+        }
+        else {
+            var Url = "../CompanyInfoManager/DownloadFile?type=download_EItable_XGZL&ID=" + rows[0].id;
+            downloadFile(Url);
+        }
+    }
+
+    /* 已作废
+    //函数 保存数据
+    function SaveInfo() {
+        var myurl = '../CompanyInfoManager/TransCompanyData?type=';
+        ContentURL();
+        if (Operation == "Add") {
+            myurl += 'AddXGZL';
+        }
+        else {
+            myurl += 'AlterXGZL&ID=' + ID;
+        }
+
+        $("#ff").form('submit', {
+            onSubmit: function () {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            url: myurl + '&Info=' + encodeURI(URL),
+            success: function (data) {
+                if (data == "True") {
+                    $.messager.alert('提示', '保存成功！');
+                    $('#XGZL').datagrid('reload');
+                    $('#dlg').dialog('close');
+                } else {
+                    $.messager.alert('提示', '保存失败！');
+                }
+            },
+            error: function () {
+                $.messager.alert('提示', '保存时出错！');
+            }
+        });
+
+    }*/
+</script>
+
+<table id="XGZL" class="easyui-datagrid" title="相关资料信息" data-options="fit:true" style="width: 100%; height: 100%;"></table>
+<div id="tb" style="padding: 5px; height: auto">
+    <div style="margin-bottom: 5px">
+        <label id="lblminecode">企业名称：</label><div class="easyui-combobox" style="width:150px" id="comboMineCode"></div>
+        <a href="#" class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" onclick="LoadData()">查询</a>
+        <a href="#" class="easyui-linkbutton" id="btnAdd" data-options="iconCls:'icon-add'" onclick="AddInfo()">添加资料</a>
+        <a href="#" class="easyui-linkbutton" id="btnAlter" data-options="iconCls:'icon-edit'" onclick="alter()">修改资料</a>
+        <a href="#" class="easyui-linkbutton" id="btnDelete" data-options="iconCls:'icon-remove'" onclick="del()">删除资料</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-arrow_down'" onclick="download()">下载</a>
+    </div>
+</div>
+<div id="dlg" title="编辑相关资料信息" class="easyui-dialog" closed="true" style="width: 30%; height: 210px; padding: 15px;">
+    <form id="ff" method="post">
+        <table border="1" style="width: 100%; border-collapse: collapse; border-bottom-style: none; font-size: 12px;">
+            <tr style="height: 20px;">
+                <td align="right">企业编码：
+                </td>
+                <td align="left">
+                    <input id="colliery_no" class="easyui-textbox" data-options="required:true,disabled:true" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 20px;">
+                <td align="right">文件名：
+                </td>
+                <td align="left">
+                    @*<input id="filename" class="easyui-filebox" data-options="required:true, buttonText: '选择文件'" style="width: 80%;" />*@
+                    <input type="file" id="filename" name="filename" />
+                </td>
+            </tr>
+            <tr style="height: 20px;">
+                <td align="right">描述：
+                </td>
+                <td align="left">
+                    <input id="notes" class="easyui-textbox" data-options="required:true" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 20px;">
+                <td align="right">附件类型：
+                </td>
+                <td align="left">
+                    <select id="attachmenttype" class="easyui-combobox" data-options="required:true" style="width: 80%;" />
+                </td>
+            </tr>
+            <tr style="height: 20px;">
+                <td colspan="2" align="center">
+                    <a href="#" class="easyui-linkbutton" style="width: 150px;" id="subbmit" icon="icon-ok" onclick="ajaxFileUpload()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

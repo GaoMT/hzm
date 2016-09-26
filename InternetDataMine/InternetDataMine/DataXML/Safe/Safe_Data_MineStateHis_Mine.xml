@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TreeList>
+  <Properties  Title="历史传输异常查询" editAble="false" bgColor="#FFFFFF" headerBgColor="#ffffff"  fadeInStep="0"  curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SystemTypeName"  width="20%" align="center">系统类别</Col>
+    <Col name="StateCode"  width="20%" align="center">故障名称</Col>
+    <Col name="StartTime"  width="20%" align="center">开始时间</Col>
+    <Col name="EndTime"  width="20%" align="center">结束时间</Col>
+    <Col name="Continuous"  width="20%" align="center">持续时长</Col>
+  </Cols>
+</TreeList>

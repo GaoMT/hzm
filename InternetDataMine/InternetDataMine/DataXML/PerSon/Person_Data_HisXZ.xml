@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<TreeList>
+  <Properties  Title="历史限制区域报警" editAble="false" bgColor="#FFFFFF" headerBgColor="#ffffff"  fadeInStep="0"  curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="5%" align="center">煤矿名称</Col>
+    <Col name="Name"  width="5%" align="center">姓名</Col>
+    <Col name="Position"  width="5%" align="center">职务</Col>
+    <Col name="Department"  width="5%" align="center">部门</Col>
+    <Col name="InTime"  width="15%" align="center">下井时间</Col>
+    <Col name="StartAITime" isHide="abstrue"  width="8%" align="center">列1</Col>
+    <Col name="EndAITime" isHide="abstrue"  width="8%" align="center">列1</Col>
+    <Col name="continuoustime"  width="15%" align="center">持续时间</Col>
+    <Col name="AreaName"  width="5%" align="center">区域名称</Col>
+    <Col name="InAreaTime"  width="15%" align="center">进入区域时间</Col>
+    <Col name="StationName" isHide="abstrue"  width="8%" align="center">分站名称</Col>
+    <Col name="InNowStTime"  width="15%" align="center">进入分站时间</Col>
+    <Col name="OutTime"  width="15%" align="center">离开分站时间</Col>
+  </Cols>
+</TreeList>

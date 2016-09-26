@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "企业基本信息管理";
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+
+<script type="text/javascript">
+    var type = 1;
+    var index;
+    var test;
+    var ID;
+    var MineCode = "";
+    $(document).ready(function () {
+
+        //加载煤矿列表信息
+        loadMineInfo();
+
+        MineCode = getQueryString("minecode");
+        if (MineCode == null)
+        {
+            MineCode = "";
+        }
+
+        if (MineCode == "")
+        {
+           $("#btnAdd").hide();
+           $("#btnAlter").hide();
+           $("#btnDelete").hide();
+        }
+        else
+        {
+            $("#lblminecode").hide();
+            $("#comboMineCode + .combo").hide();
+            $("#btnQuery").hide();
+        }
+
+        LoadInfo();
+    });
+
+
+
+    function Preview()
+    {
+        type = 2;
+        var rows = $('#JBXX').datagrid('getChecked');
+        if (rows.length < 1) {
+            $.messager.alert("提示", "预览前，请先选取一行，请选取！", 'info');
+            return;
+        }
+        else {
+            if (rows.length > 1) {
+                $.messager.alert("提示", "预览前，请先选取一行，请选取！", 'info');
+            }
+            else {
+              
+                $('#Adddlg')[0].title = "查看企业信息";
+                openEdit(rows[0].id);
+            }
+
+
+        }
+    }
+
+    //function loadMineInfo()
+    //{
+    //    $("#comboMineCode").combobox({
+    //        url: "../CompanyInfoManager/QueryJBXXAll",
+    //        valueField: 'minecode',
+    //        textField: 'simplename'
+    //    });
+    //}
+
+    //加载企业信息
+    function LoadInfo()
+    {
+        MineCode = readCookie('MineCode');
+        if (MineCode == "" | MineCode == null | MineCode == "null") {
+            MineCode = $("#comboMineCode").combobox("getValue");
+        }
+
+
+        $('#JBXX').datagrid({
+            toolbar: '#tb',
+            fitColumns: true,
+            striped: true,
+            singleSelect: true,
+            method: 'Post',
+            url: '../CompanyInfoManager/TransCompanyData?type=JBXX&MineCode=' + MineCode,
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'id', title: '编号', width: 100 },
+                { field: 'colliery_no', title: '企业编码', width: 100 },
+                { field: 'col_name', title: '矿井名称', width: 100 },
+                { field: 'areano', title: '行政辖区', width: 100 },
+                { field: 'col_type', title: '经济性质', width: 100 },
+                { field: 'lawyer', title: '法人', width: 100 }
+            ]]
+        });
+    }
+
+    //删除企业信息
+    function DeleInfo()
+    {
+        $.messager.progress();
+        var rows = $('#JBXX').datagrid('getChecked');
+        if (rows.length < 1) {
+            $.messager.alert("警告", "没有要删除的信息，请选取一行或多行！", 'warning');
+            $.messager.process("close");
+            return;
+        }
+        else {
+
+            var IDs = "";
+            $(rows).each(function (i, item) {
+
+                IDs += item.id+",";
+            });
+
+            IDs = IDs.substring(0,IDs.lastIndexOf(","));
+
+            $.ajax({
+                url: "../CompanyInfoManager/TransCompanyData?type=DelJBXX&ID=" + IDs + "&MineCode=" + MineCode,
+                success: function (data) {
+                    if (data == "True")
+                    {
+                        AddProcessLogGlobal("删除了企业基本信息！");
+                        $.messager.alert("恭喜", "数据删除成功！", 'info');
+                        LoadInfo();
+                    }
+                    else
+                    {
+                        $.messager.alert("抱歉", "企业编号已存在，无法重复添加！", 'warning');
+                    }
+
+                    $.messager.progress("close");
+                },
+                error: function (data) {
+                    $.messager.alert("抱歉", "数据删除失败！", 'error');
+                    $.messager.progress("close");
+                }
+            });
+
+            LoadInfo();
+        }
+    }
+
+    //添加企业信息
+    function AddInfo() {
+        type = 1;
+        $('#Adddlg')[0].title = "添加企业信息";
+        openEdit("");
+    }
+
+    //修改企业信息
+    function AlterInfo(index) {
+        var rows= $('#JBXX').datagrid('getChecked');
+        if (rows.length < 1)
+        {
+            $.messager.alert("警告", "编辑前，请先选取一行，请选取！", 'warning');
+            return;
+        }
+        else
+        {
+            if (rows.length > 1)
+            {
+                $.messager.alert("警告", "编辑前，请先选取一行，请选取！", 'warning');
+            }
+            else
+            {
+                type = 0;
+                $('#Adddlg')[0].title = "编辑企业信息";
+                openEdit(rows[0].id);
+            }
+
+          
+        }
+    }
+
+    //弹出企业信息编辑界面，进行添加/修改操作
+    function openEdit(rowID) {
+        $("#myiframe")[0].src = "../CompanyInfoManager/JBXXEdit?test=test&OperationType=" + type + "&id=" + rowID + "&MineCode=" + MineCode;
+        $("#myiframe")[0].style.height = ($("#Adddlg")[0].style.height.replace('px', '') - 10) + "px";
+        $('#Adddlg').dialog('open');
+    }
+
+</script>
+<div style="width: 100%; height: 90%;">
+    <table id="JBXX" class="easyui-datagrid" title="企业基本信息" style="width: 100%; height: 100%;"></table>
+    <div id="tb" style="padding:5px;height:auto">
+
+        <div style="margin-bottom:5px">
+            <label id="lblminecode">企业名称：</label><div class="easyui-combobox" style="width:150px" id="comboMineCode"></div>
+            <a href="#" class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" onclick="LoadInfo()">查询</a>
+            <a href="#" class="easyui-linkbutton" id="btnAdd" data-options="iconCls:'icon-add'" onclick="AddInfo()">添加信息</a>
+            <a href="#" class="easyui-linkbutton" id="btnAlter" data-options="iconCls:'icon-edit'" onclick="AlterInfo()">修改信息</a>
+            <a href="#" class="easyui-linkbutton" id="btnDelete" data-options="iconCls:'icon-remove'" onclick="DeleInfo()">删除信息</a>
+            <a href="#" class="easyui-linkbutton" id="btnPreview" data-options="iconCls:'icon-Page_preview'" onclick="Preview()">预览</a>
+</div>
+    </div>
+
+    <div id="Adddlg" title="添加企业信息" class="easyui-window" data-options="closed:true,fit:true,onClose:function(){LoadInfo();},onCollapse:function(){LoadInfo();}" style="width:100%;height:600px;">
+        <iframe id="myiframe" style="width: 99%;height:100%;"></iframe>
+    </div>
+
+</div>

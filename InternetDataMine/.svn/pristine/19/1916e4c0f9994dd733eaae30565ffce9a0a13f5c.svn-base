@@ -1,0 +1,387 @@
+﻿@{
+    ViewBag.Title = "RealTimePersonInMine";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+    
+    int x;
+}
+
+@*@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/common")
+@Scripts.Render("~/bundles/easyui")*@
+<script type="text/javascript">
+
+    //声明煤矿信息列表
+    var listMineInfo = new Array();
+    //声明当前煤矿信息列表的索引
+    var listMineInfoIndex = 0;
+
+//构造煤矿信息对象
+    function MineInfo(mineCode, mineName) {
+        this.mineCode = mineCode;
+        this.mineName = mineName;
+    }
+
+    //加载煤矿信息到
+    function LoadMinesInfo() {
+        if (listMineInfo.length > 0) {
+            listMineInfo.splice(0, listMineInfo.length);
+        }
+
+        $.ajax({
+            async: false,
+            url: '../CompanyInfoManager/QueryJBXX',
+            dataType: 'json',
+            success: function(data) {
+                $(data).each(function(index, item) {
+                    var mineInfo = new MineInfo(item.minecode, item.simplename);
+                    listMineInfo.push(mineInfo);
+                });
+            },
+            error: function(data) {
+
+            }
+
+        });
+
+    }
+
+    function showRTTrack(object) {
+
+        showDetail(null, 0);
+        var rtMineCode = $(object).find("#tr_MineCode")[0].innerText;
+        var rtJobCardCode = $(object).find("#tr_JobCardCode")[0].innerText;
+        var url = "../Person/GetRTTrack?MineCode=" + rtMineCode + "&JobCardCode=" + rtJobCardCode + getUrlStafix();
+
+        $("#dgvShowDetail").datagrid({
+            fitColumns: true,
+            singleSelect:true,
+            pagination: false,
+            pageSize1: 10,
+            method: 'Post',
+            url: url,
+            columns: [
+                [
+                    { field: 'JobCardCode', title: '标示卡号', width: 100 },
+                    { field: 'Name', title: '姓名', width: 100 },
+                    { field: 'Department', title: '部门', width: 100 },
+                    { field: 'Position', title: '职务', width: 100 },
+                    { field: 'InTime', title: '下井时间', width: 180 },
+                    { field: 'Place', title: '分站位置', width: 150 },
+                    { field: 'inStationTime', title: '进入分站时间', width: 180 }
+                ]
+            ],
+            onclose:function() {
+                
+            }
+        });
+
+        $("#divRTTrackDetail").dialog("open");
+       // $("#divRTTrackDetail").panel("move", { top: $(document).scrollTop() + ($(window).height() - 400) * 0.5, left: $(document).scrollTop() + ($(window).width() - 400) * 0.5 });
+
+    }
+
+    //显示下井人员详细信息
+    function showDetail(object, value) {
+        if (value == 1) {
+            var x = 0;
+            var y = 0;
+            x = document.body.scrollLeft + event.x + 3;
+            y = document.body.scrollTop + event.y + 3;
+            $("#divDisplay").css({ display: 'inline' });
+            $("#divDisplay").empty();
+            //$("#divDisplay")[0].style.top = (y + 156);//页面嵌套时使用
+            $("#divDisplay")[0].style.top = y+"px"; //页面单独使用时
+            $("#divDisplay")[0].style.left = x+"px";
+
+           
+
+            var children = $(object).find("table").clone();
+            $("#divDisplay").append(children);
+            //$("#divDisplay").find("tr_name")[0].style.textAlign= 'left';
+            $("#divDisplay").find("table")[0].style.width = '180px';
+            $("#divDisplay").find("table")[0].style.height = '138px';
+            $("#divDisplay").find("#tr_name")[0].style.display = 'inline';
+            $("#divDisplay").find("#tr_position")[0].style.display = 'inline';
+            $("#divDisplay").find("#tr_dept")[0].style.display = 'inline';
+            $("#divDisplay").find("#tr_stationposition")[0].style.display = 'inline';
+            $("#divDisplay").find("#tr_intime")[0].style.display = 'inline';
+            $("#divDisplay").find("#tr_inminetime")[0].style.display = 'inline';
+        } else {
+            $("#divDisplay")[0].style.display = 'none';
+        }
+    }
+
+    var InMineCount = 0;
+    var SelectedClass = null;
+    var classes = null;
+    var Title = null;
+    var personcount = null;
+    var divMain = null;
+    var MineName = "";
+    var GroupInfo = null;
+    var lablePersonCount = null;
+    var img = null;
+
+    function ReadData(object) {
+       
+        SelectedClass = $("#selectedClass")[0].options[$("#selectedClass")[0].selectedIndex].value;
+        classes = "";
+        Title = "";
+        personcount = "";
+        divMain = $("#divMain");
+        MineName = "";
+        divMain[0].innerHTML = null;
+        divMain.empty();
+        InMineCount = 0;
+        $("#lbl_InMineCount")[0].innerText = "0";
+        var tt = new Array();
+        $(object).each(function(index, item) {
+            InMineCount++;
+
+            $("#lbl_InMineCount")[0].innerHTML = InMineCount;
+            MineName = item.SimpleName;
+            switch (SelectedClass) {
+            case "1": // 按部门分组
+                Title = item.Department;
+                personcount = "lbl" + item.Department;
+                classes = "div" + item.Department;
+                break;
+            case "2": //按职务分组
+                Title = item.Position;
+                personcount = "lbl" + item.Position;
+                classes = "div" + item.Position;
+                break;
+            case "3": //按所在位置分组
+                Title = item.Place;
+                personcount = "lbl" + item.Place;
+                classes = "div" + item.Place;
+                break;
+            default: //默认按部门分组
+                Title = item.Department;
+                personcount = "lbl" + item.Department;
+                classes = "div" + item.Department;
+                break;
+            }
+            //组对象
+            GroupInfo = $("#divMain").find("#" + classes);
+            //查找人数
+            lablePersonCount = $("#divMain").find("#" + personcount);
+
+            if (item.Department == null) {
+                img = "<img src='../content/themes/image/worker.png' style='width:40px;' />";
+            } else {
+                if (item.Department.indexOf("领导") >= 0 | item.Department.indexOf("特殊") >= 0 | item.Department.indexOf("办") >= 0) {
+                    img = "<img src='../content/themes/image/manager.png' style='width:40px;' />";
+                } else {
+                    img = "<img src='../content/themes/image/worker.png' style='width:40px;' />";
+                }
+            }
+            PersonInfo =
+                "<div ondblclick='showRTTrack(this)'   onclick='showDetail(this,1)'  style='text-align: center; width:60px; font-size: 12px; font-family: SimSun; float: left; " +
+                " border-style: dotted; z-index:100; border-width: 0px;border-spacing: 5px 5px;'>" +
+                img +
+                "<br />" +
+                item.Name +
+                "<table style='width:60px;text-align:left; font-size:12px;'>" +
+                "<tr>" +
+                "<td id='tr_MineCode' style='display :none;'>" +
+                item.MineCode +
+                "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td id='tr_JobCardCode' style='display :none;'>" +
+                item.JobCardCode +
+                "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td id='tr_name' style='display :none;'>" +
+                "姓名：" + item.Name +
+                "</td>" +
+                "</tr>" +
+                "<tr id='tr_position' style='display :none;'>" +
+                "<td >" +
+                "职务：" + item.Position +
+                "</td>" +
+                "</tr>" +
+                "<tr id='tr_dept' style='display :none;'>" +
+                "<td >" +
+                "部门：" + item.Department +
+                "</td>" +
+                "</tr>" +
+                "<tr id='tr_stationposition' style='display :none;'>" +
+                "<td >" +
+                "当前位置：" + item.Place +
+                "</td>" +
+                "</tr>" +
+                "<tr id='tr_intime' style='display :none;'>" +
+                "<td >" +
+                "进入时间：" + item.InNowStTime +
+                "</td>" +
+                "</tr>" +
+                "<tr id='tr_inminetime' style='display :none;'>" +
+                "<td >" +
+                "下井时间：" + item.InTime +
+                "</td>" +
+                "</tr>" +
+                "</table>" +
+                "</div>";
+
+
+            if (GroupInfo.length > 0) {
+                if (item.Department.indexOf("领导") >= 0 | item.Department.indexOf("特殊") >= 0 | item.Department.indexOf("办") >= 0) { //工人显示在后面
+                    $("#" + classes).prepend(PersonInfo);
+                } else { //领导显示在前面
+                    $("#" + classes).append(PersonInfo);
+                }
+                if (lablePersonCount.length > 0) {
+                    lablePersonCount[0].innerText = (parseInt(lablePersonCount[0].innerText) + 1);
+                }
+            } else {
+                //工人显示在后面
+                if (item.Department.indexOf("领导") >= 0 | item.Department.indexOf("特殊") >= 0 | item.Department.indexOf("办") >= 0) {
+                    $("#divMain").prepend(
+                          "<div style='float:left;'>" +
+                        "<label style='font-family:黑体;font-size:17px;'>" + Title + "[</label>" +
+                        "<label id='" + personcount + "' style='font-family:黑体;font-size:17px;'>1</label>" +
+                        "<label style='font-family:黑体;font-size:17px;'>人]</label>" +
+                        "</div>" +
+                           "<br/>" +
+                       "<div style='width:10%;border-top-width:1px;border-bottom-width:0px;border-right-width:0px;border-left-width:0px;border-style:solid;border-color:silver;margin:1px 0px 1px 0px;'></div>" +
+                        "<div id=" + classes + " style='float:left;width:100%;clear:both;'>" +
+                        PersonInfo +
+                        "</div>" +
+                        "<br/>" +
+                        "<br/>" +
+                        "<br/>" +
+                        "<br/>" +
+                        "<br/>"
+                    );
+                } else { //领导显示在前面
+                    $("#divMain").append(
+                        "<div style='float:left;'>" +
+                        "<label style='font-family:黑体;font-size:17px;margin:0 0 0 0;'>" + Title + " [</label>" +
+                        "<label id='" + personcount + "' style='font-family:黑体;font-size:17px;'>1</label>" +
+                        "<label style='font-family:黑体;font-size:17px;'>人]</label>" +
+                        "</div>" +
+                           "<br/>" +
+                        "<div style='width:10%;border-top-width:1px;border-bottom-width:0px;border-right-width:0px;border-left-width:0px;border-style:solid;border-color:silver;margin:1px 0px 1px 0px;'></div>" +
+                        "<div id=" + classes + " style='float:left;width:100%;clear:both;'>" +
+                        PersonInfo +
+                        "</div>" +
+                        "<br/>" +
+                        "<br/>" +
+                        "<br/>" +
+                        "<br/>" +
+                        "<br/>"
+                    );
+                }
+            }
+
+
+        });
+        SelectedClass = null;
+        classes = null;
+        Title = null;
+        personcount = null;
+        divMain = null;
+        MineName = null;
+        img = null;
+        GroupInfo = null;
+        lablePersonCount = null;
+    }
+
+    function getParameterByName(name) {
+        var queryname = name.toLowerCase();
+        var match = RegExp('[?&]' + queryname + '=([^&]*)')
+            .exec(window.location.search.toLowerCase());
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
+    function LoadData() {
+        var minecode = getParameterByName("MineCode");
+        if (minecode == null) minecode = "";
+        if (minecode == "") {
+            if (listMineInfoIndex > listMineInfo.length - 1) {
+                listMineInfoIndex = 0;
+            }
+            minecode = listMineInfo[listMineInfoIndex].mineCode;
+            $("#lbl_title")[0].innerText = listMineInfo[listMineInfoIndex].mineName.replace(/\r\n/g, '') + "下井人员名单";
+            listMineInfoIndex++;
+
+        } else {
+            $(listMineInfo).each(function(index, item) {
+                if (item.mineCode == minecode) {
+                    $("#lbl_title")[0].innerText = item.mineName.replace(/\r\n/g, '') + "下井人员名单";
+                }
+            });
+        }
+
+        $("#body").click("$('#divDisplay').css(display:'none')");
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "../person/ReturnXX?minecode=" + minecode,
+            dataType: "json",
+            success: function(data) { ReadData(data); }
+        });
+
+        if ($("#divDisplay").length > 0) {
+            if ($("#divDisplay")[0].style.left < 20) {
+                $("#divDisplay").css({ display: "none" });
+            }
+        }
+
+    }
+
+    function displayOrNot() {
+        if ($("#divDisplay")[0].style.display == "inline") {
+            $("#divDisplay")[0].style.display == "none"
+        }
+    }
+
+    $(document).ready(function() {
+
+        LoadMinesInfo();
+        LoadData();
+
+    });
+
+    window.setInterval("LoadData()", 10000);
+
+</script>
+
+<div id="divRTTrackDetail" class="easyui-dialog" title="下井人员实时轨迹" data-options="closed:true" style="width: 800px; height: 400px;">
+    <table id="dgvShowDetail" class="easyui-datagrid" data-options="fit:true"></table>
+
+</div>
+
+<table style="width:100%;border-style:solid;border-width:0px; border-color:silver;" onclick="displayOrNot()">
+    <tr>
+        <td>
+            <div style="width:100%; text-align:center; z-index:-1;">
+                <label id="lbl_title" style="font-family:SimHei;font-size:20px;"></label>
+            </div>
+            <div id="divInMineCount" style="font-family:黑体;font-size:12px; text-align:right">
+                <label>分组方式:</label>
+                <select style="width:100px;" id="selectedClass" onchange="LoadData()">
+                    <option value="1">
+                        按部门分组
+                    </option>
+                    <option value="2">
+                        按职务分组
+                    </option>
+                    <option value="3">
+                        按所在位置分组
+                    </option>
+                </select>&nbsp;&nbsp;
+                当前下井：[<label id="lbl_InMineCount" style="font-family:黑体;font-size:12px">0</label>
+                <label style="font-family:黑体;font-size:12px">人]</label>
+            </div>
+            <div id="divMain" style="float:left;width:100%; z-index:-1;">
+            </div>
+            <div id="divDisplay" style="z-index: 100; background-color:snow; text-align: right; border-style: dotted; border-width:1px;  position: absolute; width: 180px; height: 150px; display: none; background:url('../content/themes/icons/clear.png') right top no-repeat; background-color:snow;" onclick="$(this)[0].style.display='none'">
+              
+            </div>
+        </td>
+    </tr>
+</table>

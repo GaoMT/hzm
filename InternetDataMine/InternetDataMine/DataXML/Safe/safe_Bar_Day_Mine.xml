@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-24-->
+<freeform>
+  <Properties>
+    <backGround bgColor="#FFFFFF"/>
+  </Properties>
+  <Fonts>
+    <Font faceName="微软雅黑" size="-13"/>
+    <Font size="14"/>
+    <Font size="-16" bold="1"/>
+  </Fonts>
+  <objects>
+    <TableLayout id="layout" y="3" width="100%" >
+      <!--<col width="250px"/>-->
+      <col width="250px"/>
+      <col width="250px"/>
+      <col width="20px"/>
+      <col width="80px"/>
+      <tr height="20">
+        <!--<td>
+          <Input id="MineName" type="EditableDropTreeList" taborder ="2" isHide="absTrue" align="left" leftText="煤矿名称：" leftTextAlign="right" leftsize="1"  treelistURL="../../dataxml/public/Public_Bar_MineSelect.xml" dataCol="MineCode" displayCol="SimpleName"/>
+        </td>-->
+        <td>
+          <Input id="DevType" type="EditableDropTreeList" tabOrder="3" align="left" leftText="设备名：" leftTextAlign="right" leftSize="1" treelistURL="../../dataxml/safe/Safe_DropList_SensorTypeSelect.xml" dataCol="TypeCode" displayCol="TypeName"/>
+        </td>
+        <td>
+          <Input id="StartTime" type="Edit" tabOrder="3" defaultValue="=now()" align="left" leftText="查询日期：" leftTextAlign="right" leftSize="1" value="2014.11.25" dataType="dateTime" editMask="YYYY-MM-DD"/>
+        </td>
+        <td></td>
+        <td>
+          <Input id="Query" type="Button" taborder="4" text="查询" picture="../../Content/themes/icons/search.png" at="left"/>
+        </td>
+      </tr>
+    </TableLayout>
+  </objects>
+</freeform>

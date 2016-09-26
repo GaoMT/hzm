@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--By Supcan Report -->
+<Report>
+  <WorkSheet name="Report_FeedBack" isDefaultPrint="true">
+    <Properties>
+      <BackGround bgColor="#FFFFFF" arrange="left,top" alpha="255"/>
+      <DefaultTD>
+        <TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" isRound="true" isPrint="true"/>
+      </DefaultTD>
+      <Other isShowZero="true" isRefOriPrecision="true" LineDistance="0" isRowHeightAutoExtendAble="true"/>
+    </Properties>
+    <Fonts>
+      <Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+      <Font faceName="微软雅黑" charSet="134" height="-27" weight="700"/>
+    </Fonts>
+    <Table>
+      <Col width="0"/>
+      <Col width="100"/>
+      <Col width="80"/>
+      <Col width="80"/>
+      <Col width="140"/>
+      <Col width="140"/>
+      <Col width="140"/>
+      <Col width="140"/>
+      <Col width="140"/>
+      <!--<Col width="100"/>-->
+      <Col width="15"/>
+      <TR height="24" sequence="0">
+        <TD col="0" fontIndex="1" align="center">超员报警统计</TD>
+      </TR>
+      <TR height="24" sequence="1">
+        <TD col="1">1</TD>
+      </TR>
+      <TR height="24" sequence="2">
+        <!--<TD col="0" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">煤矿编号</TD>-->
+        <TD col="1" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" formula="=headrow(&apos;Report_FeedBack&apos;)">煤矿名称</TD>
+        <!--<TD col="2" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">系统类型</TD>-->
+        <TD col="2" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">人员姓名</TD>
+        <TD col="3" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">职务</TD>
+        <TD col="4" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">部门</TD>
+        <TD col="5" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">下井时间</TD>
+        <TD col="6" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">开始时间</TD>
+        <TD col="7" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">结束时间</TD>
+        <TD col="8" leftBorderColor="#000000" topBorderColor="#000000" datatype="1">持续时长</TD>
+        <TD col="9" leftBorderColor="#000000"/>
+      </TR>
+      <TR height="24" sequence="3">
+        <!--<TD col="0" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" topBorder="1"></TD>-->
+        <TD col="1" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" formula="=datarow(&apos;Report_FeedBack&apos;)"></TD>
+        <TD col="2" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" topBorder="1"></TD>
+        <TD col="3" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" topBorder="1"></TD>
+        <TD col="4" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" topBorder="1"></TD>
+        <TD col="5" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" topBorder="1"></TD>
+        <TD col="6" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" topBorder="1"></TD>
+        <TD col="7" leftBorderColor="#000000" topBorderColor="#000000" datatype="1" topBorder="1"></TD>
+        <TD col="8" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>
+        <!--<TD col="6" leftBorderColor="#000000" topBorderColor="#000000" datatype="1"></TD>-->
+        <TD col="9" leftBorderColor="#000000" topBorder="1"/>
+      </TR>
+      <TR height="24" sequence="4">
+        <!--<TD col="0" topBorderColor="#000000" topBorder="1"/>-->
+        <TD col="1" topBorderColor="#000000" topBorder="1"/>
+        <TD col="2" topBorderColor="#000000"/>
+        <TD col="3" topBorderColor="#000000"/>
+        <TD col="4" topBorderColor="#000000"/>
+        <TD col="5" topBorderColor="#000000"/>
+        <TD col="6" topBorderColor="#000000"/>
+        <TD col="7" topBorderColor="#000000">制表人：</TD>
+        <TD col="8" topBorderColor="#000000"/>
+        <!--<TD col="6" topBorderColor="#000000"></TD>-->
+        <TD col="9" topBorder="1"/>
+      </TR>
+      <TR height="24" sequence="5">
+        <TD col="7">制表时间：</TD>
+        <!--<TD col="6" topBorder="0"/>-->
+      </TR>
+      <TR height="24" sequence="6">
+        <TD col="15" topBorder="0"/>
+      </TR>
+      <TR height="24" sequence="7">
+        <TD col="15" topBorder="0"/>
+      </TR>
+      <TR height="24" sequence="8">
+        <TD col="15" topBorder="0"/>
+      </TR>
+      <TR height="24" sequence="9">
+        <TD col="15" topBorder="0"/>
+      </TR>
+      <TR height="15" sequence="10">
+        <TD col="0" leftBorder="0"/>
+        <TD col="1" leftBorder="0"/>
+        <TD col="2" leftBorder="0"/>
+        <TD col="3" leftBorder="0"/>
+        <TD col="4" leftBorder="0"/>
+        <TD col="5" leftBorder="0"/>
+        <TD col="6" leftBorder="0"/>
+      </TR>
+    </Table>
+    <Merges>
+      <Range row1="0" col1="0" row2="1" col2="8"/>
+      <Range row1="4" col1="7" row2="4" col2="8"/>
+      <Range row1="5" col1="7" row2="5" col2="8"/>
+    </Merges>
+    <PrintPage>
+      <Paper oriantation="landscape">
+        <Margin left="19" top="25" right="19" bottom="25"/>
+      </Paper>
+      <Page align="center" isPrintEmptyRow="false" isIgnoreValidBorder="true">
+        <GridLine isPrintDefinedLineOnly="true"/>
+        <PageCode>
+          <Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+        </PageCode>
+      </Page>
+    </PrintPage>
+  </WorkSheet>
+  <DataSources Version="255" isAutoCalculateWhenOpen="false" isSaveCalculateResult="false">
+    <DataSource type="4">
+      <!-- Desc: Supcan Report Component DataSource Specification -->
+      <Data>
+        <ID>Report_FeedBack</ID>
+        <Version>2</Version>
+        <Type>4</Type>
+        <TypeMeaning>JSON</TypeMeaning>
+        <Source>../TransJson/TransJsonToTreeList?DataType=ReportBKD&amp;ReportName=Report_FeedBack</Source>
+        <XML_RecordAble_Nodes>
+          <Node>
+            <name>jsonobject</name>
+          </Node>
+        </XML_RecordAble_Nodes>
+        <Columns>
+          <!--<Column>
+            <name>jsonobject\MineCode</name>
+            <text>煤矿编号</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>1</sequence>
+          </Column>-->
+          <Column>
+            <name>jsonobject\SimpleName</name>
+            <text>煤矿名称</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>2</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\Name</name>
+            <text>人员姓名</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>3</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\Position</name>
+            <text>职务</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>4</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\Department</name>
+            <text>部门</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>5</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\InTime</name>
+            <text>下井时间</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>6</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\StartAlTime</name>
+            <text>超时开始时间</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>6</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\EndAlTime</name>
+            <text>超时结束时间</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>6</sequence>
+          </Column>
+          <Column>
+            <name>jsonobject\continuoustime</name>
+            <text>持续时长</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>6</sequence>
+          </Column>
+
+        </Columns>
+      </Data>
+    </DataSource>
+  </DataSources>
+</Report>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=Duty" OriUrl="../../TransJson/TransJsonToTreeList?DataType=Duty">
+  </Properties>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="Duty"  width="100%" align="center">职务</Col>
+  </Cols>
+</TreeList>

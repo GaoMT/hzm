@@ -1,0 +1,5 @@
+﻿
+@{
+    ViewBag.Title = "安全生产综合管理系统";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}

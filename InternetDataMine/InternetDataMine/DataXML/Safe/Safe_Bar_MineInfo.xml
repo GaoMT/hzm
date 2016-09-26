@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-21-->
+<freeform>
+  <Properties>
+    <backGround bgColor="#ffffff"/>
+  </Properties>
+  <Fonts>
+    <Font faceName="微软雅黑" charSet="134" height="-13"/>
+    <Font faceName="微软雅黑" charSet="134" height="14"/>
+    <Font faceName="微软雅黑" charSet="134" height="-24" weight="700" isAntiAlias="true" ShadowAlpha="118" ShadowBlur="13" ShadowX="3" ShadowY="3"/>
+  </Fonts>
+  <objects>
+    <TableLayout id="layout" y="3" width="100%" >
+      <col width="10px"/>
+      <col width="80px"/>
+      <col width="25%"/>
+      <col width="5%"/>
+      <col width="10%"/>
+      <col width="80px"/>
+      <col width="80px"/>
+      <tr height="20">
+        <td>
+
+        </td>
+          <td>
+          <Input id="StopRefresh" type="CheckBox" taborder ="1"  align="left" Text="停止刷新"  />
+        </td>
+        <td>
+          <Input id="MineName" type="EditableDropTreeList" taborder ="2" align="left" leftText="煤矿名称：" leftTextAlign="right" leftsize="1" treelistURL="../../dataxml/Public/Public_Bar_MineSelect.xml" dataCol="MineCode" displayCol="SimpleName"/>
+        </td>
+        <td></td>
+        <td></td>
+        <td>
+          <Input id="Query" type="Button" taborder="4" text="查询" picture="../../Content/themes/icons/search.png" at="left"/>
+        </td>
+      </tr>
+    </TableLayout>
+  </objects>
+</freeform>

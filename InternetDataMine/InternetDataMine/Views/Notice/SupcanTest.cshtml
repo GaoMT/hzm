@@ -1,0 +1,53 @@
+﻿@model InternetDataMine.Models.PersonModel
+
+@{
+    ViewBag.Title = "SupcanTest";
+    string dataX = @Model.ReturnPersons();
+}
+
+<script src="~/bundles/supcan"></script>
+<script src="~/bundles/jquery"></script>
+<script type="text/javascript">
+    function OnReady(id)
+    {
+        List.func("Build", "../DataXML/TestList.xml");
+        Bar.func("Build", "../DataXML/Bar.xml")
+        DoubleKill("Build","../DataXML/DoubleKill.xml")
+        var s="[{\"Name\":\"AA\",\"Age\":\"45\",\"Remark\":\"ddddd\"}]";
+        loadData();
+       
+    }
+
+    function loadData() {
+        $.ajax(
+            {
+                type: "POST",
+                dataType: "text",
+                url: "../person/Getjson",
+                success: function (data) {
+                    List.func("load", data);
+                }
+            });
+    }
+
+
+</script>
+
+
+<div style="height:200px">
+    <script type="text/javascript">
+        insertFreeForm('Bar','');
+    </script>
+
+</div>
+<div style="height:600px">
+    <script type="text/javascript">
+        insertTreeList('List','')
+
+    </script>
+</div>
+<div style="height:auto">
+    <script type="text/javascript">
+    insertFreeForm('DoubleKill', '')
+    </script>
+    </div>

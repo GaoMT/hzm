@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2015-2-4-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=PointType" OriUrl="../../TransJson/TransJsonToTreeList?DataType=PointType">
+  </Properties>
+  <Cols>
+    <Col name="TypeName"  width="90" align="center">测点类型</Col>
+    <Col name="TypeCode"  width="90" align="center">编号</Col>
+  </Cols>
+</TreeList> 

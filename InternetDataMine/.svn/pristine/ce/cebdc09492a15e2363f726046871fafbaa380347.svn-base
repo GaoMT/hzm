@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=RYAreaInfo" OriUrl="../../TransJson/TransJsonToTreeList?DataType=RYAreaInfo">
+  </Properties>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="120" align="center">煤矿名称</Col>
+    <Col name="city" isHide="absTrue"  width="90" align="center">归属城市</Col>
+    <Col name="AreaType"  width="120" align="center">区域类型</Col>
+    <Col name="AreaCode"  isHide="absTrue" align="center">区域代码</Col>
+    <Col name="Workers" isHide="absTrue" width="150" align="center">核定人数</Col>
+    <Col name="AreaName"  width="120" align="center">区域名称</Col>
+    <Col name="Time" datatype ="datetime"  width="150" align="center">最近更新时间</Col>
+  </Cols>
+</TreeList>

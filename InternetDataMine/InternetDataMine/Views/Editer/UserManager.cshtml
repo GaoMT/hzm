@@ -1,0 +1,336 @@
+﻿@{
+    Layout = "../shared/_LayoutEditer.cshtml";
+
+}
+<script type="text/javascript">
+
+
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    //用户组下拉框加载数据
+    $('#UserGroup').ready(function () {
+        $('#UserGroup').combobox({
+            url: '../Editer/TransData?type=UserGroupCombo',
+            valueField: 'id',
+            textField: 'text',
+            value: '请选择用户组',
+            required: true,
+            method: 'post'
+        })
+    });
+    //用户组下拉框加载数据:Edit
+    $('#editgroup').ready(function () {
+        $('#editgroup').combobox({
+            url: '../Editer/TransData?type=UserGroupCombo',
+            valueField: 'id',
+            textField: 'text',
+            value: '请选择用户组',
+            required: true,
+            method: 'post'
+        })
+    });
+    //datagrid加载数据
+    $('#User').ready(function () {
+        $("#User").datagrid({
+            toolbar: '#tb',
+            fitColumns: true,
+            striped: true,
+            singleSelect: false,
+            method: 'Post',
+            url: '../Editer/TransData?type=UserInfo',
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, },
+                { field: 'UserID', title: 'UserID', hidden: true },
+                { field: 'GroupID', title: '用户组编号', hidden: true, width: 100 },
+                { field: 'UserName', title: '用户名', width: 100 },
+                { field: 'RoleName', title: '角色', width: 100 },
+                { field: 'GroupName', title: '用户组', width: 100 },
+                { field: 'PassWord', title: '密码', hidden: true, width: 100 },
+                { field: 'Remark', title: '备注', width: 100 }
+            ]]
+        });
+    });
+    //保存用户
+    function submitForm() {
+        var GroupID = $("#UserGroup").combogrid('getValue');
+        var UserName = $("#UserName").textbox('getText');
+        var Password = $("#pwd").textbox('getText');
+        var Remark = $("#Remark").textbox('getText');
+        
+        if (GroupID == "请选择用户组") {
+            $.messager.alert('提示', '请选择用户组！');
+            return;
+        }
+
+        $('#ff').form('submit', {
+            url: '../Editer/TransData?type=AddUser&GroupID=' + GroupID + "&UserName=" + escape(UserName) + "&Password=" + Password + "&Remark=" + escape(Remark),
+            onSubmit: function () {
+                return $(this).form('enableValidation').form('validate');
+            },
+            success: function (data) {
+                if (data == "True") {
+
+                    AddProcessLogGlobal("添加了用户信息！");
+
+                    $.messager.alert('提示', '用户添加成功！');
+                    $('#dlg').dialog('close');
+                    $('#User').datagrid('reload');
+                }
+                else {
+                    $.messager.alert('提示', '用户添加失败！');
+                }
+            }
+        });
+    }
+    var oldpassword;
+    var userID = "";
+    function alter() {
+        $("#oldpwd").val("");
+        if ($('#User').datagrid('getSelected') != null) {
+            $('#editgroup').combobox('setValue', $('#User').datagrid('getSelected')['GroupID']);
+            $('#editUserName').textbox('setValue', $('#User').datagrid('getSelected')['UserName']);
+            oldpassword = $('#User').datagrid('getSelected')['PassWord'];
+            userID = $('#User').datagrid('getSelected')['UserID'];
+            $('#editdlg').dialog('open');
+        }
+    }
+    //删除用户
+
+    function del() {
+        var rows = $("#User").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+
+        if ($('#User').datagrid('getSelected') != null) {
+            $.messager.confirm('提示', '确认要删除所选项吗？', function (result) {
+                if (result) {
+                    var condition = "";
+                    var index = 0;
+                    for (index = 0; index < rows.length; index++) {
+                        if (index == rows.length - 1) {
+                            condition += "'" + rows[index].UserID + "'";
+                        } else {
+                            condition += "'" + rows[index].UserID + "',";
+                        }
+                    }
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        datatype: "json",
+                        url: '../Editer/TransData?type=DelUser&UserID=' + condition,
+                        success: function (data) {
+                            if (data == "True") {
+                                AddProcessLogGlobal("删除用户信息！");
+                                $.messager.confirm('提示', '删除成功！');
+                                $('#User').datagrid('reload');
+                            } else {
+                                $.messager.confirm('提示', '删除失败！');
+                            }
+                        },
+                        error: function () {
+                            $.messager.confirm('提示', '错误！');
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    //添加用户按钮
+    function AddMenu() {
+        //$("#UserName").val("");
+        //$("#pwd").val("");
+        //$("#rpwd").val("");
+        //$("#Remark").textbox("clear");
+        $(".easyui-textbox").textbox("setText", "");
+        $('#dlg').dialog('open');
+    }
+    //密码一致性校验
+    function Checkpwd() {
+        if ($("#pwd")[0].value != $("#rpwd")[0].value) {
+            $.messager.alert('提示', '两次密码不一致!');
+            $("#rpwd").val("");
+        }
+    }
+    //editdlg save
+    function AlterUser() {
+        if (userID == "") return;
+        $('#newpwd').val("");
+        $('#newrpwd').val("");
+        var GroupID = $('#editgroup').combobox('getValue');
+        var UserName = $('#editUserName').textbox('getText');
+        var Password = $('#newpwd').textbox('getText');
+        var Remark = $('#editRemark').textbox('getText');
+        $.ajax({
+            cache: false,
+            type: "POST",
+            datatype: "json",
+            url: '../Editer/TransData?type=EditUser&UserID=' + userID + '&GroupID=' + GroupID + "&UserName=" + escape(UserName) + "&Password=" + Password + "&Remark=" + escape(Remark),
+            success: function(data) {
+                if (data == "True") {
+                    AddProcessLogGlobal("修改了用户密码！");
+                    $.messager.alert('提示', '修改成功！');
+                    $('#User').datagrid('reload');
+                    $('#editdlg').dialog('close');
+                } else {
+                    $.messager.alert('提示', '修改失败！');
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert(errorThrown);
+            }
+        });
+    }
+    //旧密码验证
+    function oldpasswordcheck() {
+        var returnpassword = "";
+        $.ajax({
+            url: '../Editer/TransData?type=getpassword&Password=' + $('#oldpwd')[0].value + '&oldpassword=' + oldpassword + '',
+            cache: false,
+            type: "POST",
+            datatype: "json",
+            success: function (data) {
+                if (data != "True") {
+                    $.messager.alert('提示', "旧密码错误");
+                    $('#oldpwd').val("");
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert(errorThrown);
+            }
+        });
+    }
+    //editdlg 密码一致性验证
+    function editcheckpwd() {
+        if ($("#newpwd")[0].value != $("#newrpwd")[0].value) {
+            $.messager.alert('提示', '两次密码不一致!');
+            $("#rpwd").val("");
+        }
+    }
+</script>
+
+<table id="User" class="easyui-datagrid" title="用户组信息" data-options="fit:true"></table>
+<div id="tb">
+    <div>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="AddMenu()">添加用户</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="alter()">修改用户</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="del()">删除用户</a>
+    </div>
+</div>
+<div id="dlg" class="easyui-dialog" data-options="modal:true,closed:true" title="添加用户" style="width: 400px; height: 250px;">
+    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width: 100%;">
+            <tr>
+                <td align="right" style="width: 100px;">
+                    <font color="red"> 用户组：</font>
+                </td>
+                <td align="left">
+                    <select id="UserGroup" class="easyui-combobox" data-options="required:true" style="width: 100%; height: 20px;"></select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <font color="red"> 用户名：</font>
+                </td>
+                <td align="left">
+                    <input data-options="prompt:'用户名',required:true" id="UserName" name="UserName" type="text" class="easyui-textbox" style="width: 100%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <font color="red"> 密码：</font>
+                </td>
+                <td align="left">
+                    <input type="password" id="pwd" name="pwd" type="text" class="easyui-textbox" data-options="prompt:'密码',required:true" style="width: 100%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <font color="red"> 确认密码：</font>
+                </td>
+                <td align="left">
+                    <input type="password" id="rpwd" name="rpwd" type="text" class="easyui-textbox" onblur="Checkpwd()" data-options="required:true" style="width: 100%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right">备注：
+                </td>
+                <td align="left">
+                    <input type="text" id="Remark" name="Remark" class="easyui-textbox" data-options="multiline:true" style="width: 100%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+
+                <td colspan="2" align="right" style="padding-top: 10px; padding-bottom: 10px; text-align: center; vertical-align: middle;">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width: 150px;" onclick="submitForm()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="editdlg" class="easyui-dialog" title="编辑用户" data-options="closed:true" style="width: 420px; height: 300px; padding-top: 40px">
+    <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width: 100%; margin-top: 20px;">
+            <tr>
+                <td align="right" style="width: 20%;">
+                    <font color="red"> 用户组：</font>
+                </td>
+                <td align="left">
+                    <input type="text" id="editgroup" name="editgroup" class="easyui-combobox" data-options="multiline:true" style="width: 90%; height: 20px;" />
+                </td>
+                <tr>
+                    <td align="right">
+                        <font color="red"> 用户名：</font>
+                    </td>
+                    <td align="left">
+                        <input data-options="required:true" id="editUserName" name="editUserName" class="easyui-textbox" style="width: 90%; height: 20px;" />
+                    </td>
+                </tr>
+            <tr>
+                <td align="right">
+                    <font color="red"> 旧密码：</font>
+                </td>
+                <td align="left">
+                    <input type="password" id="oldpwd" name="pwd" class="easyui-textbox" onblur="oldpasswordcheck()" data-options="required:true" style="width: 90%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <font color="red"> 新密码：</font>
+                </td>
+                <td align="left">
+                    <input type="password" id="newpwd" name="pwd" class="easyui-textbox" data-options="required:true" style="width: 90%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <font color="red"> 确认密码：</font>
+                </td>
+                <td align="left">
+                    <input type="password" id="newrpwd" name="rpwd" class="easyui-textbox" onblur="editcheckpwd()" data-options="required:true" style="width: 90%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="right">备注：
+                </td>
+                <td align="left">
+                    <input type="text" id="editRemark" name="Remark" class="easyui-textbox" data-options="multiline:true" style="width: 90%; height: 20px;" />
+                </td>
+            </tr>
+            <tr>
+
+                <td colspan="2" style="padding-left: 20px; padding-top: 10px; padding-bottom: 10px; text-align: center; vertical-align: middle;">
+                    <a href="javascript:void(0)" style="width: 150px;" data-options="iconCls:'icon-save'" class="easyui-linkbutton" onclick="AlterUser()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+

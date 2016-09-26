@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpMap.Layers.HeatLayer</name>
+    </assembly>
+    <members>
+        <member name="T:SharpMap.Layers.BlendOperation">
+            <summary>
+            List of possible blend operations
+            </summary>
+        </member>
+        <member name="F:SharpMap.Layers.HeatLayer._bitmaps">
+            <summary>
+            A list of dots, that are used as heat value markers
+            </summary>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.#ctor">
+            <summary>
+            Creates an instance of this class
+            </summary>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.#ctor(SharpMap.Layers.VectorLayer,System.String,System.Single)">
+            <summary>
+            Creates an instance of this class
+            </summary>
+            <param name="vectorLayer">The base layer</param>
+            <param name="heatValueColumn">The name of the column that contains the heat value</param>
+            <param name="heatValueScale">A value that is responsible to scale the heat value to the range &#x211d;[0, 1f]</param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.#ctor(SharpMap.Data.Providers.IProvider,System.String,System.Single)">
+            <summary>
+            Creates an instance of this class
+            </summary>
+            <param name="provider">The provider</param>
+            <param name="heatValueColumn">The name of the column that contains the heat value</param>
+            <param name="heatValueScale">A value that is responsible to scale the heat value to the range &#x211d;[0, 1f]</param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.#ctor(SharpMap.Layers.VectorLayer,System.Func{SharpMap.Data.FeatureDataRow,System.Single})">
+            <summary>
+            Creates an instance of this class
+            </summary>
+            <param name="vectorLayer">The base layer</param>
+            <param name="heatComputer">A function to compute the heat value from a <seealso cref="T:SharpMap.Data.FeatureDataRow"/></param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.#ctor(SharpMap.Data.Providers.IProvider,System.Func{SharpMap.Data.FeatureDataRow,System.Single})">
+            <summary>
+            Creates an instance of this class
+            </summary>
+            <param name="provider">The provider</param>
+            <param name="heatComputer">A function to compute the heat value from a <seealso cref="T:SharpMap.Data.FeatureDataRow"/></param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.Render(System.Drawing.Graphics,SharpMap.Map)">
+            <summary>
+            Renders the layer
+            </summary>
+            <param name="g">Graphics object reference</param>
+            <param name="map">Map which is rendered</param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">
+            <summary>
+            Returns the data associated with all the geometries that are intersected by 'geom'
+            
+            Note! The table added should be named according to the LayerName!
+            </summary>
+            <param name="box">Bounding box to intersect with</param>
+            <param name="ds">FeatureDataSet to fill data into</param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">
+            <summary>
+            Returns the data associated with all the geometries that are intersected by 'geom'
+            
+            Note! The table added should be named according to the LayerName!
+            </summary>
+            <param name="geometry">Geometry to intersect with</param>
+            <param name="ds">FeatureDataSet to fill data into</param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.CalculateZoomMinMax(System.Double)">
+            <summary>
+            Method compute the <seealso cref="P:SharpMap.Layers.HeatLayer.ZoomMin"/> and <seealso cref="P:SharpMap.Layers.HeatLayer.ZoomMax"/> values
+            </summary>
+            <param name="portion">A protion that is to be cut off. Value must be less than 0.5f</param>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.GenerateDots">
+            <summary>
+            Method to generate the base markers for different zoom levels
+            </summary>
+            <returns>An array of bitmaps</returns>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.ApplyHeatValueToImage(System.Drawing.Bitmap,System.Single)">
+            <summary>
+            Change the intensity of the image
+            </summary>
+            <param name="image">The dot image</param>
+            <param name="weight">The weight to apply</param>
+            <returns>The weighted image</returns>
+        </member>
+        <member name="M:SharpMap.Layers.HeatLayer.GetZoomIndex(System.Double)">
+            <summary>
+            Method to get the symbol index for the <paramref name="zoom"/>
+            </summary>
+            <param name="zoom">The zoom</param>
+            <returns>The symbol's index</returns>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.HeatValueComputer">
+            <summary>
+            A delegate function definition that computes the heat value from a <seealso cref="T:SharpMap.Data.FeatureDataRow"/>
+            </summary>
+            <returns>A value in the range ℝ[0, 1f] </returns>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.HeatColorBlend">
+            <summary>
+            A color blend that transforms heat values into colors.
+            <para>Note: in order to make non hot areas transparent, be sure to start your
+            <seealso cref="T:SharpMap.Rendering.Thematics.ColorBlend"/> with a <seealso cref="T:System.Drawing.Color"/> that has an 
+            <seealso cref="P:System.Drawing.Color.A"/> value of 0.</para>
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.HeatValueColumn">
+            <summary>
+            Gets or sets the name of the column that contains the heat value
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.HeatValueScale">
+            <summary>
+            Gets or sets a scale value to get a heat value in the range &#x211d;[0, 1].
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.BaseLayer">
+            <summary>
+            Gets the base layer
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.DataSource">
+            <summary>
+            Gets the provider that serves the heat value features
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.Fire">
+            <summary>
+            Gets a linear gradient scale with 5 colors making a fire-like color blend
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.Classic">
+            <summary>
+            Gets a linear gradient scale with seven colours making a rainbow from red to violet.
+            </summary>
+            <remarks>
+            Colors span the following with an interval of 1/6:
+            { Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo, Color.Violet }
+            </remarks>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.Envelope">
+            <summary>
+            Returns the extent of the layer
+            </summary>
+            <returns>Bounding box corresponding to the extent of the features in the layer</returns>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.IsQueryEnabled">
+            <summary>
+            Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, 
+            ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE.
+            This property currently only applies to WMS and should perhaps be moved to a WMS
+            specific class.
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.ZoomMin">
+            <summary>
+            Gets or sets the <see cref="P:SharpMap.Map.Zoom"/> value, at which the biggest heat value symbol should be drawn
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.ZoomMax">
+            <summary>
+            Gets or sets the <see cref="P:SharpMap.Map.Zoom"/> value, at which the smallest heat value symbol should be drawn
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.OpacityMin">
+            <summary>
+            Gets or sets an opacity value for the <seealso cref="P:SharpMap.Layers.HeatLayer.ZoomMin"/> value
+            </summary>
+        </member>
+        <member name="P:SharpMap.Layers.HeatLayer.OpacityMax">
+            <summary>
+            Gets or sets an opacity value for the <seealso cref="P:SharpMap.Layers.HeatLayer.ZoomMax"/> value
+            </summary>
+        </member>
+        <member name="T:SharpMap.Layers.ImageBlender">
+            <summary>
+            Class for image blending operations.
+            </summary>
+            <seealso href="http://www.codeproject.com/KB/GDI-plus/KVImageProcess.aspx"/>
+            <remarks>
+            ToDo This class is neat, but overkill: 
+            Only <see cref="F:SharpMap.Layers.BlendOperation.BlendMultiply"/> is used along with the 
+            <see cref="M:SharpMap.Layers.ImageBlender.BlendImages(System.Drawing.Bitmap,System.Int32,System.Int32,System.Int32,System.Int32,SharpMap.Layers.BlendOperation)"/> 
+            function</remarks>
+        </member>
+        <member name="F:SharpMap.Layers.ImageBlender.NtscRedWeight">
+            NTSC defined color weights
+        </member>
+        <member name="M:SharpMap.Layers.ImageBlender.Invert(System.Drawing.Image)">
+            <summary>
+            Method to invert an image
+            </summary>
+            <param name="img">The image to invert</param>
+        </member>
+        <member name="M:SharpMap.Layers.ImageBlender.AdjustBrightness(System.Drawing.Image,System.Single,System.Single,System.Single)">
+            <summary>
+            Method to adjust an image's brightness
+            </summary>
+            <param name="img">The image</param>
+            <param name="adjValueR">Adjustment value for the red channel [-1f, 1f]</param>
+            <param name="adjValueG">Adjustment value for the green channel [-1f, 1f]</param>
+            <param name="adjValueB">Adjustment value for the blue channel [-1f, 1f]</param>
+        </member>
+        <member name="M:SharpMap.Layers.ImageBlender.AdjustBrightness(System.Drawing.Image,System.Single)">
+            <summary>
+            Method to adjust an image's brightness
+            </summary>
+            <param name="img">The image</param>
+            <param name="adjValue">Adjustment value for all channels [-1f, 1f]</param>
+        </member>
+    </members>
+</doc>

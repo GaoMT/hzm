@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "AQJKRTData";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript" src="../../binary/dynaload.js?20"> </script>
+<script type="text/javascript">
+
+    //获取URL参数的值
+    function getParameterByName(name) {
+        var queryname = name.toLowerCase();
+        var match = RegExp('[?&]' + queryname + '=([^&]*)')
+            .exec(window.location.search.toLowerCase());
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+    
+    var minecode = null;
+    //硕正控件入口函数
+    function OnReady(id) {
+        minecode = getParameterByName("minecode");
+        AF.func("Build", "../dataxml/safe/Safe_Data_RealData.xml");
+        AF.func("OpenFreeformBar", "../DataXML/freeformpager2.xml \r\n bBar");//打开bBar
+        var h = AF.func("GetHandle", "");//获取datalist句柄
+        var hBbar = AF.func("GetHandle", "bBar");//获取bBar句柄
+        AF.func(hBbar + "BindPager", h + "\r\n ID0");
+        ChangeRowsLength();
+        LoadData();
+        AF.func("bBar.timerRoundPage", "ID0 \r\n 10000");
+
+    }
+
+
+    var times = 0;
+    var mystopRefresh = false;
+
+    //改变每页总行数
+    function ChangeRowsLength()
+    {
+        var myHeight = parseInt($("#myGrid")[0].style.height.replace("px", ""));
+        var myrows = (myHeight - 80) / 26;
+        var hBbar = AF.func("GetHandle", "bBar");//获取bBar句柄
+        AF.func(hBbar + "SetObjectProp", "ID0\r\n pageRows  \r\n" + myrows); //让Treelist异步加载数据
+    }
+
+    function stopRefresh(obj)
+    {
+        if(obj.checked)
+        {
+            AF.func("bBar.timerRoundPage", "ID0 \r\n 0");
+        }
+        else
+        {
+            AF.func("bBar.timerRoundPage", "ID0 \r\n 10000");
+        }
+    }
+
+
+    function DivChange()
+    {
+        ChangeRowsLength();
+        LoadData();
+    }
+
+    //加载数据
+    function LoadData() {
+        var urlq = "../TransJson/TransJsonToTreeList?DataType=RealData&startRow=@@startRow&rows=@@rows" + getUrlStafix();
+        if (minecode != null)
+            urlq = urlq + "&minecode=" + minecode;
+        var hBbar = AF.func("GetHandle", "bBar");//获取bBar句柄
+        AF.func(hBbar + "SetObjectProp", "ID0\r\n dataURL  \r\n" + urlq + "\r\n mode=asynch"); //让Treelist异步加载数据
+    }
+        
+
+</script>
+<div>
+    <table style="width:100%;height:20px;">
+        <tr>
+            <td class="panel-title" style="text-align:left;">停止刷新<input id="stopRefresh" onclick="stopRefresh(this)" type="checkbox" /></td>
+            
+        </tr>
+    </table>
+</div>
+<div id="myGrid" class="easyui-panel" data-options="fit:true,onResize:function(){DivChange();}" onchange="DivChange()">
+    <div style="height:96%;">
+        <script type="text/javascript">
+            insertTreeList('AF', '');
+        </script>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+﻿@{
+    Layout = null;
+
+
+    System.IO.StreamReader streamReader = new StreamReader(@"C:\Users\HuangGang\Documents\Visual Studio 2013\Projects\InternetDataMine(1)\InternetDataMine\DataXML\Sample.json", System.Text.Encoding.UTF8);
+
+    string TestString = streamReader.ReadToEnd();
+
+    streamReader.Close();
+
+    Response.Write(TestString);
+
+
+    Response.End();
+}

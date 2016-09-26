@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+<global>
+	<hue>Lividity</hue>
+	<dateformat>%Y.%m.%d</dateformat>
+	<datetimeformat>%Y.%m.%d %H:%M:%S</datetimeformat>
+	<MultiLineEnter>Ctrl+Enter</MultiLineEnter>
+	<isWordWrap>false</isWordWrap>
+	<bgColor>context</bgColor>
+	<httpCache>localhostNoCache</httpCache>
+	<httpConnectingPromptTimeout>5</httpConnectingPromptTimeout>
+	<maxParallelHttpTasks>2</maxParallelHttpTasks>
+	<postContentType>application/x-www-form-urlencoded</postContentType>
+	<httpSRTimeOut></httpSRTimeOut>
+	<httpCookieFunction>parse</httpCookieFunction>
+	<pictureAsynchLoadAble>true</pictureAsynchLoadAble>
+	<autoEncodeChineseURL>none</autoEncodeChineseURL>
+	<spinAsCalendar>false</spinAsCalendar>
+	<startDate>=now('%Y.%m.%d')</startDate>
+	<callFuncWhenAsynch>ignore</callFuncWhenAsynch>
+	<chartcolors></chartcolors>
+	<printPreviewColor>detect</printPreviewColor>
+	<SeparateBarWidth>3</SeparateBarWidth>
+	<SeparateBarColor>#F0F0F0,#FFFFFF,#C8C8C8</SeparateBarColor>
+	<convertPicture>
+		<FileType></FileType>
+		<PDF_Precision>-1</PDF_Precision>
+		<PDF_Scale>-1</PDF_Scale>
+	</convertPicture>
+	<RichText>
+		<Tag_sup_begin>{sup}</Tag_sup_begin>
+		<Tag_sup_end>{/sup}</Tag_sup_end>
+		<Tag_sub_begin>{sub}</Tag_sub_begin>
+		<Tag_sub_end>{/sub}</Tag_sub_end>
+	</RichText>
+
+	<XP_manifest>true</XP_manifest>
+</global>
+<Treelist>
+	<menu>copy,paste,pasteNewrow,delete,deleteMore,insert,selectCol,print,addSort,export,import,hue,showruler,separate,expandTree,displayAs,enter</menu>
+	<pasteAbleWhenUnEditAble>false</pasteAbleWhenUnEditAble>
+	<Properties>
+		<isHiLightModified>false</isHiLightModified>
+		<isHiLightNewRow>false</isHiLightNewRow>
+		<multiLayerAble>true</multiLayerAble>
+		<rowHeight>19</rowHeight>
+		<headerHeight>24</headerHeight>
+		<headerFontIndex></headerFontIndex>
+		<disableRowFlag>gray</disableRowFlag>
+		<curselMode>row</curselMode>
+		<isSelectEditWhenFocus>auto</isSelectEditWhenFocus>
+		<innerShadow>top.width=6;top.alpha=25;left.width=2;left.alpha=33</innerShadow>
+		<separateBarStyle>auto</separateBarStyle>
+		<isHideLeftScroll>true</isHideLeftScroll>
+		<isFrozenWhenSeparate>true</isFrozenWhenSeparate>
+		<isDrawUncheckedRadio>false</isDrawUncheckedRadio>
+		<autoBreakLine>0</autoBreakLine>
+		<autoUpdate>false</autoUpdate>
+		<fadeInStep>20</fadeInStep>
+		<leftWidth>35</leftWidth>
+		<dropDataLoadMode>asynch</dropDataLoadMode>
+	</Properties>
+	<Fonts>
+	</Fonts>
+	<col>
+		<width>0.1</width>
+		<editableNewRow>false</editableNewRow>
+		<isThousandSeparat>true</isThousandSeparat>
+	</col>
+	<convertData>
+		<FileType></FileType>
+		<mask>asDisplay</mask>
+		<dropdownMask>asDisplay</dropdownMask>
+		<IncludeHead>xlsx=title;xls=title;rtf=title;htm=name;doc=name</IncludeHead>
+	</convertData>
+	<convertDataCopy>
+		<mask>asData</mask>
+		<dropdownMask>asData</dropdownMask>
+		<IncludeHead>none</IncludeHead>
+		<isIncludeHide>false</isIncludeHide>
+	</convertDataCopy>
+</Treelist>
+<Freeform>
+	<Properties>
+		<isSelectEditWhenFocus>auto</isSelectEditWhenFocus>
+		<HilightUnNullAble>false</HilightUnNullAble>
+		<dropDataLoadMode>asynch</dropDataLoadMode>
+	</Properties>
+	<Fonts>
+	</Fonts>
+	<Objects>
+		<Input>
+			<LeftTextAlign>right</LeftTextAlign>
+		</Input>
+	</Objects>
+</Freeform>
+<Report>
+	<MergeAsExcel>false</MergeAsExcel>
+	<DSAreaIfRowsMerged>false</DSAreaIfRowsMerged>
+	<DSCenterDialogHeader>auto</DSCenterDialogHeader>
+	<DSCenterURL></DSCenterURL>
+	<DSDataFunctionText>none</DSDataFunctionText>
+	<fadeInStep>5</fadeInStep>
+	<fullScreen>TopMost</fullScreen>
+	<DrawInvalidPicture>Text</DrawInvalidPicture>
+	<OptimizeTD>auto</OptimizeTD>
+	<ErrorStackSize>50</ErrorStackSize>
+	<convertData>
+		<FileType></FileType>
+		<mask>asDisplay</mask>
+		<WorkSheet>all</WorkSheet>
+		<Grid>true</Grid>
+		<BackPicture>true</BackPicture>
+	</convertData>
+</Report>
+</root>

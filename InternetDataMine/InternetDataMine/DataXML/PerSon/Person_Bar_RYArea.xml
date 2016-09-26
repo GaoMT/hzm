@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-24-->
+<freeform>
+  <Properties>
+    <backGround bgColor="#ffffff"/>
+  </Properties>
+  <Fonts>
+    <Font faceName="微软雅黑" charSet="134" height="-13"/>
+  </Fonts>
+  <objects>
+    <TableLayout id="layout" y="5" width="100%" >
+      <col width="20%"/>
+      <col width="20%"/>
+      <col width="20%"/>
+      <col width="80px"/>
+      <col width="80px"/>
+      <tr height="20">
+        <td>
+          <Input id="MineName" type="EditableDropTreeList" taborder ="2" align="left" leftText="煤矿名称：" leftTextAlign="right" leftsize="1" treelistURL="../../DataXML/Public/Public_Bar_MineSelect.xml" dataCol="MineCode" displayCol="SimpleName" />
+        </td>
+        <td>
+          <Input id="SensorNum" type="EditableDropTreeList" taborder ="2" align="left" leftText="区  域：" leftTextAlign="right" leftsize="1" treelistURL="../../DataXML/Person/Person_DropList_AreaInfo.xml" datacol="AreaCode" displaycol ="AreaName"/>
+        </td>
+        <td>
+          <Input id="DevType" type="EditableDropTreeList" taborder ="3" align="left" leftText="核定人数：" leftTextAlign="right" leftsize="1" treelistURL="../../DataXML/Person/Person_DropList_RatedNumber.xml" datacol="Workers" displaycol ="Workers"/>
+        </td>
+        <td></td>
+        <td>
+          <Input id="Query" type="Button" taborder="4" text="查询" picture="../../Content/themes/icons/search.png" at="left"/>
+        </td>
+      </tr>
+    </TableLayout>
+  </objects>
+</freeform>

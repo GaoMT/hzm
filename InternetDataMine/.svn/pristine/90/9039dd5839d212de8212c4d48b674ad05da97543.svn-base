@@ -1,0 +1,315 @@
+﻿@{
+    ViewBag.Title = "预警";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+
+<script type="text/javascript">
+
+    var MineCode = "";
+    $(document).ready(function () {
+        MineCode = getQueryString("MineCode");//获取煤矿编号
+        document.all.tdMineName.style.display = "none";
+        if (MineCode == "" || MineCode == null) {
+            document.all.tdMineName.style.display = "";
+            LoadMineCode();
+        }
+
+        LoadDevType();
+        
+        SeachWarn();
+
+        $("#cmbAlarmType").combobox("setText","全部");
+    });
+
+
+    function LoadMineCode() {
+        var url = '../TransJson/TransJsonToTreeList?DataType=WarnMineName';
+        $('#cmbMineCode').combogrid({
+            url: url,
+            idField: 'MineCode',
+            textField: 'SimpleName',
+            panelWidth: 200,
+            editable:false,
+            columns: [[
+                { field: 'MineCode', title: '煤矿编号', width: 120 },
+                { field: 'SimpleName', title: '煤矿名称', width: 60 }
+            ]]
+        });
+        $('#cmbMineCode').combogrid('setText', "全部");
+    }
+    
+    function LoadDevType() {
+        var url = '../TransJson/TransJsonToTreeList?DataType=WarnDevType';
+        $('#cmbDevType').combogrid({
+            url: url,
+            idField: 'TypeCode',
+            textField: 'TypeName',
+            panelWidth: 200,
+            editable: false,
+            columns: [[
+                { field: 'TypeCode', title: '设备编号', width: 60 },
+                { field: 'TypeName', title: '设备名称', width: 60 },
+                { field: 'Unit', title: '单位', width: 60 }
+            ]]
+        });
+        $('#cmbDevType').combogrid('setValue', "全部");
+    }
+
+    var ID = "";
+    function SeachWarn() {
+        var mine = "";
+        if (document.all.tdMineName.style.display == "none") {
+            mine = MineCode;
+        } else {
+            mine = $('#cmbMineCode').combogrid('getValue');
+        }
+        //var minecode = $('#cmbMineCode').combogrid('getValue');
+        var devtype = $('#cmbDevType').combogrid('getValue');
+        var alarmtype = $('#cmbAlarmType').combobox('getValue');
+        var url = '../TransJson/TransJsonToTreeList?DataType=WarnList&MineCode=' + escape(mine) + '&SensorNum=' + escape(devtype) + '&DropName=' + alarmtype;
+        $("#dgvMain").datagrid({
+            toolbar: '#toolbar',
+            fitColumns: true,
+            //striped: true,
+            singleSelect: true,
+            pagination: true,
+            pageSize1: 10,
+            //method: 'Post',
+            url: url,
+            columns: [[
+                //{ field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'SimpleName', title: '煤矿名称', width: 80 },
+                //{ field: 'SensorNum', title: '测点编号', width: 100 },
+                { field: 'TypeName', title: '测点名称', width: 60 },
+                { field: 'Place', title: '安装地点', width: 100 },
+                { field: 'level', title: '报警级别', width: 60 },
+                { field: 'ShowValue', title: '当前值', width: 50 },
+                { field: 'PoliceMaxValue', title: '最大值', width: 50 },
+                { field: 'PoliceMin', title: '最小值', width: 50 },
+                { field: 'Datetime', title: '监测时间', width: 120 },
+                { field: 'unit', title: '单位', width: 40 },
+                { field: 'valueState', title: '状态', width: 60 },
+                { field: 'starttime', title: '开始时间', width: 120 },
+                { field: 'overtime', title: '结束时间', width: 120 },
+                { field: 'lasttimeLength', title: '持续时长', width: 110 },
+                { field: 'ChulState', title: '处理情况', width: 60 }
+            ]],
+            rowStyler:function(index, row, css) {
+                if (row.level == 1) {
+                    return "background-color:red; color:white;";
+                }
+                else if (row.level == 2) {
+                    return "background-color:orange;color:white";
+                }
+                else if (row.level == 3) {
+                    return "background-color:yellow;color:black;";
+                }
+                else if (row.level == 4) {
+                    return "background-color:blue;color:white;";
+                }
+                return "";
+            },
+            onDblClickRow: function (rowIndex, rowData) {
+                $("#txtEndTime")[0].value = rowData.overtime;
+                $('#txtSimpleName').textbox('setValue', rowData.SimpleName);
+                $('#txtTypeName').textbox('setValue', rowData.TypeName);
+                $('#txtvalueState').textbox('setValue', rowData.valueState);
+                $('#txtShowValue').textbox('setValue', String(rowData.ShowValue));
+                $('#txtPoliceMaxValue').textbox('setText', String(rowData.PoliceMaxValue));
+                $('#txtPoliceMin').textbox('setText', String(rowData.PoliceMin));
+                $('#txtlasttimeLength').textbox('setValue', rowData.lasttimeLength);
+                $('#txtStartTime').textbox('setValue', rowData.starttime);
+                $('#txtPlace').textbox('setValue', rowData.Place);
+                $('#txtjlpers').textbox('setValue', rowData.jlpers);
+                $('#txtchulway').textbox('setValue', rowData.chulway);
+                $('#txtchulresult').textbox('setValue', rowData.chulresult);
+                ID = rowData.ID;
+                if (rowData.overtime != null || rowData.overtime != "") {
+                    //$('#btnHis').linkbutton('disabled', 'false');
+                    $('#btnHis').linkbutton('enable');
+                }
+                $('#divWarn').dialog('open');
+            }
+        });
+        //启动客户端分页功能
+        $("#dgvMain").datagrid("clientPaging");
+    }
+    // 保存
+    function WarnSave() {
+
+        var chulway = $('#txtchulway').textbox('getValue');
+        var chulresult = $('#txtchulresult').textbox('getValue');
+        var jlpers = $('#txtjlpers').textbox('getValue');
+
+        var url = "../TransJson/TransJsonToTreeList?DataType=WarnSave&MineCode=" + escape(chulway) + "&SensorNum=" + escape(chulresult) + "&DropName=" + escape(jlpers) + "&ReportName=" + ID;
+        $("#ffedit").form('submit', {
+            url: url,
+            onSubmit: function () {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                   
+                }
+                return isValid;
+            },
+            success: function (data) {
+                if (data == "True") {
+                    $.messager.confirm('提示', '数据保存成功！');
+                    $('#dgvMain').datagrid('reload');
+                    $('#divWarn').dialog('close');
+                } else {
+                    $.messager.confirm('提示', '数据保存失败！');
+                }
+        },
+            error: function (data) {
+                $.messager.alert('提示', "数据保存失败！",'error');
+            }
+        });
+    }
+
+    // 放入历史
+    function WarnToHis() {
+
+
+        if ($("#txtEndTime")[0].value == "") {
+            $.messager.alert("提示", "报警未结束,无法提交!", "warning");
+            return;
+        }
+
+        var url = "../TransJson/TransJsonToTreeList?DataType=WarnToHis&MineCode=" + ID;
+        $("#ffedit").form('submit', {
+       url:url,
+            onSubmit: function() {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            success: function (data) {
+                if (data == "True") {
+                    $.messager.confirm('提示', '预警信息提交成功！');
+                    $('#dgvMain').datagrid('reload');
+                    $('#divWarn').dialog('close');
+                } else {
+                    $.messager.confirm('提示', '操作失败！');
+                }
+            },
+            error: function (data) {
+                $.messager.alert('提示', "数据保存失败！", 'error');
+            }
+        });
+    }
+
+</script>
+
+<table id="dgvMain" class="easyui-datagrid" data-options="fit:true" title="多级预警"></table>
+<div id="toolbar" >
+    <table>
+        <tr>
+            <td align="left">
+                <input id="ckbRotationDisplay" type="checkbox" />是否轮显
+            </td>
+            <td align="left">
+                <input id="ckbStopRefresh" type="checkbox" />停止刷新
+            </td>
+            <td align="left" id="tdMineName">煤矿名称：
+                <select id="cmbMineCode" class="easyui-combogrid" style="width:100px;"></select>  
+            </td>
+            <td align="left">设备名称：
+                <select id="cmbDevType" class="easyui-combogrid" style="width:100px;"></select>  
+            </td>
+            <td align="left">报警类型：
+                <select id="cmbAlarmType" class="easyui-combobox" style="width:80px;">
+                    <option value="-1">全部</option>
+                    <option value="1">报警</option>
+                    <option value="4">断电</option>
+                    <option value="8">故障</option>
+                    <option value="16">馈电异常</option>
+                    <option value="32">工作异常</option>
+                </select>  
+            </td>
+            <td>
+                <div class="easyui-linkbutton" id="editsubbmit" style="width:100px;" data-options="iconCls:'icon-search'" onclick="SeachWarn();">查询</div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="divWarn" class="easyui-dialog" closed="true" title="预警信息" style="width: 620px; height: 320px; padding: 5px">
+    <input type="text" id="txtEndTime" style="display: none;"/>
+
+    <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+        <table style="width: 600px;">
+            <tr>
+                <td align="right">煤矿名称：</td>
+                <td align="left">
+                    <input id="txtSimpleName" class="easyui-textbox" data-options="required:true" style="width: 100px; height: 20px;" readonly="readonly"/>
+                </td>
+                <td align="right">测点名称：</td>
+                <td align="left">
+                    <input id="txtTypeName" class="easyui-textbox" data-options="required:true" style="width: 100px; height: 20px;" readonly="readonly"/>
+                </td>
+                <td align="right">状态：</td>
+                <td align="left">
+                    <input id="txtvalueState" class="easyui-textbox" data-options="required:true" style="width: 100px; height: 20px;" readonly="readonly"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">当前值：</td>
+                <td align="left">
+                    <input id="txtShowValue" class="easyui-textbox" data-options="required:true" style="width: 100px; height: 20px;" readonly="readonly"/>
+                </td>
+                <td align="right">最大值：</td>
+                <td align="left">
+                    <input id="txtPoliceMaxValue" class="easyui-textbox" data-options="required:true" style="width: 100px; height: 20px;" readonly="readonly"/>
+                </td>
+                <td align="right">最小值：</td>
+                <td align="left">
+                    <input id="txtPoliceMin" class="easyui-textbox" data-options="required:true" style="width: 100px; height: 20px;" readonly="readonly"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">持续时长：</td>
+                <td align="left" colspan="2">
+                    <input id="txtlasttimeLength" class="easyui-textbox" data-options="required:true" style="width: 150px; height: 20px;" readonly="readonly"/>
+                </td>
+                <td align="right">报警开始时间：</td>
+                <td align="left" colspan="2">
+                    <input id="txtStartTime" class="easyui-textbox" data-options="required:true" style="width: 150px; height: 20px;" readonly="readonly"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">安装地点：</td>
+                <td align="left" colspan="5">
+                    <input id="txtPlace" class="easyui-textbox" data-options="required:true" style="width: 400px; height: 20px;" readonly="readonly"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">记录人：</td>
+                <td align="left" colspan="5">
+                    <input id="txtjlpers" class="easyui-textbox" data-options="required:true" style="width: 400px; height: 20px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">处理措施：</td>
+                <td align="left" colspan="5">
+                    <input id="txtchulway" class="easyui-textbox" data-options="required:true,multiline:true" style="width: 400px; height: 50px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">处理结果：</td>
+                <td align="left" colspan="5">
+                    <input id="txtchulresult" class="easyui-textbox" data-options="required:true,multiline:true" style="width: 400px; height: 50px;"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="6" style="padding-top: 5px; text-align: center; vertical-align: middle;">
+                    <div class="easyui-linkbutton" id="btnSave" style="width: 100px;" data-options="iconCls:'icon-save'" onclick=" WarnSave(); ">保存</div>
+                    <div class="easyui-linkbutton" id="btnHis" style="width: 70px;" data-options="disabled:true,iconCls:'icon-redo'" onclick=" WarnToHis(); ">提交</div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--By Supcan Report -->
+<Report>
+  <WorkSheet name="工作表1" isDefaultPrint="true">
+    <Properties>
+      <BackGround bgColor="#FFFFFF" arrange="tile" alpha="255"/>
+      <DefaultTD>
+        <TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="center" vAlign="middle" isDataSource="false" isProtected="false" isThousandSeparat="true" isRound="true" isPrint="true"/>
+      </DefaultTD>
+      <Other isShowZero="true" LineDistance="0" isRowHeightAutoExtendAble="true" isUsingEditMask="true"/>
+    </Properties>
+    <Fonts>
+      <Font faceName="宋体" charSet="134" height="-13" weight="400"/>
+      <Font faceName="宋体" charSet="134" height="-16" weight="400" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
+      <Font faceName="宋体" charSet="134" height="-16" weight="700" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
+      <Font faceName="楷体_GB2312" charSet="134" height="-24" weight="700" pitchAndFamily="34" quality="1" outPrecision="3" clipPrecision="2"/>
+      <Font faceName="宋体" charSet="134" height="-16" weight="400"/>
+    </Fonts>
+    <Table>
+      <Col width="30"/>
+      <Col width="200"/>
+      <Col width="30"/>
+      <Col width="30"/>
+      <Col width="30"/>
+      <Col width="30"/>
+      <Col width="30"/>
+      <Col width="30"/>
+      <Col width="30"/>
+      <Col width="30"/>
+      <TR height="30" sequence="0">
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td topBorder="0"></td>
+      </TR>
+      <TR height="30" sequence="1">
+        <td/>
+        <td FontIndex="3" align="center">下井人员统计</td>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td/>
+        <td topBorder="0"></td>
+      </TR>
+    </Table>
+    <Merges>
+      <Range row1="1" col1="1" row2="1" col2="17"/>
+      <Range row1="0" col1="0" row2="0" col2="7"/>
+    </Merges>
+  </WorkSheet>
+
+</Report>

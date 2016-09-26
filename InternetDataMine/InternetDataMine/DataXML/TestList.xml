@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<!-- By Supcan TreeList  -->
+<TreeList>
+<Properties Title="订单明细表" HeaderFontIndex="2"  />
+<Fonts>
+<Font faceName="Consolas"/>
+<Font/>
+<Font faceName="微软雅黑" bold="1"/>
+<Font bold="true"/>
+</Fonts>
+<Cols>
+<Col name="Name" width="90">姓名</Col>
+<Col name="Age" width="90" align="center">年龄</Col>
+<Col name="Remark" width="60">备注</Col>
+
+</Cols>
+</TreeList>

@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+</head>
+<body>
+    <div title="" class="easyui-window panel-body panel-body-noborder window-body" id="divAlarmSet" style="width: 946px; height: 564px; z-index: 100;" data-options="closed:true,modal:true,iconCls:'icon-save',onClose:function(){ShowAllIframe();},onMinimize:function(){ShowAllIframe();}">
+        <div style="margin-top: 30px; margin-left: 50px;">
+            <input id="CheckboxSound" type="checkbox" value="">是否启用声音
+        </div>
+        <div style="padding-left: 20px; margin-left: 50px;">
+            声音类型：
+            <input name="Sound" id="Radio1" type="radio" value="静音">静音
+            <input name="Sound" id="Radio1" type="radio" value="单一声音">单一声音
+            <input name="Sound" id="Radio1" type="radio" value="完整声音">完整声音
+        </div>
+        <div style="margin-left: 50px;">
+            <div style="margin-top: 20px;">
+                <input id="CheckboxMines" type="checkbox" value="All">煤矿是否选择播放声音：
+            </div>
+            <div id="divMines" style="height: auto; padding-left: 20px;">
+
+            </div>
+
+            <div style="margin-top: 20px;">
+                <input id="CheckboxSystem" type="checkbox" value="">系统类型：
+            </div>
+            <style type="text/css">
+                .H { width: 200px;display: inline-block; }
+            </style>
+            <div id="divSystem" style="height: auto; padding-left: 20px;">
+                <div class="H"><input type="checkbox" value="安全监控"><lable>安全监控</lable></div>
+                <div class="H"><input type="checkbox" value="人员管理"><lable>人员管理</lable></div>
+                <div class="H"><input type="checkbox" value="瓦斯抽放"><lable>瓦斯抽放</lable></div>
+                <div class="H"><input type="checkbox" value="安全监控瓦斯抽放"><lable>安全监控瓦斯抽放</lable></div>
+                <div class="H"><input type="checkbox" value="系统配置"><lable>系统配置</lable></div>
+                <div class="H"><input type="checkbox" value="企业档案"><lable>企业档案</lable></div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <input id="CheckboxCall" type="checkbox" value="">报警类型：
+            </div>
+            <div id="divCall" style="height: auto; padding-left: 20px;">
+
+                <input type="checkbox" value="超时报警"><lable>超时报警</lable>
+                <input type="checkbox" value="特种人员工作异常报警"><lable>特种人员工作异常报警</lable><input type="checkbox" value="超员报警"><lable>超员报警</lable><input type="checkbox" value="限制区域人员报警"><lable>限制区域人员报警</lable><input type="checkbox" value="报警"><lable>报警</lable><input type="checkbox" value="断电报警"><lable>断电报警</lable><input type="checkbox" value="故障报警"><lable>故障报警</lable><input type="checkbox" value="馈电异常报警"><lable>馈电异常报警</lable><input type="checkbox" value="工作异常报警"><lable>工作异常报警</lable><input type="checkbox" value="通讯中断报警"><lable>通讯中断报警</lable><input type="checkbox" value="传输异常报警"><lable>传输异常报警</lable><input type="checkbox" value="超时报警"><lable>超时报警</lable><input type="checkbox" value="特种人员工作异常报警"><lable>特种人员工作异常报警</lable><input type="checkbox" value="超员报警"><lable>超员报警</lable><input type="checkbox" value="限制区域人员报警"><lable>限制区域人员报警</lable><input type="checkbox" value="报警"><lable>报警</lable><input type="checkbox" value="断电报警"><lable>断电报警</lable><input type="checkbox" value="故障报警"><lable>故障报警</lable><input type="checkbox" value="馈电异常报警"><lable>馈电异常报警</lable><input type="checkbox" value="工作异常报警"><lable>工作异常报警</lable><input type="checkbox" value="通讯中断报警"><lable>通讯中断报警</lable><input type="checkbox" value="传输异常报警"><lable>传输异常报警</lable><input type="checkbox" value="超时报警"><lable>超时报警</lable><input type="checkbox" value="特种人员工作异常报警"><lable>特种人员工作异常报警</lable><input type="checkbox" value="超员报警"><lable>超员报警</lable><input type="checkbox" value="限制区域人员报警"><lable>限制区域人员报警</lable><input type="checkbox" value="报警"><lable>报警</lable><input type="checkbox" value="断电报警"><lable>断电报警</lable><input type="checkbox" value="故障报警"><lable>故障报警</lable><input type="checkbox" value="馈电异常报警"><lable>馈电异常报警</lable><input type="checkbox" value="工作异常报警"><lable>工作异常报警</lable><input type="checkbox" value="通讯中断报警"><lable>通讯中断报警</lable><input type="checkbox" value="传输异常报警"><lable>传输异常报警</lable>
+            </div>
+
+            <div>
+                <input id="CheckboxSensor" type="checkbox" value="">设备名称：
+            </div>
+            <div id="divSensor" style="height: auto; padding-left: 20px;">
+
+                <input type="checkbox" value="烟雾"><lable>烟雾</lable><input type="checkbox" value="开停"><lable>开停</lable><input type="checkbox" value="风筒"><lable>风筒</lable><input type="checkbox" value="三态开停"><lable>三态开停</lable><input type="checkbox" value="高浓度甲烷"><lable>高浓度甲烷</lable><input type="checkbox" value="管道温度"><lable>管道温度</lable><input type="checkbox" value="频率"><lable>频率</lable><input type="checkbox" value="高低浓度甲烷"><lable>高低浓度甲烷</lable><input type="checkbox" value="馈电"><lable>馈电</lable><input type="checkbox" value="工况纯流量"><lable>工况纯流量</lable><input type="checkbox" value="产量"><lable>产量</lable><input type="checkbox" value="分站"><lable>分站</lable><input type="checkbox" value="氧气"><lable>氧气</lable><input type="checkbox" value="二氧化碳"><lable>二氧化碳</lable><input type="checkbox" value="主扇"><lable>主扇</lable><input type="checkbox" value="标况纯流量"><lable>标况纯流量</lable><input type="checkbox" value="电压"><lable>电压</lable><input type="checkbox" value="控制量"><lable>控制量</lable><input type="checkbox" value="煤位"><lable>煤位</lable><input type="checkbox" value="其它开停"><lable>其它开停</lable><input type="checkbox" value="水位"><lable>水位</lable><input type="checkbox" value="压差"><lable>压差</lable><input type="checkbox" value="风门"><lable>风门</lable><input type="checkbox" value="一氧化碳"><lable>一氧化碳</lable><input type="checkbox" value="标况混合流量"><lable>标况混合流量</lable><input type="checkbox" value="局扇"><lable>局扇</lable><input type="checkbox" value="粉尘"><lable>粉尘</lable><input type="checkbox" value="低负压机组开停"><lable>低负压机组开停</lable><input type="checkbox" value="风速"><lable>风速</lable><input type="checkbox" value="高负压机组开停"><lable>高负压机组开停</lable><input type="checkbox" value="累计时间"><lable>累计时间</lable><input type="checkbox" value="工况混合流量"><lable>工况混合流量</lable><input type="checkbox" value="压力"><lable>压力</lable><input type="checkbox" value="其它模拟量"><lable>其它模拟量</lable><input type="checkbox" value="管道一氧化碳"><lable>管道一氧化碳</lable><input type="checkbox" value="转速"><lable>转速</lable><input type="checkbox" value="负压"><lable>负压</lable><input type="checkbox" value="风向"><lable>风向</lable><input type="checkbox" value="温度"><lable>温度</lable><input type="checkbox" value="低浓度甲烷"><lable>低浓度甲烷</lable><input type="checkbox" value="管道甲烷"><lable>管道甲烷</lable><input type="checkbox" value="钩数"><lable>钩数</lable><input type="checkbox" value="电流"><lable>电流</lable><input type="checkbox" value="其它累计量"><lable>其它累计量</lable><input type="checkbox" value="管道负压"><lable>管道负压</lable><input type="checkbox" value="二态开停"><lable>二态开停</lable><input type="checkbox" value="烟雾"><lable>烟雾</lable><input type="checkbox" value="开停"><lable>开停</lable><input type="checkbox" value="风筒"><lable>风筒</lable><input type="checkbox" value="三态开停"><lable>三态开停</lable><input type="checkbox" value="高浓度甲烷"><lable>高浓度甲烷</lable><input type="checkbox" value="管道温度"><lable>管道温度</lable><input type="checkbox" value="频率"><lable>频率</lable><input type="checkbox" value="高低浓度甲烷"><lable>高低浓度甲烷</lable><input type="checkbox" value="馈电"><lable>馈电</lable><input type="checkbox" value="工况纯流量"><lable>工况纯流量</lable><input type="checkbox" value="产量"><lable>产量</lable><input type="checkbox" value="分站"><lable>分站</lable><input type="checkbox" value="氧气"><lable>氧气</lable><input type="checkbox" value="二氧化碳"><lable>二氧化碳</lable><input type="checkbox" value="主扇"><lable>主扇</lable><input type="checkbox" value="标况纯流量"><lable>标况纯流量</lable><input type="checkbox" value="电压"><lable>电压</lable><input type="checkbox" value="控制量"><lable>控制量</lable><input type="checkbox" value="煤位"><lable>煤位</lable><input type="checkbox" value="其它开停"><lable>其它开停</lable><input type="checkbox" value="水位"><lable>水位</lable><input type="checkbox" value="压差"><lable>压差</lable><input type="checkbox" value="风门"><lable>风门</lable><input type="checkbox" value="一氧化碳"><lable>一氧化碳</lable><input type="checkbox" value="标况混合流量"><lable>标况混合流量</lable><input type="checkbox" value="局扇"><lable>局扇</lable><input type="checkbox" value="粉尘"><lable>粉尘</lable><input type="checkbox" value="低负压机组开停"><lable>低负压机组开停</lable><input type="checkbox" value="风速"><lable>风速</lable><input type="checkbox" value="高负压机组开停"><lable>高负压机组开停</lable><input type="checkbox" value="累计时间"><lable>累计时间</lable><input type="checkbox" value="工况混合流量"><lable>工况混合流量</lable><input type="checkbox" value="压力"><lable>压力</lable><input type="checkbox" value="其它模拟量"><lable>其它模拟量</lable><input type="checkbox" value="管道一氧化碳"><lable>管道一氧化碳</lable><input type="checkbox" value="转速"><lable>转速</lable><input type="checkbox" value="负压"><lable>负压</lable><input type="checkbox" value="风向"><lable>风向</lable><input type="checkbox" value="温度"><lable>温度</lable><input type="checkbox" value="低浓度甲烷"><lable>低浓度甲烷</lable><input type="checkbox" value="管道甲烷"><lable>管道甲烷</lable><input type="checkbox" value="钩数"><lable>钩数</lable><input type="checkbox" value="电流"><lable>电流</lable><input type="checkbox" value="其它累计量"><lable>其它累计量</lable><input type="checkbox" value="管道负压"><lable>管道负压</lable><input type="checkbox" value="二态开停"><lable>二态开停</lable><input type="checkbox" value="烟雾"><lable>烟雾</lable><input type="checkbox" value="开停"><lable>开停</lable><input type="checkbox" value="风筒"><lable>风筒</lable><input type="checkbox" value="三态开停"><lable>三态开停</lable><input type="checkbox" value="高浓度甲烷"><lable>高浓度甲烷</lable><input type="checkbox" value="管道温度"><lable>管道温度</lable><input type="checkbox" value="频率"><lable>频率</lable><input type="checkbox" value="高低浓度甲烷"><lable>高低浓度甲烷</lable><input type="checkbox" value="馈电"><lable>馈电</lable><input type="checkbox" value="工况纯流量"><lable>工况纯流量</lable><input type="checkbox" value="产量"><lable>产量</lable><input type="checkbox" value="分站"><lable>分站</lable><input type="checkbox" value="氧气"><lable>氧气</lable><input type="checkbox" value="二氧化碳"><lable>二氧化碳</lable><input type="checkbox" value="主扇"><lable>主扇</lable><input type="checkbox" value="标况纯流量"><lable>标况纯流量</lable><input type="checkbox" value="电压"><lable>电压</lable><input type="checkbox" value="控制量"><lable>控制量</lable><input type="checkbox" value="煤位"><lable>煤位</lable><input type="checkbox" value="其它开停"><lable>其它开停</lable><input type="checkbox" value="水位"><lable>水位</lable><input type="checkbox" value="压差"><lable>压差</lable><input type="checkbox" value="风门"><lable>风门</lable><input type="checkbox" value="一氧化碳"><lable>一氧化碳</lable><input type="checkbox" value="标况混合流量"><lable>标况混合流量</lable><input type="checkbox" value="局扇"><lable>局扇</lable><input type="checkbox" value="粉尘"><lable>粉尘</lable><input type="checkbox" value="低负压机组开停"><lable>低负压机组开停</lable><input type="checkbox" value="风速"><lable>风速</lable><input type="checkbox" value="高负压机组开停"><lable>高负压机组开停</lable><input type="checkbox" value="累计时间"><lable>累计时间</lable><input type="checkbox" value="工况混合流量"><lable>工况混合流量</lable><input type="checkbox" value="压力"><lable>压力</lable><input type="checkbox" value="其它模拟量"><lable>其它模拟量</lable><input type="checkbox" value="管道一氧化碳"><lable>管道一氧化碳</lable><input type="checkbox" value="转速"><lable>转速</lable><input type="checkbox" value="负压"><lable>负压</lable><input type="checkbox" value="风向"><lable>风向</lable><input type="checkbox" value="温度"><lable>温度</lable><input type="checkbox" value="低浓度甲烷"><lable>低浓度甲烷</lable><input type="checkbox" value="管道甲烷"><lable>管道甲烷</lable><input type="checkbox" value="钩数"><lable>钩数</lable><input type="checkbox" value="电流"><lable>电流</lable><input type="checkbox" value="其它累计量"><lable>其它累计量</lable><input type="checkbox" value="管道负压"><lable>管道负压</lable><input type="checkbox" value="二态开停"><lable>二态开停</lable>
+            </div>
+        </div>
+
+
+
+    </div>
+</body>
+</html>

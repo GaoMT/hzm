@@ -1,0 +1,14 @@
+﻿@model InternetDataMine.Models.PersonModel
+
+@{
+    ViewBag.Title = "DEY";
+    Layout = "../shared/_layout.cshtml";
+}
+
+<h2>第二页</h2>
+
+<label>姓名：</label>@Model.Name
+
+<label>年龄：</label>@Model.Age
+
+<label>备注：</label>@Model.Remark

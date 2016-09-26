@@ -1,0 +1,309 @@
+﻿@{
+    ViewBag.Title = "子系统配置";
+    Layout = "~/Views/Shared/_LayoutEditer.cshtml";
+}
+
+<script type="text/javascript">
+
+    // 加载表格数据
+    function LoadDataGrid() {
+        var url = "../Config/SubSystemConfig_Query";
+        $.ajax({
+            dataType: "json",
+            method: "post",
+            url: url,
+            success: function (data) {
+                var columns =
+                [[
+                    { title: "编码", field: "ck", width: 70, checkbox:true, align: 'center' },
+                    { title: "系统编码", field: "SystemCode", width: 70, align: 'center', hidden: true },
+                    { title: "系统安标证号", field: "SystemMACode", width: 70, align: 'center', hidden: true },
+                       { title: "系统类别编号", field: "TypeCode", width: 70, align: 'center', hidden: true },
+                    { title: "煤矿编号", field: "MineCode", width: 70, align: 'center',hidden:true },
+                    { title: "系统类别", field: "TypeName", width: 70, align: 'center' },
+                    { title: "系统名称", field: "Name", width: 70, align: 'center' },
+                    { title: "煤矿名称", field: "SimpleName", width: 70, align: 'center' },
+                    { title: "矿长姓名", field: "Maintainer", width: 80, align: 'center' },
+                    { title: "系统提供商", field: "Supplier", width: 120, align: 'center' },
+                    { title: "电话号码", field: "Phone", width: 120, align: 'center' },
+                    { title: "IP地址", field: "IP", width: 120, align: 'center' },
+                    { title: "备注", field: "Remark", width: 120, align: 'center',hidden:true },
+                    {
+                        title: "启用", field: "IsEnabled", width: 120, align: 'center', formatter: function (value, row, index) {
+                            if (row.IsEnabled) {
+                                return "启用";
+                            } else {
+                                return "未启用";
+                            }
+                        }
+                    }
+                ]];
+                $("#dgvMain").datagrid({ columns: columns, fitColumns: true, data: data, nowrap: false, rownumbers: true, singleSelect: false, pagination: true, align: 'left', fit: true, toolbar: '#toolbar', width: 700, height: 250 });
+            }
+        });
+    }
+
+    // 加载编辑信息
+    function LoadEditeInfo() {
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.alert("警告", "编辑前，请先选取一行，请选取！");
+            return;
+        }
+        if (rows.length > 1) {
+            $.messager.alert("警告", "编辑的时候，只能选取一行，请重新选择！");
+            return;
+        }
+
+      
+
+        var data = rows[0];
+        $("#hiddenValue")[0].innerText = data.SystemCode;
+
+        $("#txtSysMACode").textbox("setText", data.SystemMACode);
+        $("#txtSysType").combobox("select", data.TypeCode);
+        $("#txtSysName").textbox("setText", data.Name);
+        $("#txtSimpleName").combobox("select", data.MineCode);
+        $("#txtMaintainer").textbox("setText", data.Maintainer);
+        $("#txtSupplier").textbox("setText", data.Supplier);
+        $("#txtPhone").textbox("setText", data.Phone);
+        $("#txtIP").textbox("setText", data.IP);
+        $("#txtIsEnabled")[0].checked = data.IsEnabled;
+        $("#txtRemark").textbox("setText", data.Remark);
+        
+        $("#divAdd").window("setTitle", "子系统配置");
+
+
+        $("#divAdd").window("open");
+    }
+
+    // 删除数据项
+    function DeleteItem() {
+        $.messager.progress();
+
+        var rows = $("#dgvMain").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+
+        $.messager.confirm("提示", "你确定要删除吗？", function (r) {
+            if (r) {
+
+                AddProcessLogGlobal("删除了煤矿子系统配置信息");
+                var condition = "";
+                var index = 0;
+                for (index = 0; index < rows.length; index++) {
+                    if (index == rows.length - 1) {
+                        condition += rows[index].SystemCode;
+                    }
+                    else {
+                        condition += rows[index].SystemCode + ",";
+                    }
+                }
+
+                var url = "../Config/SubSystemConfig_Delete?Condition=" + condition;
+                $.ajax({
+                    dataType: "text",
+                    method: "post",
+                    url: url,
+                    success: function (data) {
+                        $.messager.progress('close');
+                        $.messager.alert('提示', data);
+                        LoadDataGrid();
+                    }
+                });
+            }
+            else {
+                $.messager.progress('close');
+            }
+        });
+    }
+    
+    // 保存信息
+    function SaveEditeInfo() {
+        $.messager.progress();
+
+        var url = "&SysMaCode=" + $("#txtSysMACode").textbox("getText");
+        url += "&SysType=" + $("#txtSysType").combotree("getValue");
+        url += "&SysName=" + $("#txtSysName").textbox("getText");
+        url += "&MineCode=" + $("#txtSimpleName").combotree("getValue");
+        url += "&Maintainer=" + $("#txtMaintainer").textbox("getText");
+        url += "&Supplier=" + $("#txtSupplier").textbox("getText");
+        url += "&Phone=" + $("#txtPhone").textbox("getText");
+        url += "&IpAddress=" + $("#txtIP").textbox("getText");
+        url += "&Enabled=" + $("#txtIsEnabled")[0].checked;
+        url += "&Remark=" + $("#txtRemark").textbox("getText");
+       
+
+        if ($("#hiddenValue")[0].innerText == "") {
+            url = "../Config/SubSystemConfig_Insert?" + url;
+        }
+        else {
+            url = "../Config/SubSystemConfig_Update?sysCode=" + $("#hiddenValue")[0].innerText + url;
+        }
+
+        $("#ff").form('submit', {
+            url: url,
+            onSubmit: function () {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            success: function (data) {
+                $.messager.progress('close');
+                $.messager.alert('提示', data);
+                $(".easyui-textbox").textbox("setText", "");
+
+               
+
+                LoadDataGrid();
+
+                AddProcessLogGlobal("保存了煤矿子系统配置信息");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        // 加载表格数据
+        LoadDataGrid();
+
+        // 加载煤矿信息
+        LoadMineBaseInfo();
+
+        // 加载系统类别信息
+        LoadSysTypesInfo();
+
+        //加载查询按钮的单击响应事件
+        $("#btnQuery").bind('click', function () {
+            LoadDataGrid();
+        });
+
+        //加载添加按钮的单击响应事件
+        $("#btnAdd").bind('click', function () {
+            $(".easyui-textbox").textbox("setText", "");
+            $("#hiddenValue")[0].innerText = "";
+            $("#divAdd").window("setTitle", "煤矿信息配置");
+            $("#divAdd").window("open");
+        });
+
+        //加载编辑按钮的单击响应事件
+        $("#btnEdit").bind('click', function () {
+            LoadEditeInfo();
+        });
+
+        //加载保存按钮的单击响应事件
+        $('#btnSave').bind('click', function () {
+            SaveEditeInfo();
+        });
+
+        //加载删除按钮的单击响应事件
+        $("#btnRemove").bind('click', function () {
+            DeleteItem();
+        });
+    });
+
+    // 加载煤矿列表
+    function LoadMineBaseInfo() {
+        $('#txtSimpleName').combobox({
+            url: "../CompanyInfoManager/QueryJBXX",
+            valueField: 'id',
+            textField: 'simplename'
+        });
+    }
+
+    // 加载系统类别
+    function LoadSysTypesInfo() {
+        $('#txtSysType').combobox({
+            url: "../CompanyInfoManager/QuerySysTypes",
+            valueField: 'TypeCode',
+            textField: 'TypeName'
+        });
+    }
+</script>
+
+<style type="text/css">
+    td.left {
+        border: 1px solid silver;
+        text-align: right;
+        width: 20%;
+    }
+
+    td.right {
+        text-align: left;
+        border: 1px solid silver;
+        width: 30%;
+    }
+</style>
+
+<div id="toolbar">
+    <table>
+        <tr>
+            <td style="padding-left:20px; text-align:right;"><a id="btnAdd" class="easyui-linkbutton" data-options="iconCls:'icon-add'" style="width:120px;">添加</a></td>
+            <td style="padding-left:10px; text-align:right;"><div id="btnEdit" style="width: 120px;" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</div></td>
+            <td style="padding-left:10px; text-align:right;"><div id="btnRemove" style="width: 120px;" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</div></td>
+            <td style="padding-left:30px;"><div id="btnQuery" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" style="width: 120px;">刷新</div></td>
+        </tr>
+    </table>
+</div>
+<div id="dgvMain" class="easyui-datagrid"></div>
+<div class="easyui-window" id="divAdd" title="企业隐患监管部门排查填报单" data-options="closed:true,fit:true" style="width:943px;height:520px;">
+    <span id="hiddenValue" style="display:none;"></span>
+    <form id="ff" method="post">
+        <table style="text-align: center; width: 100%; height: 60%; border-width:1px; border-color:black; border-collapse:collapse;">
+            <tr>
+                <td class="left">煤矿名称：</td>
+                <td class="right"><div id="txtSimpleName" class="easyui-combobox" data-options="required:true,prompt:'请填写煤矿名称'" style="width:70%;"></div></td>
+                <td class="left">安标编号：</td>
+                <td class="right"><div id="txtSysMACode" class="easyui-textbox" data-options="prompt:'请填写安标编号'" style="width:70%;"></div></td>
+            </tr>
+            <tr>
+                <td class="left">系统类型：</td>
+                <td class="right"><div id="txtSysType" class="easyui-combobox" data-options="required:true,prompt:'请填写系统类型'" style="width:70%;"></div></td>
+                <td class="left">系统名称：</td>
+                <td class="right"><div id="txtSysName" class="easyui-textbox" data-options="required:true,prompt:'请填写系统类型'" style="width:70%;"></div></td>
+            </tr>
+            <tr>
+                <td class="left">矿长姓名：</td>
+                <td class="right"><div id="txtMaintainer" class="easyui-textbox" data-options="prompt:'请填写矿长姓名'" style="width:70%;"></div></td>
+                <td class="left">电话号码：</td>
+                <td class="right"><input id="txtPhone" class="easyui-textbox" data-options="prompt:'请填写电话号码'" style="width:70%;"></td>
+              
+               
+            </tr>
+            <tr>
+                <td class="left">系统提供商：</td>
+                <td class="right"><input id="txtSupplier" class="easyui-textbox" data-options="prompt:'请填写系统提供商'" style="width:70%;"></td>
+                <td class="left">IP地址：</td>
+                <td class="right"><input id="txtIP" class="easyui-textbox" data-options="prompt:'请填写IP地址'" style="width:70%;"></td>
+               
+            </tr>
+            <tr>
+                <td class="left">启用：</td>
+                <td class="right" colspan="3" style="text-align:left;"><input id="txtIsEnabled" type="checkbox"></td>
+               
+            </tr>
+            <tr>
+                <td style="text-align: right; border: 1px solid silver; ">
+                    备注：
+                </td>
+                <td colspan="3" style="text-align: left; border: 1px solid silver; ">
+                    <input id="txtRemark" class="easyui-textbox" data-options="prompt:'有附加内容可以填写到此处',multiline:true,validType:'length[0,200]'" style="width:80%;height:100px;">
+                    最多可以输入200个汉字！
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align: center; border: 1px solid silver;">
+                    <a id="btnSave" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:150px;">
+                        保存
+                    </a>
+                    <a id="btnclose" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel',onClick:function(){$('#divAdd').window('close');}" style="width:150px">关闭</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

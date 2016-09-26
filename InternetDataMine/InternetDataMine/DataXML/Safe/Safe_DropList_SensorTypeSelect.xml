@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-21-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=DevType" OriUrl="../../TransJson/TransJsonToTreeList?DataType=DevType">
+  </Properties>
+  <Cols>
+    <Col name="TypeCode"  width="90" align="center">设备编号</Col>
+    <Col name="TypeName"  width="90" align="center">设备名</Col>
+    <Col name="Unit"  width="90" align="center">单位</Col>
+    <Col name="Type"  width="90" align="center">类型</Col>
+  </Cols>
+</TreeList>

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-25-->
+<freeform>
+  <Properties>
+    <backGround bgColor="#ffffff"/>
+  </Properties>
+  <Fonts>
+    <Font faceName="微软雅黑" charSet="134" height="-13"/>
+  </Fonts>
+  <objects>
+    <TableLayout id="layout" y="5" width="100%" >
+      <!--<col width="20%"/>-->
+      <col width="20%"/>
+      <col width="20%"/>
+      <col width="40px"/>
+      <col width="5%"/>
+      <tr height="20">
+        <!--<td>
+          <Input id="MineName" type="EditableDropTreeList" taborder ="0" align="left" isHide="absTrue" leftText="煤矿名称：" leftTextAlign="right" leftsize="1" treelistURL="../../DataXML/Public/Public_Bar_MineSelect.xml" dataCol="MineCode" displayCol="SimpleName" />
+        </td>-->
+        <!--<td>
+          <Input id="SensorNum" type="EditableDropTreeList" taborder ="1" align="left" leftText="区域名称：" leftTextAlign="right" leftsize="1" treelistURL="../../DataXML/Person/Person_DropList_AreaInfo.xml" dataCol="TmpID" displayCol="AreaName"/>
+        </td>
+        <td>
+          <Input id="DevType" type="EditableDropTreeList" taborder ="2" align="left" leftText="分站名称：" leftTextAlign="right" leftsize="1" treelistURL="../../DataXML/Person/Person_DropList_RYStation.xml" dataCol="StationCode" displayCol="StationName"/>
+        </td>-->
+        <td>
+          <Input id="StartTime"  type="Edit" tabOrder="3" leftText="开始时间" defaultValue="=now()" align="center" leftTextAlign="right" value="2014.08.28 00:00:00" dataType="dateTime" editMask="YYYY-MM-DD 00:00:00"/>
+        </td>
+        <td>
+          <Input id="EndTime" type="Edit" tabOrder="4" leftText="结束时间" defaultValue="=now()" align="center" leftTextAlign="right" value="2014.08.28 23:59:59" dataType="dateTime" editMask="YYYY-MM-DD 23:59:59"/>
+        </td>
+        <td></td>
+        <td>
+          <Input id="Query" type="Button" taborder="5" text="查询" picture="../../Content/themes/icons/search.png" at="left"/>
+        </td>
+        <td/>
+      </tr>
+    </TableLayout>
+  </objects>
+</freeform>

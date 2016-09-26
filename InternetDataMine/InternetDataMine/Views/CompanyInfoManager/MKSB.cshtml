@@ -1,0 +1,500 @@
+﻿@{
+    ViewBag.Title = "煤矿设备管理";
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script>
+    var Operation = "";
+    var URL = "";
+    var ID = "";
+    
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    var mineCode = "";
+    //窗体准备好，加载相关数据
+    $(document).ready(function (e)
+    {
+        loadMineInfo();
+
+        mineCode = getQueryString("MineCode");
+
+        if (mineCode == null|mineCode=="null")
+        {
+            mineCode = "";
+        }
+       
+        $('#colliery_no').textbox('setText', mineCode);
+
+        //根据煤矿编号是否为空来加载不同的按钮
+        if (mineCode == "")
+        {
+            $("#btnAdd").hide();
+            $("#btnAlter").hide();
+            $("#btnDelete").hide();
+        }
+        else
+        {
+            $("#lblminecode").hide();
+            $("#comboMineCode + .combo").hide();
+            $("#btnQuery").hide();
+        }
+
+        //$('#colliery_no')[0].value = mineCode;
+        //$('#colliery_no').val(mineCode);
+        //alert(MineCode);
+    });
+
+    function LoadInfo()
+    {
+        mineCode = readCookie('MineCode');
+        if (mineCode == "" | mineCode == null | mineCode == "null")
+        {
+            mineCode = $("#comboMineCode").combobox("getValue");
+        }
+
+        $('#MKSB').datagrid({
+            toolbar: '#tb',
+            fitColumns: true,
+            striped: true,
+            singleSelect: true,
+            method: 'Post',
+            url: '../CompanyInfoManager/TransCompanyData?type=MKSB&MineCode=' + mineCode,
+            columns: [[
+                { field: 'ck', title: '选择', checkbox: true, width: 100 },
+                { field: 'eq_code', title: '编号', width: 100 },
+                { field: 'eq_describe', title: '设备名称', width: 100 },
+                { field: 'install_place', title: '安装位置', width: 100 },
+                { field: 'eq_model', title: '型号', width: 100 }
+            ]]
+        });
+    }
+
+
+    ///加载datagrid
+    $('#MKSB').ready(function() {
+        LoadInfo();
+    });
+
+
+    ///加载combobox
+    $('#use_type').ready(function() {
+        $('#use_type').combobox({
+            url: '../CompanyInfoManager/TransCompanyData?type=use_type',
+            valueField: 'id',
+            textField: 'text'
+        });
+    });
+    $('#eq_name').ready(function() {
+        $('#eq_name').combobox({
+            url: '../CompanyInfoManager/TransCompanyData?type=eq_name',
+            valueField: 'id',
+            textField: 'text'
+        });
+    });
+
+
+    function Preview() {
+        var rows = $("#MKSB").datagrid("getChecked");
+        if (rows.length != 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "请先选中一行，再点击预览按钮！");
+            return;
+        }
+
+        InputEabled(false);
+
+        ShowMKSBInfo();
+
+    }
+
+    //把选中的煤矿设备信息显示出来
+    function ShowMKSBInfo()
+    {
+        if ($('#MKSB').datagrid('getSelected') != null) {
+
+            $('#dlg').dialog('open');
+            ID = $('#MKSB').datagrid('getSelected')['id'];
+            $('#colliery_no').textbox('setText', $('#MKSB').datagrid('getChecked')[0].colliery_no);
+            $('#use_type').combobox('setValue', $('#MKSB').datagrid('getChecked')[0].use_type);
+            $('#eq_name').combobox('setValue', $('#MKSB').datagrid('getChecked')[0].eq_name);
+            $('#eq_describe').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_describe);
+            $('#eq_model').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_model);
+            $('#eq_code').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_code);
+            $('#eq_count').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_count);
+            $('#eq_factory').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_factory);
+            $('#eq_power').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_power);
+            $('#safe_certificate').textbox('setText', $('#MKSB').datagrid('getChecked')[0].safe_certificate);
+            $('#explosion_certificate').textbox('setText', $('#MKSB').datagrid('getChecked')[0].explosion_certificate);
+            $('#production_certificate').textbox('setText', $('#MKSB').datagrid('getChecked')[0].production_certificate);
+            $('#factory_no').textbox('setText', $('#MKSB').datagrid('getChecked')[0].factory_no);
+            $('#factory_date').datebox('setValue', $('#MKSB').datagrid('getChecked')[0].factory_date);
+            $('#purchase_date').datebox('setValue', $('#MKSB').datagrid('getChecked')[0].purchase_date);
+            $('#eq_use').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_use);
+            $('#install_place').textbox('setText', $('#MKSB').datagrid('getChecked')[0].install_place);
+            $('#install_date').datebox('setValue', $('#MKSB').datagrid('getChecked')[0].install_date);
+            $('#timing_date').datebox('setValue', $('#MKSB').datagrid('getChecked')[0].timing_date);
+            $('#life_time').textbox('setText', $('#MKSB').datagrid('getChecked')[0].life_time);
+            $('#eq_manager').textbox('setText', $('#MKSB').datagrid('getChecked')[0].eq_manager);
+        }
+    }
+
+    //所有COMBOBOX及文本框可填写或不可写
+    function InputEabled(enable)
+    {
+        if (enable) {
+            //所有COMBOBOX及文本框可填写
+            var textboxes = $(".easyui-textbox");
+            $(textboxes).each(function (i, item) {
+                $("#" + item.id).textbox("enable");
+            });
+
+            var combobox = $(".easyui-combobox");
+            $(combobox).each(function (i, item) {
+                $("#" + item.id).combobox("enable");
+            });
+
+            var datebox = $(".easyui-datebox");
+            $(datebox).each(function (i, item) {
+                $("#" + item.id).datebox("enable");
+            });
+            $("#subbmit")[0].style.display = "inline";
+
+            $('#colliery_no').textbox("disable", true);
+        }
+        else
+        {
+            //是所有COMBOBOX及文本框不可用
+            var textboxes = $(".easyui-textbox");
+            $(textboxes).each(function (i, item) {
+                $("#" + item.id).textbox("disable");
+            });
+
+            var combobox = $(".easyui-combobox");
+            $(combobox).each(function (i, item) {
+                $("#" + item.id).combobox("disable");
+            });
+
+            var datebox = $(".easyui-datebox");
+            $(datebox).each(function (i, item) {
+                $("#" + item.id).datebox("disable");
+            });
+
+            $("#comboMineCode").combobox("enable");
+
+            $("#subbmit")[0].style.display = "none";
+        }
+    }
+
+
+    //函数 修改煤矿设备信息
+    function alter() {
+        $(".easyui-textbox").textbox("setText", "");
+        var rows = $("#MKSB").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法修改，请先选取一行，在点击修改按钮！");
+            return;
+        }
+
+        
+        InputEabled(true);
+
+        Operation = "alter";
+
+        ShowMKSBInfo();
+       
+    }
+    //函数 删除煤矿设备信息
+    function del() {
+
+        var rows = $('#MKSB').datagrid('getChecked');
+
+        if (rows.length < 1)
+        {
+            $.messager.alert('错误提示', '没有选中的行，无法执行删除操作！', 'error');
+            return;
+        }
+
+        $.messager.confirm("确认", "确认要删除数据吗？", function(data) {
+            if (data) {
+
+                var condition = "";
+                var index = 0;
+                for (index = 0; index < rows.length; index++) {
+                    if (index == rows.length - 1) {
+                        condition += rows[index].id;
+                    }
+                    else {
+                        condition += rows[index].id + ",";
+                    }
+                }
+                $.ajax({
+                    cache: false,
+                    method: "POST",
+                    datatype: "json",
+                    url: '../CompanyInfoManager/TransCompanyData?type=DelMKSB&ID=' + condition,
+                    success: function(data) {
+                        if (data == "True") {
+                            AddProcessLogGlobal("删除了煤矿设备信息！");
+                            $.messager.alert('提示', '删除成功！');
+                            LoadInfo();
+                        } else {
+                            $.messager.alert('提示', '删除失败！');
+                        }
+                    },
+                    error: function() {
+                        $.messager.alert('提示', '删除数据时出错！');
+                    }
+                });
+            }
+        });
+    }
+    //函数 弹出编辑窗体
+    function AddInfo() {
+        $(".easyui-textbox").textbox("setText", "");
+        $(".easyui-combobox").textbox("setText", "");
+        $('#colliery_no').textbox('setText', mineCode);
+        Operation = "Add";
+     
+
+        InputEabled(true);
+        $('#dlg').dialog('open');
+    }
+    //函数 拼接URL
+    function ContentURL() {
+        URL = "";
+        URL += "colliery_no|" + $('#colliery_no').textbox('getText');
+        URL += ",use_type|" + $('#use_type').combobox('getValue');
+        URL += ",eq_name|" + $('#eq_name').combobox('getValue');
+        URL += ",eq_describe|" + $('#eq_describe').textbox('getText');
+        URL += ",eq_model|" + $('#eq_model').textbox('getText');
+        URL += ",eq_code|" + $('#eq_code').textbox('getText');
+        URL += ",eq_count|" + $('#eq_count').textbox('getText');
+        URL += ",eq_factory|" + $('#eq_factory').textbox('getText');
+        URL += ",eq_power|" + $('#eq_power').textbox('getText');
+        URL += ",safe_certificate|" + $('#safe_certificate').textbox('getText');
+        URL += ",explosion_certificate|" + $('#explosion_certificate').textbox('getText');
+        URL += ",production_certificate|" + $('#production_certificate').textbox('getText');
+        URL += ",factory_no|" + $('#factory_no').textbox('getText');
+        URL += ",factory_date|" + $('#factory_date').datebox('getValue');
+        URL += ",purchase_date|" + $('#purchase_date').datebox('getValue');
+        URL += ",eq_use|" + $('#eq_use').textbox('getText');
+        URL += ",install_place|" + $('#install_place').textbox('getText');
+        URL += ",install_date|" + $('#install_date').datebox('getValue');
+        URL += ",timing_date|" + $('#timing_date').datebox('getValue');
+        URL += ",life_time|" + $('#life_time').textbox('getText');
+        URL += ",eq_manager|" + $('#eq_manager').textbox('getText');
+    }
+    //函数 提交数据
+    function SaveInfo() {
+        var myurl = '../CompanyInfoManager/TransCompanyData?type=';
+        ContentURL();
+        if (Operation == "Add") {
+            myurl += 'AddMKSB';
+        }
+        else {
+            myurl += 'AlterMKSB&ID=' + ID;
+        }
+        $("#ff").form('submit', {
+            onSubmit: function() {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            url: myurl + '&Info=' + encodeURI(URL),
+            success: function(data) {
+                if (data == "True") {
+                    AddProcessLogGlobal("保存了煤矿设备信息！");
+                    $.messager.alert('提示', '保存成功！');
+                    $('#dlg').dialog('close');
+                    LoadInfo();
+                } else {
+                    $.messager.alert('提示', '保存失败！');
+                }
+            },
+            error: function() {
+                $.messager.alert('提示', '保存时出错！');
+            }
+        });
+    }
+</script>
+    <table id="MKSB" class="easyui-datagrid" title="煤矿设备信息" data-options="fit:true"></table>
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:5px">
+            <label id="lblminecode">企业名称：</label><div class="easyui-combobox" style="width:150px" id="comboMineCode"></div>
+            <a href="#" class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" onclick="LoadInfo()">查询</a>
+            <a href="#" class="easyui-linkbutton" id="btnAdd" data-options="iconCls:'icon-add'" onclick="AddInfo()">添加设备</a>
+            <a href="#" class="easyui-linkbutton" id="btnAlter" data-options="iconCls:'icon-edit'" onclick="alter()">修改设备</a>
+            <a href="#" class="easyui-linkbutton" id="btnDelete" data-options="iconCls:'icon-remove'" onclick="del()">删除设备</a>
+            <a href="#" class="easyui-linkbutton" id="btnPreview" data-options="iconCls:'icon-Page_preview'" onclick="Preview()">预览</a>
+            @*<a href="#" class="easyui-linkbutton" iconcls="" onclick="">预览</a>*@
+        </div>
+    </div>
+    <div id="dlg" title="编辑煤矿设备信息" class="easyui-dialog" data-options="closed:true" style="padding:15px;width:70%;height:470px;">
+        <form id="ff" method="post">
+            <table border="1" style="width:95%;border-collapse:collapse;border-bottom-style:none;font-size:12px;padding-left:10px">
+
+                <tr style="height:30px;">
+                    <td align="right" style="width:10%;">
+                        企业编码：
+                    </td>
+                    <td align="left" style="width:40%;">
+                        <input id="colliery_no" class="easyui-textbox" data-options="required:true,disabled:true" style="width:80%;" />
+                    </td>
+                    <td align="right" style="width:10%;">
+                        设备使用方向：
+                    </td>
+                    <td align="left" style="width:40%;">
+                        <input id="use_type" class="easyui-combobox" data-options="required:true" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        设备类型：
+                    </td>
+                    <td align="left">
+                        <input id="eq_name" class="easyui-combobox" data-options="required:true" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        设备名称：
+                    </td>
+                    <td align="left" colspan="5">
+                        <input id="eq_describe" class="easyui-textbox" data-options="required:true" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        型号：
+                    </td>
+                    <td align="left">
+                        <input id="eq_model" class="easyui-textbox" data-options="required:true" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        编号：
+                    </td>
+                    <td align="left">
+                        <input id="eq_code" class="easyui-textbox" data-options="required:true" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        数量：
+                    </td>
+                    <td align="left">
+                        <input id="eq_count" class="easyui-textbox" data-options="required:true" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        生产厂家：
+                    </td>
+                    <td align="left">
+                        <input id="eq_factory" class="easyui-textbox" data-options="required:true" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        功率：
+                    </td>
+                    <td align="left">
+                        <input id="eq_power" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        安全标志证号：
+                    </td>
+                    <td align="left">
+                        <input id="safe_certificate" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        防爆合格证号：
+                    </td>
+                    <td align="left">
+                        <input id="explosion_certificate" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        生产许可证号：
+                    </td>
+                    <td align="left">
+                        <input id="production_certificate" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        出厂编号：
+                    </td>
+                    <td align="left">
+                        <input id="factory_no" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        出厂日期：
+                    </td>
+                    <td align="left">
+                        <input id="factory_date" class="easyui-datebox" data-options="showseconds:false" value="=now()" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        购进日期：
+                    </td>
+                    <td align="left">
+                        <input id="purchase_date" class="easyui-datebox" data-options="showseconds:false" value="=now()" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        用途：
+                    </td>
+                    <td align="left">
+                        <input id="eq_use" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        安装地点：
+                    </td>
+                    <td align="left">
+                        <input id="install_place" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        安装时间：
+                    </td>
+                    <td align="left">
+                        <input id="install_date" class="easyui-datebox" data-options="showseconds:false" value="=now()" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        调校时间：
+                    </td>
+                    <td align="left">
+                        <input id="timing_date" class="easyui-datebox" data-options="showseconds:false" value="=now()" style="width:80%;" />
+                    </td>
+                    <td align="right">
+                        使用期限：
+                    </td>
+                    <td align="left">
+                        <input id="life_time" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        设备负责人：
+                    </td>
+                    <td align="left">
+                        <input id="eq_manager" class="easyui-textbox" style="width:80%;" />
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr style="height:30px;">
+
+                    <td colspan="4" align="center">
+                        <a href="#" class="easyui-linkbutton" style="width:150px;" id="subbmit" data-options="iconCls:'icon-save'" onclick="SaveInfo()">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>

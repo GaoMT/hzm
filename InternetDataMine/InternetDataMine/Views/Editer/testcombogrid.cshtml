@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "testcombogrid";
+    Layout = null;
+}
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/common")
+@Styles.Render("~/Content/icon")
+<link rel="stylesheet" type="text/css" href="../Content/themes/metro-orange/easyui.css" title="orange">
+<link rel="stylesheet" type="text/css" href="../Content/themes/ui-pepper-grinder/easyui.css" title="pink">
+<link rel="stylesheet" type="text/css" href="../Content/themes/ui-cupertino/easyui.css" title="blue">
+<link rel="stylesheet" type="text/css" href="../Content/themes/ui-dark-hive/easyui.css" title="gray">
+<link rel="stylesheet" type="text/css" href="../Content/themes/metro-green/easyui.css" title="green">
+@Scripts.Render("~/bundles/easyui")
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        alert("j");
+       
+    });
+
+
+    function GetComboValue()
+    {
+        $('#comboRole').combogrid('setText', '');
+        var xx = $('#comboRole').combogrid('getValue') + $('#comboRole').combogrid('getText');
+        alert(xx);
+    }
+
+</script>
+
+<input id="cc" class="easyui-combogrid" style="width:250px" data-options="
+			panelWidth: 500,
+		    idField: 'RoleID',
+			textField: 'RoleName',
+			url: '../Editer/MyDataSource',
+			method: 'get',
+			columns: [[
+				  {field:'RoleID',title:'RoleID',width:80,hidden:true},
+				                    {field:'RoleName',title:'角儿名称',width:80},
+				                    {field:'MineName',title:'企业名称',width:120}
+			]],
+			fitColumns: true
+		">
+
+<input id="comboRole" class="easyui-combogrid" data-options="editable:false,
+                       panelWidth: 360,
+			            idField: 'RoleID',
+			            textField: 'RoleName',
+			            url: '../Editer/MyDataSource',
+			            method: 'get',
+			            columns: [[
+                                    {field:'RoleID',title:'RoleID',width:80,hidden:true},
+				                    {field:'RoleName',title:'角儿名称',width:80},
+				                    {field:'MineName',title:'企业名称',width:120}
+			                    ]],
+			                fitColumns: true
+                       " style="width:360px;height:32px;" />
+
+
+<input type="button" onclick="GetComboValue()" value="Confirm" />

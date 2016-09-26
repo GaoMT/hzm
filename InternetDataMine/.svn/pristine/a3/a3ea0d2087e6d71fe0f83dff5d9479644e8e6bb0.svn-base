@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Report>
+  <WorkSheet name="Sheet" isDefaultPrint="true">
+    <Properties>
+      <BackGround bgColor="#FFFFFF" arrange="tile" alpha="255"/>
+      <DefaultTD>
+        <TD fontIndex="0" textColor="#000000" transparent="true" leftBorder="1" topBorder="1" leftBorderColor="#C0C0C0" leftBorderStyle="solid" topBorderColor="#C0C0C0" topBorderStyle="solid" decimal="2" align="left" vAlign="middle" isProtected="false" isThousandSeparat="true" isRound="true" isPrint="true"/>
+      </DefaultTD>
+      <Other isShowZero="true" isRefOriPrecision="true" LineDistance="0" isRowHeightAutoExtendAble="true"/>
+    </Properties>
+    <Fonts>
+      <Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+      <Font faceName="微软雅黑" charSet="134" height="-14" weight="700"/>
+      <Font faceName="微软雅黑" charSet="134" height="-19" weight="700"/>
+    </Fonts>
+    <Table>
+      <Col width="140"/>
+      <Col width="65"/>
+      <Col width="145"/>
+      <Col width="124"/>
+      <Col width="77"/>
+      <Col width="152"/>
+      <Col width="15"/>
+      <TR height="40" sequence="0">
+        <TD fontIndex="2" align="center">通讯异常统计</TD>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="33" sequence="1">
+        <TD align="center">煤矿编号</TD>
+        <TD datatype="1" formula="=data(&apos;monthreport&apos;, 1, &apos;MineName&apos;)"/>
+        <TD/>
+        <TD align="center">填写时间</TD>
+        <TD datatype="1" formula="=data(&apos;monthreport&apos;, 1, &apos;Rq&apos;)"/>
+        <TD/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="28" sequence="2">
+        <TD align="center">煤矿名称</TD>
+        <TD datatype="1" formula="=data(&apos;monthreport&apos;, 1, &apos;MineNum&apos;)"/>
+        <TD align="center" datatype="1"/>
+        <TD align="center"/>
+        <TD/>
+        <TD align="center" datatype="1"/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="28" sequence="3">
+        <TD align="center">内容</TD>
+        <TD datatype="1" formula="=data(&apos;monthreport&apos;, 1, &apos;Contents&apos;)"/>
+        <TD align="center" datatype="1"/>
+        <TD align="center"/>
+        <TD/>
+        <TD align="center" datatype="1"/>
+        <TD topBorder="0"/>
+      </TR>    
+      <!--<TR height="35" sequence="4">
+        <TD fontIndex="1" align="center">施工采区</TD>
+        <TD datatype="1"/>
+        <TD align="center" datatype="1"/>
+        <TD align="center"/>
+        <TD/>
+        <TD datatype="1"/>
+        <TD topBorder="0"/>
+      </TR>-->
+      <TR height="28" sequence="5">
+        <TD align="center">矿井类型</TD>
+        <TD datetype="1" formula="=data(&apos;monthreport&apos;,1,&apos;Type&apos;)"/>
+        <TD align="center" datatype="1"/>
+        <TD align="center"/>
+        <TD/>
+        <TD align="center" datatype="1"/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="28" sequence="6">
+        <TD align="center">法人代表</TD>
+        <TD/>
+        <TD align="center" datatype="1"/>
+        <TD align="center"/>
+        <TD/>
+        <TD align="center" datatype="1"/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="31" sequence="7">
+        <TD fontIndex="1" align="center">准备采区</TD>
+        <TD datatype="1"/>
+        <TD align="center"/>
+        <TD align="center" datatype="1"/>
+        <TD/>
+        <TD datatype="1"/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="28" sequence="8">
+        <TD align="center"/>
+        <TD align="center" datatype="1"/>
+        <TD align="center"/>
+        <TD align="center" datatype="1"/>
+        <TD datatype="1"/>
+        <TD/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="28" sequence="9">
+        <TD/>
+        <TD/>
+        <TD align="center"/>
+        <TD align="center" datatype="1"/>
+        <TD/>
+        <TD/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="28" sequence="10">
+        <TD fontIndex="1" align="center">改造采区</TD>
+        <TD datatype="1"/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="34" sequence="11">
+        <TD align="center">采煤方法及工艺</TD>
+        <TD/>
+        <TD align="center" datatype="1"/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="28" sequence="12">
+        <TD align="center">现生产水平及标高</TD>
+        <TD datatype="1"/>
+        <TD align="center" datatype="1"/>
+        <TD align="center"/>
+        <TD datatype="1"/>
+        <TD/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="22" sequence="13">
+        <TD align="center" datatype="1"/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD/>
+        <TD topBorder="0"/>
+      </TR>
+      <TR height="15" sequence="14">
+        <TD leftBorder="0"/>
+        <TD leftBorder="0"/>
+        <TD leftBorder="0"/>
+        <TD leftBorder="0"/>
+        <TD leftBorder="0"/>
+        <TD leftBorder="0"/>
+        <TD leftBorder="0" topBorder="0"/>
+      </TR>
+    </Table>
+    <Merges>
+      <Range row1="0" col1="0" row2="0" col2="5"/>
+      <Range row1="13" col1="0" row2="13" col2="5"/>
+      <Range row1="1" col1="1" row2="1" col2="2"/>
+      <Range row1="1" col1="4" row2="1" col2="5"/>
+      <Range row1="2" col1="1" row2="2" col2="5"/>
+      <Range row1="3" col1="0" row2="12" col2="0"/>
+      <Range row1="3" col1="1" row2="12" col2="5"/>
+    </Merges>
+    <PrintPage>
+      <Paper scale="93">
+        <Margin left="18" top="39" right="18" bottom="24"/>
+      </Paper>
+      <Page>
+        <PageCode>
+          <Font faceName="微软雅黑" charSet="134" height="-14" weight="400"/>
+        </PageCode>
+      </Page>
+    </PrintPage>
+  </WorkSheet>
+  <DataSources Version="255" isAutoCalculateWhenOpen="false" isSaveCalculateResult="false">
+    <DataSource type="4">
+      <!-- Desc: Supcan Report Component DataSource Specification -->
+      <Data>
+        <ID>monthreport</ID>
+        <Version>2</Version>
+        <Type>4</Type>
+        <TypeMeaning>JSON</TypeMeaning>
+        <Source>Data.aspx?sType=Report&amp;fullName=%u671D%u9633%u7164%u77FF&amp;City=%u82A6%u6EAA%u53BF</Source>
+        <Memo>月度报表</Memo>
+        <XML_RecordAble_Nodes>
+          <Node>
+            <name/>
+          </Node>
+        </XML_RecordAble_Nodes>
+        <Paras>
+          <Para1 Name="sType" Title="类型"/>
+        </Paras>
+        <Columns>
+          <Column>
+            <name>R</name>
+            <text>R</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>3</sequence>
+          </Column>
+          <Column>
+            <name>Id</name>
+            <text>Id</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>6</sequence>
+          </Column>
+          <Column>
+            <name>MineNum</name>
+            <text>MineNum</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>4</sequence>
+          </Column>
+          <Column>
+            <name>MineName</name>
+            <text>MineName</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>5</sequence>
+          </Column>
+          <Column>
+            <name>Rq</name>
+            <text>Rq</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>1</sequence>
+          </Column>
+          <Column>
+            <name>Contents</name>
+            <text>Contents</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>2</sequence>
+          </Column>
+          <Column>
+            <name>Type</name>
+            <text>Type</text>
+            <type>string</type>
+            <visible>true</visible>
+            <sequence>7</sequence>
+          </Column>
+        </Columns>
+      </Data>
+    </DataSource>
+  </DataSources>
+</Report>

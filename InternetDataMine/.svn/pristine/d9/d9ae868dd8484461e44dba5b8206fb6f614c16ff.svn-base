@@ -1,0 +1,7 @@
+﻿@model InternetDataMine.Models.UserAndPower.TransDataModel
+
+@{
+    ViewBag.Title = null;
+    Response.Write(Model.GetDataJson);
+    Response.End();
+}

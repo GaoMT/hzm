@@ -1,0 +1,17 @@
+﻿@model InternetDataMine.Models.TransJsonToTreeListModel
+
+@{
+    Layout = null;
+    try
+    { 
+        Response.Write(Model.GetDataJson);
+        Response.End();
+    }
+    catch(Exception ex)
+    {
+        Response.Write(ex.Message.ToString());
+    }
+    
+}
+
+

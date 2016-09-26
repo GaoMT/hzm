@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TreeList>
+  <Properties  Title="实时故障" editAble="false" bgColor="#FFFFFF"  fadeInStep="0"  headerBgColor="#ffffff" curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false"></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="8%" align="center">煤矿名称</Col>
+    <Col name="SensorNum"  width="8%" align="center">测点编号</Col>
+    <Col name="Place"  width="25%" align="center">安装地点</Col>
+    <Col name="ShowValue"   width="6%" align="center">测点值</Col>
+    <Col name="unit"  width="5%" align="center">单位</Col>
+    <Col name="datetime"   width="15%" align="center">监测时间</Col>
+    <Col name="ValueState"   width="6%" align="center" displayMask="textColor=if(data='正常',write,red) ">状态</Col>
+  </Cols>
+</TreeList>

@@ -1,0 +1,358 @@
+﻿@{
+    ViewBag.Title = "企业图纸档案管理";
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script>
+    var Operation = "";
+    var URL = "";
+    var ID = "";
+    
+    //查询URL中的参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    function now()
+    {
+        var date = new Date();
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    }
+
+    var mineCode = "";
+    $(document).ready(function (e) {
+
+       
+
+        mineCode = getQueryString("MineCode");
+
+        if (mineCode == null)
+        {
+            mineCode = "";
+        }
+        $('#colliery_no').textbox('setText', mineCode);
+        //加载煤矿信息列表
+        loadMineInfo();
+        //根据煤矿编号是否为空来加载不同的按钮
+        if (mineCode == "") {
+            $("#btnAdd").hide();
+            $("#btnAlter").hide();
+            $("#btnDelete").hide();
+        }
+        else {
+            $("#lblminecode").hide();
+            $("#comboMineCode + .combo").hide();
+            $("#btnQuery").hide();
+        }
+
+    });
+
+    //加载表格数据
+    function LoadData()
+    {
+        mineCode = readCookie('MineCode');
+        if (mineCode == null | mineCode == "null") {
+
+            mineCode = "";
+        }
+
+        if (mineCode == "") {
+            mineCode = $("#comboMineCode").combobox("getValue");
+        }
+
+        $('#QYTZ').datagrid({
+            toolbar: '#tb',
+            fitColumns: true,
+            striped: true,
+            singleSelect: false,
+            method: 'Post',
+            url: '../CompanyInfoManager/TransCompanyData?type=QYTZ&MineCode=' + mineCode + getUrlStafix(),
+            columns: [[
+                { field: 'ck', checkbox: true, width: 100 },
+                { field: 'id', title: '编号', width: 100 ,hidden:true},
+                { field: 'colliery_no', title: '企业编码', width: 100 },
+                 { field: 'simpleName', title: '企业名称', width: 100 },
+                { field: 'upload_month', title: '建档日期', width: 100 },
+                { field: 'Value', title: '图纸类别', width: 100 },
+                { field: 'explain', title: '图纸说明', width: 100 },
+                { field: 'valid_date_begin', title: '有效期起', width: 100 },
+                { field: 'valid_date_end', title: '有效期止', width: 100 },
+                { field: 'filename', title: '文件名', width: 100 }
+            ]]
+        });
+    }
+
+    ///加载datagrid
+    $('#QYTZ').ready(function() {
+        LoadData();
+    });
+    //加载图纸类型
+    $('#drawings_type').ready(function() {
+        $('#drawings_type').combobox({
+            url: '../CompanyInfoManager/TransCompanyData?type=drawings_type',
+            valueField: 'id',
+            textField: 'text'
+        });
+    });
+    //函数 修改数据
+    function alter(index) {
+        Operation = "alter";
+        if ($('#QYTZ').datagrid('getChecked')!=null) {
+            $('#dlg').dialog('open');
+            ID = $('#QYTZ').datagrid('getChecked')[0].id;
+            $('#colliery_no').textbox('setText', $('#QYTZ').datagrid('getChecked')[0].colliery_no);
+            $('#upload_month').datebox('setText', $('#QYTZ').datagrid('getChecked')[0].upload_month);
+            $('#explain').textbox('setText', $('#QYTZ').datagrid('getChecked')[0].explain);
+            $('#valid_date_begin').datebox('setText', $('#QYTZ').datagrid('getChecked')[0].valid_date_begin);
+            $('#valid_date_end').datebox('setText', $('#QYTZ').datagrid('getChecked')[0].valid_date_end);
+            $('#drawings_type').combobox('setValue', $('#QYTZ').datagrid('getChecked')[0].drawings_type);
+        }
+    }
+    //函数 删除数据
+    function del(index) {
+        var rows = $("#QYTZ").datagrid("getChecked");
+        if (rows.length < 1) {
+            $.messager.progress('close');
+            $.messager.alert('提示', "无法删除，请先选取一行或多行，在点击删除按钮！");
+            return;
+        }
+        $.messager.confirm("确认", "确认要删除数据吗？", function(data) {
+            if (data) {
+                var condition = "";
+                var index = 0;
+                for (index = 0; index < rows.length; index++) {
+                    if (index == rows.length - 1) {
+                        condition += rows[index].id;
+                    } else {
+                        condition += rows[index].id + ",";
+                    }
+                }
+                $.ajax({
+                    cache: false,
+                    method: "POST",
+                    datatype: "json",
+                    url: '../CompanyInfoManager/TransCompanyData?type=DelQYTZ&ID=' + condition,
+                    success: function(data) {
+                        if (data == "True") {
+                            AddProcessLogGlobal("删除了企业图纸！");
+                            $.messager.alert('提示', '删除成功！', "info", function () { LoadData();});
+                           
+                        } else {
+                            $.messager.alert('提示', '删除失败！',"error");
+                        }
+                    },
+                    error: function() {
+                        $.messager.alert('提示', '删除数据时出错！',"error");
+                    }
+                });
+            }
+        });
+    }
+    //函数 打开编辑窗口
+    function AddInfo() {
+        Operation = "Add";
+        $('#dlg').dialog('open');
+        $('#colliery_no').textbox('setText','');
+        $('#explain').textbox('setText', '');
+        $('#filename')[0].value="";
+        $('#drawings_type').combobox('setValue', '');
+        $('#colliery_no').textbox('setText', mineCode);
+        
+        $('#upload_month').datebox('setText', now());
+        $('#valid_date_begin').datebox('setText', now());
+        $('#valid_date_end').datebox('setText', now());
+        
+    }
+    //函数 拼接URL
+    function ContentURL() {
+        URL = "";
+        URL += "colliery_no|" + $('#colliery_no').textbox('getText');
+        URL += ",upload_month|" + $('#upload_month').datebox('getValue');
+        URL += ",drawings_type|" + $('#drawings_type').combobox('getValue');
+        URL += ",explain|" + $('#explain').textbox('getText');
+        URL += ",valid_date_begin|" + $('#valid_date_begin').datebox('getValue');
+        URL += ",valid_date_end|" + $('#valid_date_end').datebox('getValue');
+        URL += ",filename|" + $("#filename")[0].value;
+    }
+
+    //文件上传
+    function ajaxFileUpload() {
+       var isValidate= $("#ff").form('validate');
+       if (!isValidate)
+       {
+           return;
+       }
+        $.messager.progress();
+        var myurl = '../CompanyInfoManager/TransCompanyData?type=';
+        ContentURL();
+
+        if (Operation == "Add") {
+            myurl += 'AddQYTZ';
+        }
+        else {
+            myurl += 'AlterQYTZ&ID=' + ID;
+        }
+        $.ajaxFileUpload
+        (
+            {
+                url: myurl + '&Info=' + encodeURI(URL), //用于文件上传的服务器端请求地址
+                secureuri: false, //一般设置为false
+                fileElementId: 'filename', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    if (typeof (data.error) != 'undefined') {
+                        if (data.error != '') {
+                            $.messager.progress("close");
+                            $.messager.alert("警告", data.error, "error");
+                        } else {
+                            AddProcessLogGlobal("添加了企业图纸！");
+                            $.messager.progress("close");
+                            $.messager.alert("提示", data.msg, "info");
+                            LoadData();
+                        }
+                    }
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert("error");
+                }
+            }
+        )
+        return false;
+    }
+
+    function download()
+    {
+        var rows = $("#QYTZ").datagrid("getChecked");
+        if (rows.length < 1 | rows.length > 1) {
+            $.messager.alert("提示", "下载时，请选择一个文件下载，不选或多选都无法进行操作，请选择！", "error");
+        }
+        else
+        {
+            var Url = "../CompanyInfoManager/DownloadFile?type=download_EItable_QYTZ&ID=" + rows[0].id;
+            downloadFile(Url);
+
+            //$.post(Url,function(data){
+            //    alert(data);
+            //});
+        }
+    }
+
+    /*  已作废
+    //函数 提交数据到后台
+    function SaveInfo() {
+        var myurl = '../CompanyInfoManager/TransCompanyData?type=';
+        ContentURL();
+
+        if (Operation == "Add") {
+            myurl += 'AddQYTZ';
+        }
+        else {
+            myurl += 'AlterQYTZ&ID='+ID;
+        }
+        $("#ff").form('submit', {
+            onSubmit: function() {
+                var isValid = $(this).form('enableValidation').form('validate');
+                if (!isValid) {
+                    $.messager.progress('close');
+                }
+                return isValid;
+            },
+            url: myurl + '&Info=' + encodeURI(URL),
+            success: function(data) {
+                if (data == "True") {
+                    $.messager.alert('提示', '保存成功！');
+                    $('#QYTZ').datagrid('reload');
+                    $('#dlg').dialog('close');
+                } else {
+                    $.messager.alert('提示', '保存失败！');
+                }
+            },
+            error: function() {
+                $.messager.alert('提示', '保存时出错！');
+            }
+        });
+    }
+    */
+</script>
+
+    <table id="QYTZ" class="easyui-datagrid" title="企业图纸档案" data-options="fit:true"></table>
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:5px">
+            <label id="lblminecode">企业名称：</label><div class="easyui-combobox" style="width:150px" id="comboMineCode"></div>
+            <a href="#" class="easyui-linkbutton" id="btnQuery" data-options="iconCls:'icon-search'" onclick=" LoadData()">查询</a>
+            <a href="#" class="easyui-linkbutton" id="btnAdd"  data-options="iconCls:'icon-add'" onclick="AddInfo()">添加图纸</a>
+            <a href="#" class="easyui-linkbutton" id="btnAlter" data-options="iconCls:'icon-edit'" onclick="alter()">修改图纸</a>
+            <a href="#" class="easyui-linkbutton" id="btnDelete" data-options="iconCls:'icon-remove'" onclick="del()">删除图纸</a>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-arrow_down'" onclick="download()">下载</a>
+        </div>
+    </div>
+    <div id="dlg" title="编辑企业图纸档案" class="easyui-dialog" closed="true" style="width:30%;height:320px;padding:15px;">
+        <form id="ff" method="post">
+            <table border="1" style="width:95%;height:90%;border-collapse:collapse;border-bottom-style:none;font-size:12px;padding-left:10px">
+                <tr style="height:30px;">
+                    <td align="right">
+                        企业编码：
+                    </td>
+                    <td align="left">
+                        <input id="colliery_no" class="easyui-textbox" data-options="required:true,disabled:true" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        建档日期：
+                    </td>
+                    <td align="left">
+                        <input id="upload_month" class="easyui-datebox" value="=now()" data-options="showSeconds:false" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        图纸类别：
+                    </td>
+                    <td align="left">
+                        <select id="drawings_type" class="easyui-combobox" data-options="required:true" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        图纸说明：
+                    </td>
+                    <td align="left">
+                        <input id="explain" class="easyui-textbox" data-options="required:true" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        有效期起：
+                    </td>
+                    <td align="left">
+                        <input id="valid_date_begin" class="easyui-datebox" value="=now()" data-options="showSeconds:false" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        有效期止：
+                    </td>
+                    <td align="left">
+                        <input id="valid_date_end" class="easyui-datebox" value="=now()" data-options="showSeconds:false" style="width:80%;" />
+                    </td>
+                </tr>
+                <tr style="height:30px;">
+                    <td align="right">
+                        文件名：
+                    </td>
+                    <td align="left">
+                        <input type="file" style="width:80%" id="filename" accept=".doc" name="filename" />
+                               @*<input id="filename" class="easyui-filebox" data-options="required:true,buttonText: '选择文件'" style="width:80%;" />*@</td>
+                </tr>
+                <tr style="height:30px;">
+                    <td colspan="2" align="center">
+                        <a href="#" class="easyui-linkbutton" style="width:150px;" id="subbmit" icon="icon-ok" onclick="ajaxFileUpload()">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>

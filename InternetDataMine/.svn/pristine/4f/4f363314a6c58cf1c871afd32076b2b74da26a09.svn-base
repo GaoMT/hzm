@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-24-->
+<TreeList>
+  <Properties  Title="读卡分站信息" editAble="false" bgColor="#FFFFFF" headerBgColor="#ffffff"  fadeInStep="0"  curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"  isHide="absTrue" width="5%" align="center">ID号</Col>
+    <Col name="SimpleName"  width="26%" align="center">煤矿名称</Col>
+    <Col name="AreaType" width ="21%" align="center">区域类型</Col>
+    <Col name="Workers" width="11%" align="center">核定人数</Col>
+    <Col name="AreaName" width="21%" align =" center">区域名称</Col>
+    <Col name="time" datatype="datetime" width="21%" align="center">最近更新时间</Col>
+  </Cols>
+</TreeList>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<freeform>
+  <Properties Title="实时数据"  bgcolor="#FFFFFF">
+  
+  </Properties>
+  <fonts>
+    <Font faceName="微软雅黑" charSet="134" height="-18"/>
+  </fonts>
+  <!--  工具条按钮 -->
+  <Objects>
+    <Text id="_title" width="100%" height="22" align="center" fontIndex="1" />
+  </Objects>
+
+</freeform>

@@ -1,0 +1,881 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/common")
+    <link rel="stylesheet" type="text/css" href="../Content/themes/ui-cupertino/easyui.css" title="blue">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-gray/easyui.css" title="gray">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-green/easyui.css" title="green">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-orange/easyui.css" title="orange">
+    <link rel="stylesheet" type="text/css" href="../Content/themes/metro-red/easyui.css" title="pink">
+
+    @Scripts.Render("~/bundles/easyui")
+    @Styles.Render("~/Content/icon")
+    <style type="text/css">
+        td.left {
+            
+            text-align: right;
+            width: 30%;
+        }
+
+        td.right {
+            text-align: left;
+         
+            width: 70%;
+        }
+    </style>
+    <script>
+        var AlarmSoundPlayMode = 1;
+        var AlarmSetInfos;
+        var AlarmSoundPause = 0;
+
+        function AlarmSoundPauseOrResume() {
+            var imgSound = document.getElementById("imgSound");
+            if (AlarmSoundPause == 1) {
+                imgSound.src = '../../Files/Icon/sound_blue.png';
+                AlarmSoundPause = 0;
+                AddProcessLogGlobal("设置了报警静音！");
+            } else {
+                imgSound.src = '../../Files/Icon/sound_red.png';
+                AlarmSoundPause = 1;
+                AddProcessLogGlobal("开启了报警声音！");
+            }
+        }
+
+
+
+        $(document).ready(function ()
+        {
+            UserName = readCookie('UserName');
+            MineCode = readCookie('MineCode');
+            UserID = readCookie("UserID");
+
+            //加载报警信息
+            LoadAlarmInfo();
+
+            //加载密码保存按钮事件
+            $('#btnSave').bind('click', function () {
+                if (!$("#ff").form('enableValidation').form('validate'))
+                {
+                    return;
+                }
+                if ($("#txtPwdOrg").textbox("getText") != readCookie('PassWord')) { $.messager.alert('提示', "原始密码不正确, 请重新输入, 请检查. "); return; }
+                if ($("#txtPwdNew").textbox("getText") != $("#txtPwdAging").textbox("getText")) { $.messager.alert('提示', "新密码两次输入不一致, 请检查. "); return; }
+                var url = "../Editer/TransData_PwdSet?Id=" + readCookie("UserID") + "&Pwd=" + $("#txtPwdNew").textbox("getText");
+
+                createCookie('PassWord', $("#txtPwdNew").textbox("getText"), 365);
+
+                $.ajax({
+                    dataType: "text", method: "post", url: url,
+                    success: function (data) {
+                        AddProcessLogGlobal("执行了修改密码操作，修改了登录密码！");
+                        $.messager.progress('close');
+                        $.messager.alert('提示', data);
+                    }
+                });
+            });
+        });
+
+        //单击密码修改、注销、退出的响应事件
+        function SysBtnClick(sender) { if (sender == 'PWDSET') { LoadPwdSetUI(); return; } if (sender == 'EXIT') { ExitApp(); return; } if (sender == 'LOGOUT') { LogoutApp(); return; } if (sender == 'Home') { HomeApp(); return; } }
+        function LoadPwdSetUI() { $("iframe").hide("fast"); $("#txtAccount").textbox("setText", UserName); $("#divPwdSet").window("setTitle", "密码修改"); $("#divPwdSet").window("open"); } // 加载密码设置界面
+        function ExitApp() { $("iframe").hide("fast"); $.messager.confirm("提示", "你确定要退出吗？", function (r) { if (r) { AddProcessLogGlobal("执行了退出操作，退出了系统！"); window.parent.close(); } else { $("iframe").show("fast"); } }); } // 退出应用程序
+        function LogoutApp() { $("iframe").hide("fast"); $.messager.confirm("提示", "你确定要注销吗？", function (r) { if (r) { AddProcessLogGlobal("执行了注销操作，注销了系统！"); window.open("../center/index", "_self", null, true); } else { $("iframe").show("fast"); } }); } // 注销
+        function HomeApp() {
+            var mywidth = screen.width;
+            var myheight = screen.height;
+            window.open(encodeURI("../center/ShowAQJKRTData"), "_blank", "left=0,top=0,fullscreen = no, toolbar = no,width=" + mywidth + ",height=" + myheight, false);
+        } // 主页
+
+
+        //刷新报警信息
+        //window.setInterval("LoadAlarmInfo()", 5000);
+
+        var myIndex = 0;
+        var alarmControl = null;
+        //加载实时报警提示信息
+        function LoadAlarmInfo() {
+            //获取报警信息显示的容器
+            alarmControl = $("#AlarmPrompt")[0];
+
+            $.ajax({
+                url: '../RealData/GetAllAlarmCount?mineCode=' + MineCode + getUrlStafix(),
+                dataType: 'json',
+                success: function (data) {
+                    alarmControl.innerText = "";
+                    AlarmSetInfos = data;
+                    if (data[0].AlarmCount == 0) {
+                        alarmControl.style.color = "green";
+                        alarmControl.innerText = "当前无报警信息";
+                      
+                    } else {
+                        alarmControl.style.color = "red";
+                        alarmControl.innerText = "共有 " + data[0].AlarmCount + " 条报警信息";
+                    }
+
+                    showMsg(data, -1);
+                },
+                error: function (data) {
+                    //错误暂不处理
+                }
+            });
+        }
+
+        // 报警设置
+        function AlarmSet() {
+            showAlarmWindow();
+            // 打开报警设置对话框
+            $("#divAlarmSet").window("open");
+            // 取传感器数据
+            $.ajax({
+                url: '../RealData/GetAlarmSetState?AccountId=' + readCookie("UserID") + getUrlStafix(),
+                dataType: 'json',
+                success: function (data) {
+                    var senders = new Array(document.getElementById("divMines"), document.getElementById("divSystem"),
+                        document.getElementById("divCall"), document.getElementById("divSensor"));
+
+                    for (var s = 0; s < senders.length; s++)
+                        senders[s].innerHTML = "";
+
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].AlarmGroup == "99") {
+                            var sctls = new Array(document.getElementById("soundA"), document.getElementById("soundB"), document.getElementById("soundC"));
+                            sctls[data[i].Disabled-1].checked = true;
+                            AlarmSoundPlayMode = data[i].Disabled;
+
+                            for (var k = 0; k < sctls.length; k++) {
+                                sctls[k].tag = k + 1;
+                                sctls[k].onclick = function () {
+                                    AlarmSoundPlayMode = this.tag;
+                                    $.ajax({
+                                        url: '../RealData/SetAlarmSetItem?AccountId=' + readCookie("UserID") + '&AlarmGroup=99'
+                                            + '&Disabled=' + this.tag + '&LinkData=' + escape("声音报警方式") + getUrlStafix(),
+                                        dataType: 'text',
+                                        success: function (data) {
+                                            AddProcessLogGlobal("修改了声音报警方式！");
+                                            document.getElementById("btnAlarmSetTip").innerText = "声音报警方式设置成功.";
+                                            document.getElementById("btnAlarmSetTip").style.color = 'blue';
+                                        },
+                                        error: function (data) {
+                                            document.getElementById("btnAlarmSetTip").innerText = "更新失败, 可能是访问异常. ";
+                                            document.getElementById("btnAlarmSetTip").style.color = 'red';
+                                        }
+                                    });
+                                }
+                            }
+                        } else {
+                            var divMines = document.createElement("div");
+                            divMines.style.width = "160px";
+                            divMines.style.display = "inline-block";
+
+                            var chkMines = document.createElement("input");
+                            chkMines.type = "checkbox";
+                            if (!data[i].Disabled) {
+                                chkMines.checked = true;
+                            }
+                            chkMines.value = data[i].AlarmType;
+                            chkMines.name = "Group" + data[i].AlarmGroup;
+                            chkMines.tag = data[i].AlarmGroup;
+                            chkMines.onclick = function () {
+                                $.ajax({
+                                    url: '../RealData/SetAlarmSetItem?AccountId=' + readCookie("UserID") + '&AlarmGroup=' + this.tag
+                                        + '&Disabled=' + !this.checked + '&LinkData=' + escape(this.value) + getUrlStafix(),
+                                    dataType: 'text',
+                                    success: function (data) {
+                                        document.getElementById("btnAlarmSetTip").innerText = data;
+                                        document.getElementById("btnAlarmSetTip").style.color = 'blue';
+                                    },
+                                    error: function (data) {
+                                        document.getElementById("btnAlarmSetTip").innerText = "更新失败, 可能是访问异常. ";
+                                        document.getElementById("btnAlarmSetTip").style.color = 'red';
+                                    }
+                                });
+                            }
+
+                            var lblMines = document.createElement("lable");
+                            lblMines.innerText = data[i].AlarmType;
+
+                            divMines.appendChild(chkMines);
+                            divMines.appendChild(lblMines);
+
+                            senders[data[i].AlarmGroup].appendChild(divMines);
+                        }
+                    };
+                },
+                error: function (data) {
+                    //错误暂不处理
+                    
+                }
+            });
+        }
+
+        var AlarmIndex = null;
+        var soundPath = "../../Files/Wma/";
+        var sound1 = "", sound2 = "", sound3 = "";
+
+        function showMsg(data, i)
+        {
+
+            if (i == -1) {
+                $.ajax({
+                    url: '../RealData/GetAlarmSetState?AccountId=' + readCookie("UserID") + getUrlStafix(),
+                    dataType: 'json',
+                    success: function (dataAlarm) {
+                        for (AlarmIndex = 0; AlarmIndex < dataAlarm.length; AlarmIndex++) {
+                            if (dataAlarm[AlarmIndex].AlarmGroup == "99") {
+                                AlarmSoundPlayMode = dataAlarm[AlarmIndex].Disabled;
+                            }
+                        }
+                    }
+                });
+                $.ajax({
+                    url: '../RealData/GetAllAlarmInfo?MineCode=' + MineCode +"&AccountID="+UserID+ getUrlStafix(),
+                    dataType: 'json',
+                    success: function (dataAlarm) {
+                        showMsg(dataAlarm, 0);
+                    }
+                });
+                return;
+            }
+
+            var item = data[i];
+
+            if (item == undefined) {
+                window.setTimeout("LoadAlarmInfo()", 10000);
+                return;
+            }
+
+           
+
+            sound1 = soundPath + item.SimpleName + ".wma";
+            sound3 = soundPath + item.AlarmType + ".wma";
+            if (item.SensorName == '') {
+                sound2 = soundPath + item.AlarmTypeName + ".wma";
+            } else {
+                sound2 = soundPath + item.SensorName + ".wma";
+            }
+
+            i = i + 1;
+            palySound1(data, i, sound1, sound2, sound3);
+        }
+
+        function palySound1(data, i, sound1, sound2, sound3) {
+            Playing(sound1);
+            setTimeout(palySound2, 2800, data, i, sound1, sound2, sound3);
+        }
+
+        function palySound2(data, i, sound1, sound2, sound3) {
+            Playing(sound2);
+            setTimeout(palySound3, 2800, data, i, sound1, sound2, sound3);
+        }
+
+        function palySound3(data, i, sound1, sound2, sound3) {
+            Playing(sound3);
+            setTimeout(showMsg, 3800, data, i);
+        }
+
+       
+
+        var embed;
+        function Playing(src) {
+            if (embed != undefined) {
+                try {
+                    document.getElementById("divPlays").removeChild(embed);
+                }
+                catch (ex) { }
+            }
+
+            if (AlarmSoundPause == 1) return;
+
+            switch (AlarmSoundPlayMode) {
+                case 1: return;
+                case 2: src = "../../Files/Wma/sound_alarm.wma";
+            }
+
+            embed = document.createElement("EMBED");
+            embed.src = src;
+            embed.display = "none";
+            document.getElementById("divPlays").appendChild(embed);
+        }
+
+        var tcell=null;
+        function CreatCell(width, color, value) {
+         
+            tcell = document.createElement("td");
+            tcell.width = width;
+            tcell.style.color = color;
+            if (value != null) {
+                tcell.innerText = value;
+            }
+            else {
+                tcell.innerText = "---";
+            }
+            return tcell;
+
+        }
+
+        // 加载报警页面明细信息
+        function LoadAlarmPageDetail() {
+
+            $("iframe").hide("fast");
+            $("#divAlarmPageDetail").window("open");
+            $.ajax({
+                url: '../RealData/GetAlarmPageData?mineCode=' + readCookie("MineCode"),
+                dataType: 'json',
+                success: function (data) {
+                    //网络异常报警
+                    var danExp1 = document.getElementById("divAlarmNetExp1");
+                    danExp1.innerHTML = "";
+                    for (var i1 = 0; i1 < data.Table.length; i1++) {
+                        var dataItem1 = data.Table[i1];
+                        var divEx1 = document.createElement("div");
+                        divEx1.style.width = "300px";
+                        divEx1.style.display = "inline-block";
+                        var str1;
+                        var len1;
+                        len1 = dataItem1.SimpleName.length;
+                        if (len1 != 5) {
+                            str1 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                        }
+                        else {
+                            str1 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                        }
+
+
+                        divEx1.innerHTML = dataItem1.SimpleName + str1 + dataItem1.systemName + "&nbsp;&nbsp;&nbsp;&nbsp;" + " <span style='color:red'>" + dataItem1.communicationState + "</span><br/>";
+
+                        danExp1.appendChild(divEx1);
+                    }
+                    //安全监控系统报警
+                    var danExp2 = document.getElementById("divAlarmNetExp2");
+                    danExp2.innerHTML = "";
+                    var trow;
+                    trow = document.createElement("tr");
+                    trow.appendChild(CreatCell(80, "black", "煤矿名称"));
+                    trow.appendChild(CreatCell(80, "black", "设备名称"));
+                    trow.appendChild(CreatCell(160, "black", "安装位置"));
+                    trow.appendChild(CreatCell(80, "black", "状态描述"));
+                    trow.appendChild(CreatCell(80, "black", "值/最大值"));
+                    trow.appendChild(CreatCell(160, "black", "值/最大值时间"));
+                    trow.appendChild(CreatCell(160, "black", "状态开始时间"));
+                    trow.appendChild(CreatCell(150, "black", "状态持续时长"));
+                    danExp2.appendChild(trow);
+
+
+                    for (var i2 = 0; i2 < data.Table1.length; i2++) {
+                        var dataItem2 = data.Table1[i2];
+                        switch (dataItem2.AlarmType) {
+                            case "报警":
+                                {
+                                    trow = document.createElement("tr");
+                                    if (dataItem2.PoliceMaxValue == null) //没有最大值，显示 值 报警开始时间，持续时间；
+                                    {
+                                        trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                        trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                        trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                        trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                        trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
+                                        trow.appendChild(CreatCell(160, "black", "---"));
+                                        trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
+                                        trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
+                                    }
+                                    else //有最大值，显示 最大值，最大值开始时间 ，报警开始时间，持续时间；
+                                    {
+                                        trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                        trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                        trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                        trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                        trow.appendChild(CreatCell(80, "red", dataItem2.PoliceMaxValue));
+                                        trow.appendChild(CreatCell(160, "red", dataItem2.PoliceMaxDatetime));
+                                        trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
+                                        trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
+                                    }
+                                    break;
+                                }
+
+                            case "断电报警":
+                                {
+                                    trow = document.createElement("tr");
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                    trow.appendChild(CreatCell(80, "red", dataItem2.PowerMax));
+                                    trow.appendChild(CreatCell(160, "red", dataItem2.PowerMaxDatetime));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
+                                    trow.appendChild(CreatCell(150, "black", dataItem2.PowerContinuoustime));
+                                    break;
+
+                                }
+                            case "故障报警":
+                                {
+                                    trow = document.createElement("tr");
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                    trow.appendChild(CreatCell(80, "black", "--"));
+                                    trow.appendChild(CreatCell(160, "black", "--"));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
+                                    trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
+                                    break;
+                                }
+
+                            case "馈电异常报警":
+                                {
+                                    trow = document.createElement("tr");
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                    trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
+                                    trow.appendChild(CreatCell(160, "red", dataItem2.AbnormalDateTime));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
+                                    trow.appendChild(CreatCell(150, "black", dataItem2.AbnormalContinuoustime));
+                                    break;
+                                }
+
+                            case "工作异常":
+                                {
+                                    trow = document.createElement("tr");
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                    trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
+                                    trow.appendChild(CreatCell(160, "red", dataItem2.AbnormalDateTime));
+                                    trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
+                                    trow.appendChild(CreatCell(150, "black", dataItem2.AbnormalContinuoustime));
+                                    break;
+                                }
+
+                        }
+                        //divEx2.appendChild(trow);
+                        danExp2.appendChild(trow);
+                    }
+
+                    //人员管理系统超时报警
+                    var danExp3 = document.getElementById("divAlarmNetExp3");
+                    danExp3.innerHTML = "";
+                    trow = document.createElement("tr");
+                    if (data.Table2.length > 0) {
+                        trow.appendChild(CreatCell(60, "black", "煤矿名称"));
+                        trow.appendChild(CreatCell(40, "black", "标识卡"));
+                        //JobCardCode
+                        trow.appendChild(CreatCell(60, "black", "姓名"));
+                        trow.appendChild(CreatCell(60, "black", "职务"));
+                        trow.appendChild(CreatCell(60, "black", "部门 "));
+                        trow.appendChild(CreatCell(160, "black", "下井时间 "));
+                        trow.appendChild(CreatCell(160, "black", "超时开始时间"));
+                        trow.appendChild(CreatCell(160, "black", "超时时长"));
+                    }
+                    //var divEx3 = document.createElement("div");
+                    //divEx3.style.width = "500px";
+                    //divEx3.style.display = "inline-block";
+                    danExp3.appendChild(trow);
+                    for (var i3 = 0; i3 < data.Table2.length; i3++) {
+                        var dataItem3 = data.Table2[i3];
+                        //divEx3 = document.createElement("div");
+                        //divEx3.style.width = "700px";
+                        //divEx3.style.display = "inline-block";
+                        trow = document.createElement("tr");
+                        //SimpleName、JobCardCode、Name、Post、Dept、InMineTime、StartAlTime、OverTimeLength
+                        trow.appendChild(CreatCell(60, "black", dataItem3.SimpleName));
+                        trow.appendChild(CreatCell(40, "red", dataItem3.JobCardCode));
+                        trow.appendChild(CreatCell(60, "black", dataItem3.Name));
+                        trow.appendChild(CreatCell(60, "black", dataItem3.Post));
+                        trow.appendChild(CreatCell(60, "black", dataItem3.Dept));
+                        trow.appendChild(CreatCell(160, "black", dataItem3.InMineTime));
+                        trow.appendChild(CreatCell(160, "red", dataItem3.StartAlTime));
+                        // divEx3.innerHTML = dataItem3.SimpleName + dataItem3.Post;
+                        //
+                        trow.appendChild(CreatCell(160, "red", dataItem3.OverTimeLength));
+                        // divEx3.appendChild(trow);
+                        danExp3.appendChild(trow);
+                    }
+
+                    //人员管理系统超员报警
+                    var danExp4 = document.getElementById("divAlarmNetExp4");
+                    danExp4.innerHTML = "";
+                    for (var i4 = 0; i4 < data.Table3.length; i4++) {
+                        var dataItem4 = data.Table3[i4];
+                        var divEx4 = document.createElement("div");
+                        divEx4.style.width = "500px";
+                        divEx4.style.display = "inline-block";
+                        divEx4.innerHTML = dataItem4.SimpleName + dataItem4.Post;
+                        danExp4.appendChild(divEx4);
+                    }
+
+                    //人员管理系统工作异常报警
+                    var danExp5 = document.getElementById("divAlarmNetExp5");
+                    danExp5.innerHTML = "";
+                    for (var i5 = 0; i5 < data.Table4.length; i5++) {
+                        var dataItem5 = data.Table4[i5];
+                        var divEx5 = document.createElement("div");
+                        divEx5.style.width = "500px";
+                        divEx5.style.display = "inline-block";
+                        divEx5.innerHTML = dataItem5.SimpleName + dataItem5.Post;
+                        danExp5.appendChild(divEx5);
+                    }
+
+
+                }
+            });
+        }
+
+        function ChangeIframeSrc(object, iframeID, Menuobject) {
+            $(".icon-alinkleft").each(function (index, element) {
+                element.style.fontWeight = "normal";
+            });
+            Menuobject.style.fontWeight = "bold";
+            $("#" + iframeID)[0].src = object;
+        }
+
+        //显示报警窗口
+        function showAlarmWindow() {
+            $("iframe").hide("fast");
+        }
+
+        //显示隐患的Iframe
+        function ShowAllIframe() {
+            $("iframe").show("fast");
+        }
+
+        var MineCode = "";
+        var UserName = "";
+        var UserID="";
+        //动态加载菜单信息
+        $("#divtabs").ready(function () {
+           
+            //清空Tabs选项卡的所有内容
+            var mylength = $("#divtabs").tabs("tabs").length;
+            for (var myindex = mylength - 1; myindex > -1; myindex--) {
+                $("#divtabs").tabs("close", myindex);
+            }
+
+            if (MineCode == null) { MineCode = ""; }
+
+            $("#span_userName")[0].innerHTML = UserName;
+            //取出一级菜单
+            $.ajax({
+                dataType: 'text', url: '../RealData/ReturnMenus?userName=' + escape(UserName) + '&mineCode=' + MineCode + getUrlStafix(),
+                success: function (data) {
+                    var json = $.parseJSON(data);
+                    $(json).each(function (i, item) {
+                        var MenuName_1 = item.MenuName;//一级菜单名称
+                        var MenuPath_1 = item.MenuPath;//一级菜单路径
+                        var SubMenu_1 = item.subMenu; //子菜单集合
+                        var tabID = "system_" + i;
+                        var contentID = "content_" + i;
+                        var iframeID = "iframe_" + i;
+                        var menu_1 = "accordion_" + i;
+                        var iframeHeight = (document.body.clientHeight - 188) + "px";
+                        var stransHeight = (document.body.clientHeight - 188);
+                        var stransSuffix = "&Height=" + stransHeight + "&MineCode=" + MineCode + "&UserName=" + escape(UserName) + "&UserID=" + UserID;
+                        var isSelected = (i == 0);
+
+                        var menuImagePath = "";
+                        switch (MenuName_1) {
+                            case "安全监控": menuImagePath = "../content/themes/image/aqjk.png"; break;
+                            case "人员管理": menuImagePath = "../content/themes/image/rygl.png"; break;
+                            case "系统配置": menuImagePath = "../content/themes/image/systemconfig.png"; break;
+                            case "交接班管理": menuImagePath = "../content/themes/image/workshift.png"; break;
+                            case "企业档案": menuImagePath = "../content/themes/image/enterprisemanage.png"; break;
+                            case "隐患管理": menuImagePath = "../content/themes/image/troublemanage.png"; break;
+                            case "网络硬盘": menuImagePath = "../content/themes/image/modem.png"; break;
+                            case "公告发布": menuImagePath = "../content/themes/image/Notice.png"; break;
+                            case "预警管理": menuImagePath = "../content/themes/image/PreviewAlarm.png"; break;
+                            case "执法文书": menuImagePath = "../content/themes/image/LawInstruments.png"; break;
+                            case "操作日志": menuImagePath = "../content/themes/image/Timer.png"; break;
+                            case "图形系统": menuImagePath = "../content/themes/image/chart.png"; break;
+                        }
+
+                        //添加选项卡，设置选项卡内容为布局控件
+                        $('#divtabs').tabs('add', {
+                            id: tabID, closable: false, selected: isSelected,
+                            title: "<span class='tt-inner' style='cursor:pointer;'><img src='" + menuImagePath + "' /><br>" + MenuName_1 + "</span>",
+                            content: ' <div id="' + contentID + '" class="easyui-layout" data-options="fit:true,border:false" style="margin:3px 1px 3px 1px;"></div>',
+                        });
+
+                      
+
+                        //向选项卡的布局控件中添加中区，设置中区的内容为iframe
+                        $("#" + contentID).layout('add', {
+                            region: 'center', border: false, split: true,
+                            content: '<iframe id="' + iframeID + '" class="change-backgroundcolor"  frameborder="0" style="width:100%;height:' + iframeHeight + '; border:none; overflow:hidden;" title="' + MenuPath_1 + stransSuffix + '" ></iframe>',
+                        });
+
+                        $("#divtabs").tabs({
+                            onSelect: function (title, index) {
+                                $("iframe").each(function (myindx, myitem) {
+                                    if (myitem.id == "iframe_" + index)
+                                    {
+                                        $("#iframe_" + index)[0].src = $("#iframe_" + index)[0].title;
+                                    }
+                                    else
+                                    {
+                                        myitem.src = "#";
+                                    }
+
+                                    
+
+
+                                });
+                                
+                            },
+                            onUpdate: function (title, index) {
+                                if ($("#iframe_0")[0].src == "") { $("#iframe_0")[0].src = $("#iframe_0")[0].title; }
+                            }
+                        });
+
+                        if (SubMenu_1 != "") {
+                            //向选项卡的布局控件中添加左区，设置左区的内容为抽屉控件
+                            $("#" + contentID).layout('add', {
+                                region: 'west', width: 150, split: true, title: '==子功能菜单==', border: false,
+                                content: ' <div id="' + menu_1 + '" class="easyui-accordion" data-options="fit:true"></div>',
+                            });
+
+                            //取出二级菜单
+                            $(SubMenu_1).each(function (j, jtem) {
+                                var MenuName_2 = jtem.MenuName;
+                                var MenuPath_2 = jtem.MenuPath;
+                                var SubMenu_2 = jtem.subMenu;
+                                var tableID = "table_" + i + '_' + j;
+                                var Menu2_Selected = (j == 0);
+
+                                //向抽屉菜单添加子菜单表格
+                                $('#' + menu_1).accordion('add', {
+                                    title: MenuName_2, selected: Menu2_Selected,
+                                    content: '<table id="' + tableID + '"></table>',
+                                });
+
+                                if (SubMenu_2 != "") {
+                                    //取出三级菜单
+                                    $(SubMenu_2).each(function (k, ktem) {
+                                        var MenuName_3 = ktem.MenuName;
+                                        var MenuPath_3 = ktem.MenuPath;
+                                        var SubMenu_3 = ktem.subMenu;
+                                        //相对应表格添加子菜单
+                                        $("#" + tableID).append("<tr><td> <a onclick=\"ChangeIframeSrc('" + MenuPath_3 + stransSuffix + "','" + iframeID + "',this)\" class='icon-alinkleft'>" + MenuName_3 + "</a><td></tr>");
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+
+                    setTimeout("",2000)
+
+                },
+                error: function (data) {
+                    //daa;
+                }
+            });
+
+            //resizeIframe();
+            // $.parser.parse();
+            $.get({
+                type: 'get', dataType: 'text', url: 'http://www.weather.com.cn/adat/sk/101260906.html',
+                success: function (data) { },
+                error: function (data) { }
+            });
+
+            $("#divVideo").window("close");
+            $.parser.parse("#divtabs");
+        });
+
+        function resizeIframe() {
+            //$("iframe").each(function (i, item) {
+            //    item.style.height = (document.body.clientHeight - 157) + "px";
+            //});
+        }
+    </script>
+</head>
+
+<body style="margin:0 0 0 0;" class="easyui-layout" onresize="resizeIframe()" onload="resizeIframe()">
+    @RenderBody()
+    <div id="divPlays" style="display: none;"></div>
+
+    <div id="divAlarmPageDetail" title="实时报警数据" class="easyui-window" data-options="closed:true,iconCls:'icon-error',onClose:function(){ShowAllIframe();},onMinimize:function(){ShowAllIframe();}"
+         style="z-index: 100; width: 780px; height: 560px; z-index: 100; ">
+        <div style="margin-top: 20px; font-weight: 700;">安全监控报警：</div>
+        <div id="divAlarmNetExp2" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        </div>
+        <div style="margin-top: 20px;font-weight:700;">网络异常报警：</div>
+        <div id="divAlarmNetExp1" style="height: auto; padding-left: 20px; border-style:solid;border-width:1px;border-color:silver;">
+        </div>
+       
+        <div style="margin-top: 20px; font-weight: 700;">人员超时报警：</div>
+        <div id="divAlarmNetExp3" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        </div>
+        <div style="margin-top: 20px; font-weight: 700;">人员超员报警：</div>
+        <div id="divAlarmNetExp4" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        </div>
+        <div style="margin-top: 20px; font-weight: 700;">特种作业工作异常报警：</div>
+        <div id="divAlarmNetExp5" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        </div>
+    </div>
+
+    <div id="divAlarmSet" title="报警设置" class="easyui-window" data-options="closed:true,modal:true,iconCls:'icon-save',onClose:function(){ShowAllIframe();},onMinimize:function(){ShowAllIframe();}"
+         style="z-index: 100; width: 50%; height: 600px; z-index: 100;">
+        <div style="display: inline-block; margin-top: 10px; padding-left: 50px;" onclick="alert(AlarmSoundPlayMode);">提示：<div id="btnAlarmSetTip" style="display: inline-block;"></div></div>
+        <div style="margin-left:50px;margin-top: 10px;">声音类型：</div>
+        <div style="margin-left: 50px; padding-left: 20px;">
+            <div style="width: 160px; display: inline-block;"><input id="soundA" type="radio" value="静音" name="Sound" />静音</div>
+            <div style="width: 160px; display: inline-block;"><input id="soundB" type="radio" value="单一声音" name="Sound" />单一声音</div>
+            <div style="width: 160px; display: inline-block;"><input id="soundC" type="radio" value="完整声音" checked="true" name="Sound" />完整声音</div>
+        </div>
+        <div style="margin-left:50px;">
+            <div style="margin-top: 20px;">按煤矿报警：</div>
+            <div id="divMines" style="height: auto; padding-left: 20px;">
+            </div>
+
+            <div style="margin-top: 20px;">按系统报警：</div>
+            <div id="divSystem" style="height: auto; padding-left: 20px;">
+            </div>
+
+            <div style="margin-top: 20px;">按类别报警：</div>
+            <div id="divCall" style="height: auto; padding-left: 20px;">
+            </div>
+
+            <div style="margin-top: 20px;">按设备报警：</div>
+            <div id="divSensor" style="height: auto;padding-left: 20px;">
+            </div>
+        </div>
+
+        @*<table>
+                <tr>
+                    <td style="width:60px;"></td>
+                    <td style="width:60px;height:40px;">声音类型：</td>
+                    <td>
+                        <input id="Radio1" type="radio" value="静音" name="Sound"/>静音
+                        <input id="Radio1" type="radio" value="单一声音" name="Sound" />单一声音
+                        <input id="Radio1" type="radio" value="完整声音" name="Sound" />完整声音
+                    </td>
+                </tr>
+                <tr>
+                    <td >煤矿是否选择播放声音</td>
+                </tr>
+                <tr></tr>
+            </table>*@
+
+    </div>
+    <div data-options="region:'north'" style=" height:66px; text-align:center; display:table-cell; vertical-align:middle;">
+        <table style="width:100%;height:100%;font-size:12px; border-style:none;border-collapse:collapse;border-width:0 0 0 0;">
+            <tr>
+                <td id="TopLeftBgImage"></td>
+                <td id="TopMiddleBgImage">&nbsp;</td>
+                <td id="TopRightBgImage">
+                    <table id="TabTopTitle">
+                        <tr>
+                            <td style="text-align:right;height:40%;" colspan="2">欢迎你，<span id="span_userName"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td colspan="2" class="toptd" style="text-align:center;width:175px;"><span id="clock"></span></td>
+                            <td colspan="2" style="text-align:center;width:175px;">
+                                <div class="bs">
+                                    <label class="styleswitch a1" style="CURSOR: pointer;font-size:7px;" title="橘黄色" rel="orange">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a2" style="CURSOR: pointer; font-size: 7px" title="竹绿色" rel="green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a3" style="CURSOR: pointer; font-size: 7px" title="天蓝色" rel="blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a4" style="CURSOR: pointer; font-size: 7px" title="黑灰色" rel="gray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <label class="styleswitch a5" style="CURSOR: pointer; font-size: 7px" title="艳红色" rel="pink">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label id="weather"></label>
+                            </td>
+                            <td id="Home" style="width:87px;height:32px;text-align:center;">
+                                <div style="width:80px;height:32px;cursor:pointer;" onclick="SysBtnClick('Home')"></div>
+                            </td>
+                            <td id="PwdSet" style="width: 86px; height: 32px; text-align: center;">
+                                <div style="width:80px;height:32px;cursor:pointer;" onclick="SysBtnClick('PWDSET')"></div>
+                            </td>
+                            <td id="Logout" style="width: 87px; height: 32px; text-align: center;">
+                                <div style="width:80px;height:32px;cursor:pointer;" onclick="SysBtnClick('LOGOUT')"></div>
+                            </td>
+                            <td id="Exite" style="width: 86px; height: 32px; text-align: center;">
+                                <div style="width:80px;height:32px;cursor:pointer;" onclick="SysBtnClick('EXIT')"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div data-options="region:'south'" style="height:20px;">
+
+    </div>
+    <div id="divcenter" data-options="region:'center'" title="
+        <table style='width:100%;'>
+            <tr>
+                <td></td>
+                <td style='text-align:right;width:130px;'><div style='cursor:pointer; width:128px;' id='AlarmPrompt' onclick='LoadAlarmPageDetail();'></div> </td>
+                <td style='width:37px; text-align:center;'><img id='imgSound' style='cursor:pointer;' src='../../Files/Icon/sound_blue.png' onclick='AlarmSoundPauseOrResume();' /></td>
+                <td style='width: 60px; text-align: center; cursor:pointer;' onclick='AlarmSet();'>报警设置</td>
+            </tr>
+        </table> ">
+
+
+        <div id="divtabs" class="easyui-tabs" data-options="tabWidth:100,tabHeight:60,fit:true" style="width:100%;margin:0 0 0 0;">
+        </div>
+    </div>
+    <div id="divVideo" title="视频联网" class="easyui-window" data-options="modal:true" style="width:95%;max-height:2000px;min-height:600px;">
+        <iframe id="iframeVideo" frameborder="0" style="z-index:1; width:100%;min-height:600px;max-height:1000px;border:0; border-width:0px; border-color:white;   margin:0 0 0 0;padding:0 0 0 0;"></iframe>
+    </div>
+    <style scoped="scoped">
+        .tt-inner 
+        {
+            display: inline-block;
+            line-height: 12px;
+            padding-top: 5px;
+        }
+
+       .tt-inner img 
+       {
+                border: 0;
+       }
+    </style>
+
+    <div class="easyui-window" id="divPwdSet" data-options="closed:true,maximizable:false,resizable:false,onClose:function(){$('iframe').show('fast');}" style="width:390px;height:280px;">
+        <span id="hiddenValue" style="display:none;"></span>
+        <form id="ff" method="post">
+            <table style="text-align: center; width: 100%; height: 60%; border-width:1px; border-color:black; border-collapse:collapse;">
+                <tr style="height:20px;" />
+                <tr style="height:39px;">
+                    <td class="left">用户名：</td>
+                    <td class="right"><div id="txtAccount" data-options="readonly:true,disabled:true" class="easyui-textbox" style="width:70%;"></div></td>
+                </tr>
+                <tr style="height:39px;">
+                    <td class="left">原始密码：</td>
+                    <td class="right"><input id="txtPwdOrg" type="password" class="easyui-textbox" style="width:70%;" data-options="required:true" /></td>
+                </tr>
+                <tr style="height: 39px;">
+                    <td class="left">新密码：</td>
+                    <td class="right">
+                        <input id="txtPwdNew" type="password" class="easyui-textbox" style="width:70%;" data-options="required:true" />
+                    </td>
+                </tr>
+                <tr style="height: 39px;">
+                    <td class="left">新密码确认：</td>
+                    <td class="right"><input id="txtPwdAging" type="password" class="easyui-textbox" style="width:70%;" data-options="required:true"></td>
+                </tr>
+                <tr style="height:60px;">
+                    <td colspan="4" style="text-align: center;">
+                        <a id="btnSave" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="width:150px;">保存</a>
+                        <a id="btnclose" class="easyui-linkbutton" href="#" data-options="iconCls:'icon-cancel',onClick:function(){$('#divPwdSet').window('close');}" style="width:150px">关闭</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

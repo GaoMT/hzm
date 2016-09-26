@@ -1,0 +1,452 @@
+﻿@model InternetDataMine.Models.TestModel
+
+@{
+    Layout = "../shared/_LayoutEditer.cshtml";
+}
+<script type="text/javascript">
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    var MenuID = "";
+    //加载数据
+    $('#Menu').ready(function() {
+        //$("#Menu").datagrid({
+        //    rownumbers: true,
+        //    toolbar: '#tb',
+        //    fitColumns: true,
+        //    striped: true,
+        //    singleSelect: true,
+        //    method: 'Post',
+        //    fit: true,
+        //    url: '../Editer/TransData?type=Menu',
+        //    columns: [[
+        //        { field: 'ck', title: '选择', checkbox: true, width: 100 },
+        //        { field: 'MenuID', title: '菜单编号', width: 100, sortable: true, hidden: true },
+        //        { field: 'MenuParentID', title: '父菜单', width: 100, hidden: true },
+        //        { field: 'MenuName', title: '菜单名称', width: 100, editor: 'textbox' },
+        //        { field: 'MenuDescription', title: '菜单描述', width: 100, editor: 'textbox' },
+        //        { field: 'Remark', title: '备注', width: 100, editor: 'textbox' }
+        //    ]]
+        //});
+
+
+        var columns = [[
+            { field: 'ck', title: '选择', checkbox: true},
+            //{ field: 'MenuID', title: '菜单编号', width: 100, sortable: true, hidden: true },
+            //{ field: 'MenuParentID', title: '父菜单', width: 100, hidden: true },
+            { field: 'MenuName', title: '菜单名称' },
+            { field: 'MenuDescription', title: '菜单描述'},
+            { field: 'Remark', title: '备注'}
+        ]];
+
+        $("#Menu").treegrid({
+            columns: columns,
+            url: '../Editer/TransData?type=Menu',
+            toolbar: '#tb',
+            idField: "MenuID",
+            treeField: "MenuName",
+            //height: 465,
+            //pageNumber: 1,
+            //pageSize: 10,
+            //pageList: [10],
+            //singleSelect: true,
+            //rownumbers: true,
+            //animate: false,
+            fitColumns: true,
+            //nowrap: false,
+            selectOnCheck: true,
+            columns: [[
+           { field: 'ck', title: '选择', checkbox: true},
+           //{ field: 'MenuID', title: '菜单编号', width: 100, sortable: true, hidden: true },
+           //{ field: 'MenuParentID', title: '父菜单', width: 100, hidden: true },
+           { field: 'MenuName', title: '菜单名称' ,width:200},
+           { field: 'MenuDescription', title: '菜单描述',width:200},
+           { field: 'Remark', title: '备注',width:200}
+            ]]
+            //onLoadSuccess:
+            //    function (row, data) {
+            //        $.each(data, function(i, val) {
+            //            $("#Menu").treegrid('collapseAll');
+            //        });
+            //    }
+        });
+
+    });
+    //加载combobox ClassNO
+    $('#ClassNO').ready(function () {
+        $('#ClassNO').combobox({
+            url: '../Editer/TransData?type=ClassNOInfo',
+            valueField: 'id',
+            textField: 'text',
+            required: true,
+            editable: true,
+            onSelect: function (rec) {
+                var url = '../Editer/TransData?type=MenuCombox&ClassNO=' + rec.id;
+                $('#MenuParent').combobox('clear');
+                $('#MenuParent').combobox('reload', url);
+            }
+        })
+    })
+    $('#EditClassNO').ready(function() {
+        $('#EditClassNO').combobox({
+            url: '../Editer/TransData?type=ClassNOInfo',
+            valueField: 'id',
+            textField: 'text',
+            required: true,
+            editable: true,
+            onSelect: function(rec) {
+                var url = '../Editer/TransData?type=MenuCombox&ClassNO=' + rec.id;
+                $('#EditMenuParent').combobox('clear');
+                $('#EditMenuParent').combobox('reload', url);
+            }
+        });
+    });
+    $('#MenuParent').ready(function() {
+        $('#MenuParent').combobox({
+            url: '../Editer/TransData?type=MenuCombox',
+            valueField: 'id',
+            textField: 'text',
+            editable: true
+        });
+    });
+    $('#EditMenuParent').ready(function() {
+        $('#EditMenuParent').combobox({
+            url: '../Editer/TransData?type=MenuCombox',
+            valueField: 'id',
+            textField: 'text',
+            editable: true
+        });
+    });
+    //添加
+    function SaveMenu() {
+        var ParentID = $('#MenuParent').combobox('getValue');
+        var MenuName = $('#MenuName')[0].value;
+        var ClassNO = $('#ClassNO').combobox('getValue');
+        var MenuDescription = $('#MenuDescription').textbox("getText");
+        var MenuPath = $('#MenuPath').textbox("getText");
+        var Remark = $('#Remark').textbox("getText");
+        var MenuIndex = $('#txtMenuIndex').textbox("getText");
+        $("#ff").form('submit', {
+            url: '../Editer/TransData',
+            //url: '../Editer/TransData?type=SaveMenu&MenuParentID=' + ParentID + '&MenuName=' + MenuName + '&MenuDescription=' + MenuDescription + '&MenuPath=' + MenuPath + '&Remark=' + Remark + '&ClassNO=' + ClassNO + '&MenuIndex=' + MenuIndex,
+            queryParams:{
+                type: 'SaveMenu',
+                MenuParentID:ParentID,
+                ClassNO: ClassNO,
+                MenuName: MenuName,
+                MenuPath: MenuPath,
+                MenuDescription: MenuDescription,
+                Remark: Remark,
+                MenuIndex: MenuIndex
+            },
+            onSubmit: function(param) {
+                return $(this).form('enableValidation').form('validate');
+            },
+            success: function(data) {
+                if (data = "true") {
+
+                    AddProcessLogGlobal("添加了菜单信息！");
+
+                    $.messager.confirm('提示', '添加成功！');
+                    $('#dlg').dialog('close');
+                    $("#Menu").treegrid({
+
+                        url: '../Editer/TransData?type=Menu' + getUrlStafix()
+                    });
+                } else {
+                    $.messager.confirm('提示', '添加失败！');
+                }
+            },
+            error: function(data) {
+                $.messager.confirm('提示', '错误！');
+            }
+        });
+    }
+    //修改
+    function alter() {
+        $('#EditClassNO').combobox('clear');
+        $('#EditMenuParent').combobox('clear');
+        $('#EditMenuName').val("");
+        $('#EditMenuPath').val("");
+        $('#EditMenuDescription').val("");
+        $('#EditRemark').val("");
+        if ($('#Menu').datagrid('getSelected') != null) {
+            MenuID = $('#Menu').datagrid('getSelected')["MenuID"];
+            $('#EditClassNO').combobox('setValue', $('#Menu').datagrid('getSelected')['ClassNO']);
+            $('#EditMenuParent').combobox('setValue', $('#Menu').datagrid('getSelected')['MenuParentID']);
+            $('#EditMenuName').textbox('setValue', $('#Menu').datagrid('getSelected')['MenuName']);
+            $('#EditMenuPath').textbox('setValue', $('#Menu').datagrid('getSelected')['MenuPath']);
+            $('#EditMenuDescription').textbox('setValue', $('#Menu').datagrid('getSelected')['MenuDescription']);
+            $('#EditRemark').textbox('setValue', $('#Menu').datagrid('getSelected')['Remark']);
+            
+            $('#txtEditMenuIndex').textbox('setValue', $('#Menu').datagrid('getSelected')['MenuIndex']);
+            $('#editdlg').dialog('open');
+        }
+    }
+    function EditSave() {
+        if(MenuID!="")
+        {
+           
+
+            var MenuIndex = $('#txtEditMenuIndex').textbox("getText");
+            $("#ffedit").form('submit', {
+                url: '../Editer/TransData',
+                //url: '../Editer/TransData?type=EditMenu&MenuID=' + MenuID + '&MenuParentID=' + $('#EditMenuParent').combobox('getValue') + '&ClassNO=' + $('#EditClassNO').combobox('getValue') + '&MenuName=' + $('#EditMenuName')[0].value + '&MenuPath=' + $('#EditMenuPath')[0].value + '&MenuDescription=' + $('#EditMenuDescription')[0].value + '&Remark=' + $('#EditRemark')[0].value + '&MenuIndex=' + MenuIndex,
+                queryParams:{
+                    type: 'EditMenu',
+                    MenuID: MenuID,
+                    MenuParentID: $('#EditMenuParent').combobox('getValue'),
+                    ClassNO: $('#EditClassNO').combobox('getValue'),
+                    MenuName: $('#EditMenuName').textbox("getText"),
+                    MenuPath: $('#EditMenuPath').textbox("getText"),
+                    MenuDescription: $('#EditMenuDescription').textbox("getText"),
+                    Remark: $('#EditRemark').textbox("getText"),
+                    MenuIndex: MenuIndex
+                },
+                onSubmit: function (param) {
+                    return $(this).form('enableValidation').form('validate');
+                },
+                success: function (data) {
+                    if (data == "True") {
+                        $.messager.confirm('提示', '修改成功！');
+
+                        AddProcessLogGlobal("修改了菜单信息！");
+
+                        $('#editdlg').dialog('close');
+                        $("#Menu").treegrid({
+
+                            url: '../Editer/TransData?type=Menu' + getUrlStafix()
+
+
+
+                        });
+                    }
+                    else {
+                        $.messager.confirm('提示', '修改失败！');
+                    }
+                },
+                error: function (data) {
+                    $.messager.confirm('提示', '错误！');
+                }
+            })
+            $('#Menu').datagrid('reload');
+            $('#EditMenuParent').combobox('reload');
+            $('#MenuParent').combobox('reload');
+        }
+    }
+    //删除
+    function del(index) {
+        if ($('#Menu').datagrid('getSelected') != null) {
+            $.messager.confirm('警告', '确认要删除所选项？', function (result) {
+                if (result) {
+                    $.ajax({
+                        cache: false,
+                        method: 'POST',
+                        datatype: 'json',
+                        url: '../Editer/TransData?type=DelMenu&MenuID=' + $('#Menu').datagrid('getSelected')['MenuID'],
+                        success: function (data) {
+                            if (data == "True") {
+                                $.messager.alert('提示', '删除成功！');
+                                AddProcessLogGlobal("删除了菜单信息！");
+
+                            }
+                            else {
+                                $.messager.alert('提示', '删除失败！');
+                            }
+                        },
+                        error: function () {
+                            $.messager.alert('提示', '错误！');
+                        }
+                    })
+                    $("#Menu").treegrid({
+
+                        url: '../Editer/TransData?type=Menu' + getUrlStafix()
+                    });
+                    $('#EditMenuParent').combobox('reload');
+                    $('#MenuParent').combobox('reload');
+                }
+            })            
+        }
+    }
+   
+    $.extend($.fn.datagrid.defaults.editors, {
+        combogrid: {
+            init: function (container, options) {
+                var input = $('<input type="text" class="datagrid-editable-input">').appendTo(container);
+                input.combogrid(options);
+                return input;
+            },
+            destroy: function (target) {
+                $(target).combogrid('destroy');
+            },
+            getValue: function (target) {
+                return $(target).combogrid('getValue');
+            },
+            setValue: function (target, value) {
+                $(target).combogrid('setValue', value);
+            },
+            resize: function (target, width) {
+                $(target).combogrid('resize', width);
+            }
+        }
+    });
+    function AddMenu() {
+        $("#MenuName").textbox("clear");
+        $("#MenuPath").textbox("clear");
+        $("#MenuDescription").textbox("clear");
+        $("#Remark").textbox("clear");
+        $("#MenuParent").combobox('reload', '../Editer/TransData?type=MenuCombox');
+        $('#dlg').dialog('open');
+    }
+</script>
+    <table id="Menu" class="easyui-datagrid" title="菜单信息" data-options="fit:true">
+    </table>
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:5px">
+            <a href="#" class="easyui-linkbutton" iconcls="icon-add" onclick="AddMenu()">添加菜单</a>
+            <a href="#" class="easyui-linkbutton" iconcls="icon-edit" onclick="alter()">修改菜单</a>
+            <a href="#" class="easyui-linkbutton" iconcls="icon-remove" onclick="del()">删除菜单</a>
+        </div>
+    </div>
+    <div id="dlg" class="easyui-dialog" title="添加菜单" closed="true" style="width:440px;height:280px;padding:10px">
+        <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+            <table style="width:400px;">
+                <tr>
+                    <td align="right">
+                        菜单等级：
+                    </td>
+                    <td>
+                        <input class="easyui-combobox" id="ClassNO" style=" width:100%;" data-options="required:true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        父 菜 单：
+                    </td>
+                    <td>
+                        <input class="easyui-combobox" id="MenuParent" style="width: 100%;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        菜单名称：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="MenuName" data-options="required:true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        菜单路径：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="MenuPath" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        菜单描述：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="MenuDescription" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        排序：
+                    </td>
+                    <td>
+                        <input id="txtMenuIndex" class="easyui-numberspinner" value="1" style="width:80px;" required="required">  
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        备    注：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="Remark" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <a href="#" class="easyui-linkbutton" id="subbmit" icon="icon-ok"
+                           onclick="SaveMenu()">添加</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="editdlg" class="easyui-dialog" title="修改菜单" closed="true" style="width:440px;height:280px;padding:10px">
+        <form id="ffedit" class="easyui-form" method="post" data-options="novalidate:true">
+            <table style="width:400px;">
+                <tr>
+                    <td align="right">
+                        菜单等级：
+                    </td>
+                    <td>
+                        <input class="easyui-combobox" id="EditClassNO" style=" width: 100%;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        父 菜 单：
+                    </td>
+                    <td>
+                        <input class="easyui-combobox" id="EditMenuParent" style="width: 100%;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        菜单名称：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="EditMenuName" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        菜单路径：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="EditMenuPath" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        菜单描述：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="EditMenuDescription" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        排序：
+                    </td>
+                    <td>
+                        <input id="txtEditMenuIndex" class="easyui-numberspinner" value="1" style="width:80px;" required="required">  
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        备    注：
+                    </td>
+                    <td>
+                        <input class="easyui-textbox" style="width: 100%;" id="EditRemark" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="#" class="easyui-linkbutton" id="subbmit" icon="icon-ok" onclick="EditSave()">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+
