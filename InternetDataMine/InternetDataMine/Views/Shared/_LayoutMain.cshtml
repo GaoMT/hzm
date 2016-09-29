@@ -96,8 +96,11 @@
 
 
         //刷新报警信息
-        window.setInterval("LoadAlarmInfo()", 5000);
-
+       // window.setInterval("LoadAlarmInfo()", 5000);
+        function refreshalarm() {
+            LoadAlarmInfo();
+            setTimeout("refreshalarm()", 5000);
+        }
         var myIndex = 0;
         var alarmControl = null;
         //加载实时报警提示信息
@@ -616,6 +619,8 @@
                             case "图形系统": menuImagePath = "../content/themes/image/chart.png"; break;
                             case "矿山压力": menuImagePath = "../content/themes/image/troublemanage.png"; break;
                             case "火灾束管": menuImagePath = "../Content/themes/Image/PreviewAlarm.png"; break; //这里先随便拖了个图片路径
+
+                            case "视频监控": menuImagePath = "../Content/themes/Image/SPJK.png"; break;
                         }
 
                         //添加选项卡，设置选项卡内容为布局控件
