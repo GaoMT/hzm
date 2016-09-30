@@ -394,15 +394,21 @@ delete [dbo].[DiskManage] Where Disk_ID ='{0}' Or PDiskID ='{0}'", id);
         public DataTable GetMineInfo(string mineCode)
         {
             string sql = string.Format("with a as "+
-                                        "("+
-                                        "select a.MineCode,AQJK,RYGL,a.aqjkstate,b.ryglstate from "+
-                                        "(select MineCode,Name AQJK,StateCode aqjkstate from SystemConfig where TypeCode=1) as a "+
-                                        "left join "+
-                                        "(select MineCode,name RYGL,StateCode ryglstate from SystemConfig where TypeCode=2) as b "+
-                                        "on a.MineCode=b.MineCode"+
-                                        ")"+
-                                        "select * from (select newid() rowid,mc.SimpleName,mc.MineCode,mc.City,a.AQJK,case a.aqjkstate when 0 then '正常' when 1 then '通讯中断' else '传输异常' end as AQJKState,"+
-                                        "a.RYGL,case a.RYGLState when 0 then '正常' when 1 then '通讯中断' else '传输异常' end as RYGLState from MineConfig mc left join a on mc.ID=a.MineCode ) as mytable where minecode like '%"+mineCode+"%' order by City,MineCode "
+                                                       "(" +
+                                        "select a.MineCode,AQJK,RYGL,ksyl,hzsg,a.aqjkstate,b.ryglstate ,c.KSYLState,d.hzsgstate  from " +
+                                        "(select MineCode,Name AQJK,StateCode aqjkstate from SystemConfig where TypeCode=1) as a " +
+                                        "left join " +
+                                        "(select MineCode,name RYGL,StateCode ryglstate from SystemConfig where TypeCode=2) as b " +
+                                        "on a.MineCode=b.MineCode  LEFT JOIN  " +
+                                         "(select MineCode,name ksyl,StateCode KSYLState from SystemConfig where TypeCode=5) as c " +
+                                         "on c.MineCode=b.MineCode LEFT JOIN " +
+                                         " (select MineCode,name hzsg,StateCode hzsgstate from SystemConfig where TypeCode=7) as d on d.MineCode=b.MineCode" +
+                                        ")" +
+                                        "select * from (select newid() rowid,mc.SimpleName,mc.MineCode,mc.City,a.AQJK,case a.aqjkstate when 0 then '正常' when 1 then '通讯中断' else '传输异常' end as AQJKState," +
+                                        "a.RYGL,case a.RYGLState when 0 then '正常' when 1 then '通讯中断' else '传输异常' end as RYGLState ," +
+                                        "a.ksyl,case a.KSYLState when 0 then '正常' when 1 then '通讯中断' else '传输异常' end as KSYLState," +
+                                        "a.hzsg,case a.hzsgState when 0 then '正常' when 1 then '通讯中断' else '传输异常'end as hzsgState " +
+                                        "from MineConfig mc left join a on mc.ID=a.MineCode ) as mytable where minecode like '%" + mineCode + "%' order by City,MineCode "
                                     );
             return dal.ReturnData(sql);
         }

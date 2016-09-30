@@ -73,6 +73,10 @@ namespace InternetDataMine.Controllers
         {
             return View();
         }
+        public ActionResult AQJKKYData()
+        {
+            return View();
+        }
 
         public ActionResult ShowAQJKRTData()
         {

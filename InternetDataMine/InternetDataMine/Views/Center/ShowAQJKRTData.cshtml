@@ -52,7 +52,20 @@
                         return 'color:red;';
                     }
                 }
-            }
+            },
+              {
+                  title: '矿山压力', field: 'KSYLState', width: 60, align: 'right', styler: function (value, row, index) {
+                      if (value == "正常") {
+                          return 'color:green;';
+                      }
+                      else if (value == "传输异常") {
+                          return 'color:darkred;';
+                      }
+                      else {
+                          return 'color:red;';
+                      }
+                  }
+              }
             ]]
         });
         window.setTimeout("ReloadTreeGrid()", 5000);
@@ -99,20 +112,24 @@
         {
             $("#myIframeAQ")[0].src = "../Center/AQJKRTData?minecode=" + minecode;
             $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine?minecode=" + minecode;
+            $("#myIframeKY")[0].src = "../Center/AQJKKYData?minecode=" + minecode;
         }
         else
         {
             if (node == "") {
                 $("#myIframeAQ")[0].src = "../Center/AQJKRTData";
                 $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine";
+                $("#myIframeKY")[0].src = "../Center/AQJKKYData";
             }
             else {
                 if (node.minecode != 0) {
                     $("#myIframeAQ")[0].src = "../Center/AQJKRTData?minecode=" + node.minecode;
                     $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine?minecode=" + node.minecode;
+                    $("#myIframeKY")[0].src = "../Center/AQJKKYData?minecode=" + node.minecode;
                 } else {
                     $("#myIframeAQ")[0].src = "../Center/AQJKRTData";
                     $("#myIframeRY")[0].src = "../Person/RealTimePersonInMine";
+                    $("#myIframeKY")[0].src = "../Center/AQJKKYData";
                 }
             }
         }
@@ -123,15 +140,19 @@
 </script>
 
 <div id="cc" class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'west',title:'矿列表',split:true" style="width: 250px; height: 100%;">
+    <div data-options="region:'west',title:'矿列表',split:true" style="width: 310px; height: 100%;">
         <div id="treeMine" class="easyui-treegrid" data-options="fit:true"></div>
     </div>
-    <div data-options="region:'center'" style="padding: 0px;">
+    <div data-options="region:'center'" style="padding: 0px;  ">
+        
         <div class="easyui-panel" title="安全监控-实时数据" data-options="collapsed:false,collapsible:true,fit:true" >
             <iframe id="myIframeAQ" frameborder="0" style="width: 100%; height: 99%; border: 0px;" src="../Center/AQJKRTData"></iframe>
         </div>
         <div class="easyui-panel" title='人员管理-实时数据' data-options="collapsed:false,collapsible:true,fit:true">
             <iframe frameborder="0" id="myIframeRY" style="width: 100%; height: 99%; border: 0px;" src="../Person/RealTimePersonInMine"></iframe>
+        </div>
+        <div class="easyui-panel" title='矿山压力-实时数据' data-options="collapsed:false,collapsible:true,fit:true">
+            <iframe frameborder="0" id="myIframeKY" style="width: 100%; height: 99%; border: 0px;" src="../Center/AQJKKYData"></iframe>
         </div>
         </div>
     

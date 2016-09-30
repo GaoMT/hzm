@@ -81,6 +81,7 @@
                     }
                 });
             });
+            refreshalarm();
         });
 
         //单击密码修改、注销、退出的响应事件
@@ -94,13 +95,14 @@
             window.open(encodeURI("../center/ShowAQJKRTData"), "_blank", "left=0,top=0,fullscreen = no, toolbar = no,width=" + mywidth + ",height=" + myheight, false);
         } // 主页
 
-
+     
         //刷新报警信息
        // window.setInterval("LoadAlarmInfo()", 5000);
         function refreshalarm() {
             LoadAlarmInfo();
             setTimeout("refreshalarm()", 5000);
         }
+       
         var myIndex = 0;
         var alarmControl = null;
         //加载实时报警提示信息
@@ -269,10 +271,10 @@
 
             var item = data[i];
 
-            if (item == undefined) {
-                window.setTimeout("LoadAlarmInfo()", 10000);
-                return;
-            }
+            //if (item == undefined) {
+            //    window.setTimeout("LoadAlarmInfo()", 10000);
+            //    return;
+            //}
 
            
 

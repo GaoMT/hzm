@@ -45,10 +45,11 @@ namespace InternetDataMine.Models
                     {
                         json += ",";
                     }
-                   
+                   // json += string.Format(@"{{ " + "\"id\": \"{0}\",\"text\": \"{1}\",\"minecode\":\"{4}\" ,\"children\":[{{\"id\":\"AQJK\",\"text\":\"安全监控\",\"State\":\"{2}\"}},{{\"id\":\"RYGL\",\"text\":\"人员管理\",\"State\":\"{3}\"}} ,{{\"id\":\"KSYL\",\"text\":\"矿山压力\",\"State\":\"{5}\"}} ,{{\"id\":\"HZSG\",\"text\":\"火灾束管\",\"State\":\"{6}\"}}            ]}}", dr["rowid"].ToString(),
+                               //   dr["SimpleName"].ToString(), dr["AQJKState"].ToString(), dr["RYGLState"].ToString(), dr["MineCode"].ToString(), dr["ksylstate"].ToString(), dr["hzsgstate"].ToString());
                     DataRow dr = dt.Rows[i];
-                    json += string.Format(@"{{ " + "\"id\": \"{0}\",\"text\": \"{1}\",\"AQJKState\": \"{2}\",\"RYGLState\": \"{3}\",\"minecode\":\"{4}\"}}",dr["rowid"].ToString(),
-                                          dr["SimpleName"].ToString(), dr["AQJKState"].ToString(), dr["RYGLState"].ToString(), dr["MineCode"].ToString());
+                    json += string.Format(@"{{ " + "\"id\": \"{0}\",\"text\": \"{1}\",\"AQJKState\": \"{2}\",\"RYGLState\": \"{3}\",\"minecode\":\"{4}\",\"KSYLState\":\"{5}\"}}",dr["rowid"].ToString(),
+                                          dr["SimpleName"].ToString(), dr["AQJKState"].ToString(), dr["RYGLState"].ToString(), dr["MineCode"].ToString(), dr["KSYLState"].ToString());
 
                     if (i < dt.Rows.Count - 1)
                     {
