@@ -49,7 +49,7 @@ case sc.StateCode when 1 then '通讯中断' when 2 then '传输异常'end as co
 /*安全监控报警*/
 select * from (select mc.MineCode,mc.SimpleName MineName,dt.TypeName deviceName,aqss.Place,
 case aqss.ValueState When 1 Then '报警' When 4 Then '断电报警' When 8 Then '故障报警' When 16 Then '馈电异常' Else '工作异常' end as AlarmType,
-ShowValue,aqss.PoliceMaxValue,aqss.PoliceMaxDatetime,aqss.PowerMax,aqss.PowerMaxDatetime,aqss.PowerDateTime,aqss.PoliceDateTime,[dbo].[FunConvertTime](datediff(second, PoliceDatetime,getdate())) as PoliceContinuoustime,
+ShowValue,aqss.PoliceMaxValue,AQSS.SystemType, aqss.PoliceMaxDatetime,aqss.PowerMax,aqss.PowerMaxDatetime,aqss.PowerDateTime,aqss.PoliceDateTime,[dbo].[FunConvertTime](datediff(second, PoliceDatetime,getdate())) as PoliceContinuoustime,
 [dbo].[FunConvertTime](datediff(second, PowerDateTime,getdate())) as PowerContinuoustime,[dbo].[FunConvertTime](datediff(second, PowerDateTime,getdate())) as AbnormalContinuoustime,
 aqss.AbnormalDateTime
 from (select * from aqss where ValueState<>0) as aqss  
