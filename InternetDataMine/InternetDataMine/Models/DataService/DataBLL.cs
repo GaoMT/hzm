@@ -862,9 +862,9 @@ d.TypeName,d.Unit,Place,case when  (select top 1 [StateCode] from systemconfig w
             foreach (string mysensorCode in sensorCodes)
             {
                 sql += " select  max(StatisticaMaxValue) maxValue,min(StatisticaMinValue) minValue,AVG(StatisticaAvg) avgValue," +
-                    "substring(convert(nvarchar(30),StatisticalTime,120),0,16)+'0:00' statisticTime,Place from (select * from ShineView_His.dbo.AQMT where ID>=@BeginID and ID<@EndID) as xx where MineCode='" + mineCode + "' and sensorNum='" + mysensorCode + "'" +
-                    " and StatisticalTime>='" + BeginTime + "' and StatisticalTime<'" + EndTime + "'"+
-                    "group by substring(convert(nvarchar(30),StatisticalTime,120),0,16)+'0:00',Place order by substring(convert(nvarchar(30),StatisticalTime,120),0,16)+'0:00' ";
+                    " StatisticalTime statisticTime,Place from (select * from ShineView_His.dbo.AQMT where ID>=@BeginID and ID<@EndID) as xx where MineCode='" + mineCode + "' and sensorNum='" + mysensorCode + "'" +
+                    " and StatisticalTime>='" + BeginTime + "' and StatisticalTime<'" + EndTime + "'" +
+                    "group by StatisticalTime,Place order by StatisticalTime";
             }
             return dal.ReturnDs(sql).Tables;
         }
