@@ -271,10 +271,10 @@
 
             var item = data[i];
 
-            //if (item == undefined) {
-            //    window.setTimeout("LoadAlarmInfo()", 10000);
-            //    return;
-            //}
+            if (item == undefined) {
+              //  window.setTimeout("LoadAlarmInfo()", 10000);
+                return;
+            }
 
            
 
@@ -347,7 +347,7 @@
 
         // 加载报警页面明细信息
         function LoadAlarmPageDetail() {
-           // alert("LoadAlarmPageDetail ");
+            // alert("LoadAlarmPageDetail ");
             $("iframe").hide("fast");
             $("#divAlarmPageDetail").window("open");
             $.ajax({
@@ -357,8 +357,7 @@
                     //网络异常报警
                     var danExp1 = document.getElementById("divAlarmNetExp1");
                     danExp1.innerHTML = "";
-                    for (var i1 = 0; i1 < data.Table.length; i1++)
-                    {
+                    for (var i1 = 0; i1 < data.Table.length; i1++) {
                         var dataItem1 = data.Table[i1];
                         var divEx1 = document.createElement("div");
                         divEx1.style.width = "300px";
@@ -366,12 +365,10 @@
                         var str1;
                         var len1;
                         len1 = dataItem1.SimpleName.length;
-                        if (len1 != 5)
-                        {
+                        if (len1 != 5) {
                             str1 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                         }
-                        else
-                        {
+                        else {
                             str1 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
                         }
 
@@ -379,120 +376,186 @@
 
                         danExp1.appendChild(divEx1);
                     }
+
                     //安全监控系统报警
-                    var danExp2 = document.getElementById("divAlarmNetExp2");
-                    danExp2.innerHTML = "";
-                    var trow;
-                    trow = document.createElement("tr");
-                   // trow.appendChild(CreatCell(80, "black", "煤矿名称"));
-                    trow.appendChild(CreatCell(80, "black", "设备名称"));
-                    trow.appendChild(CreatCell(160, "black", "安装位置"));
-                    trow.appendChild(CreatCell(80, "black", "状态描述"));
-                    trow.appendChild(CreatCell(80, "black", "值/最大值"));
-                    trow.appendChild(CreatCell(160, "black", "值/最大值时间"));
-                    trow.appendChild(CreatCell(160, "black", "状态开始时间"));
-                    trow.appendChild(CreatCell(150, "black", "状态持续时长"));
-                    danExp2.appendChild(trow);
 
+                    //data.Table1
 
+                    function FillData(dan, data, type) {
+                        for (var i2 = 0; i2 < data.length; i2++) {
+                            var dataItem2 = data[i2];
+                            if (dataItem2.SystemType == type) {
+                                switch (dataItem2.AlarmType) {
+                                    case "超限报警":
+                                        {
+                                            trow = document.createElement("tr");
+                                            if (dataItem2.PoliceMaxValue == null) //没有最大值，显示 值 报警开始时间，持续时间；
+                                            {
+                                                // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                                trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                                trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                                trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                                trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
+                                                trow.appendChild(CreatCell(160, "black", "---"));
+                                                trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
+                                                trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
+
+                                            }
+                                            else //有最大值，显示 最大值，最大值开始时间 ，报警开始时间，持续时间；
+                                            {
+                                                // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                                trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                                trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                                trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                                trow.appendChild(CreatCell(80, "red", dataItem2.PoliceMaxValue));
+                                                trow.appendChild(CreatCell(160, "red", dataItem2.PoliceMaxDatetime));
+                                                trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
+                                                trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
+                                            }
+                                            break;
+                                        }
+
+                                    case "断电报警":
+                                        {
+                                            trow = document.createElement("tr");
+                                            //trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                            trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                            trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                            trow.appendChild(CreatCell(80, "red", dataItem2.PowerMax));
+                                            trow.appendChild(CreatCell(160, "red", dataItem2.PowerMaxDatetime));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
+                                            trow.appendChild(CreatCell(150, "black", dataItem2.PowerContinuoustime));
+                                            break;
+                                        }
+                                    case "故障报警":
+                                        {
+                                            trow = document.createElement("tr");
+                                            // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                            trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                            trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                            trow.appendChild(CreatCell(80, "black", "--"));
+                                            trow.appendChild(CreatCell(160, "black", "--"));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
+                                            trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
+                                            break;
+                                        }
+
+                                    case "馈电异常报警":
+                                        {
+                                            trow = document.createElement("tr");
+                                            // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                            trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                            trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                            trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
+                                            trow.appendChild(CreatCell(160, "red", dataItem2.AbnormalDateTime));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
+                                            trow.appendChild(CreatCell(150, "black", dataItem2.AbnormalContinuoustime));
+                                            break;
+                                        }
+
+                                    case "工作异常":
+                                        {
+                                            trow = document.createElement("tr");
+                                            //trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
+                                            trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.Place));
+                                            trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
+                                            trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
+                                            trow.appendChild(CreatCell(160, "red", dataItem2.AbnormalDateTime));
+                                            trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
+                                            trow.appendChild(CreatCell(150, "black", dataItem2.AbnormalContinuoustime));
+                                            break;
+                                        }
+                                }//SWITCH
+                                dan.appendChild(trow);
+                            }
+                        }//FOR
+                    }//function
+
+                    var AQJKcount = 0;
+                    var KSYLcount = 0;
+                    var HZSGcount = 0;
+                    //divEx2.appendChild(trow);
                     for (var i2 = 0; i2 < data.Table1.length; i2++) {
                         var dataItem2 = data.Table1[i2];
-                        switch (dataItem2.AlarmType)
-                        {
-                            case "超限报警":
-                                {
-                                    trow = document.createElement("tr");
-                                    if (dataItem2.PoliceMaxValue == null) //没有最大值，显示 值 报警开始时间，持续时间；
-                                    {
-                                       // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
-                                        trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
-                                        trow.appendChild(CreatCell(160, "black", dataItem2.Place));
-                                        trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
-                                        trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
-                                        trow.appendChild(CreatCell(160, "black", "---"));
-                                        trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
-                                        trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
-                                       
-                                    }
-                                    else //有最大值，显示 最大值，最大值开始时间 ，报警开始时间，持续时间；
-                                    {
-                                       // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
-                                        trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
-                                        trow.appendChild(CreatCell(160, "black", dataItem2.Place));
-                                        trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
-                                        trow.appendChild(CreatCell(80, "red", dataItem2.PoliceMaxValue));
-                                        trow.appendChild(CreatCell(160, "red", dataItem2.PoliceMaxDatetime));
-                                        trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
-                                        trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
-                                    }
-                                    break;
-                                }
+                        if (dataItem2.SystemType == 1) {
+                            if (AQJKcount != 0)
+                                continue;
+                            AQJKcount++;
+                            var danAQJK = document.getElementById("divAlarmNetAQJK");
+                            danAQJK.innerHTML = "";
+                            var trow;
+                            trow = document.createElement("tr");
+                            // trow.appendChild(CreatCell(80, "black", "煤矿名称"));
+                            trow.appendChild(CreatCell(80, "black", "设备名称"));
+                            trow.appendChild(CreatCell(160, "black", "安装位置"));
+                            trow.appendChild(CreatCell(80, "black", "状态描述"));
+                            trow.appendChild(CreatCell(80, "black", "值/最大值"));
+                            trow.appendChild(CreatCell(160, "black", "值/最大值时间"));
+                            trow.appendChild(CreatCell(160, "black", "状态开始时间"));
+                            trow.appendChild(CreatCell(150, "black", "状态持续时长"));
+                            danAQJK.appendChild(trow);
+                            FillData(danAQJK, data.Table1, 1);
 
-                            case "断电报警":
-                                {
-                                    trow = document.createElement("tr");
-                                    //trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
-                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
-                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
-                                    trow.appendChild(CreatCell(80, "red", dataItem2.PowerMax));
-                                    trow.appendChild(CreatCell(160, "red", dataItem2.PowerMaxDatetime));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
-                                    trow.appendChild(CreatCell(150, "black", dataItem2.PowerContinuoustime));
-                                    break;
-                                }
-                            case "故障报警":
-                                {
-                                    trow = document.createElement("tr");
-                                   // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
-                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
-                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
-                                    trow.appendChild(CreatCell(80, "black", "--"));
-                                    trow.appendChild(CreatCell(160, "black", "--"));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.PoliceDateTime));
-                                    trow.appendChild(CreatCell(150, "black", dataItem2.PoliceContinuoustime));
-                                    break;
-                                }
 
-                            case "馈电异常报警":
-                                {
-                                    trow = document.createElement("tr");
-                                   // trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
-                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
-                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
-                                    trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
-                                    trow.appendChild(CreatCell(160, "red", dataItem2.AbnormalDateTime));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
-                                    trow.appendChild(CreatCell(150, "black", dataItem2.AbnormalContinuoustime));
-                                    break;
-                                }
+                        }//IF
+                        else if (dataItem2.SystemType == 5) {
+                            if (HZSGcount != 0)
+                                continue;
+                            HZSGcount++;
+                            var danKSYL = document.getElementById("divAlarmNetKSYL");
+                            danKSYL.innerHTML = "";
+                            var trow;
+                            trow = document.createElement("tr");
+                            // trow.appendChild(CreatCell(80, "black", "煤矿名称"));
+                            trow.appendChild(CreatCell(80, "black", "设备名称"));
+                            trow.appendChild(CreatCell(160, "black", "安装位置"));
+                            trow.appendChild(CreatCell(80, "black", "状态描述"));
+                            trow.appendChild(CreatCell(80, "black", "值/最大值"));
+                            trow.appendChild(CreatCell(160, "black", "值/最大值时间"));
+                            trow.appendChild(CreatCell(160, "black", "状态开始时间"));
+                            trow.appendChild(CreatCell(150, "black", "状态持续时长"));
+                            danKSYL.appendChild(trow);
+                            FillData(danKSYL, data.Table1, 5);
 
-                            case "工作异常":
-                                {
-                                    trow = document.createElement("tr");
-                                    //trow.appendChild(CreatCell(80, "black", dataItem2.MineName));
-                                    trow.appendChild(CreatCell(80, "black", dataItem2.deviceName));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.Place));
-                                    trow.appendChild(CreatCell(80, "red", dataItem2.AlarmType));
-                                    trow.appendChild(CreatCell(80, "red", dataItem2.ShowValue));
-                                    trow.appendChild(CreatCell(160, "red", dataItem2.AbnormalDateTime));
-                                    trow.appendChild(CreatCell(160, "black", dataItem2.PowerDateTime));
-                                    trow.appendChild(CreatCell(150, "black", dataItem2.AbnormalContinuoustime));
-                                    break;
-                                }
-                        }
-                        //divEx2.appendChild(trow);
-                        danExp2.appendChild(trow);
-                    }
+
+                        }//IF
+                        else if (dataItem2.SystemType == 7) {
+                            //if (HZSGcount != 0)
+                            //    continue;
+                            //HZSGcount++;
+                            //var danHZSG = document.getElementById("divAlarmNetHZSG");
+                            //danHZSG.innerHTML = "";
+                            //var trow;
+                            //trow = document.createElement("tr");
+                            //// trow.appendChild(CreatCell(80, "black", "煤矿名称"));
+                            //trow.appendChild(CreatCell(80, "black", "设备名称"));
+                            //trow.appendChild(CreatCell(160, "black", "安装位置"));
+                            //trow.appendChild(CreatCell(80, "black", "状态描述"));
+                            //trow.appendChild(CreatCell(80, "black", "值/最大值"));
+                            //trow.appendChild(CreatCell(160, "black", "值/最大值时间"));
+                            //trow.appendChild(CreatCell(160, "black", "状态开始时间"));
+                            //trow.appendChild(CreatCell(150, "black", "状态持续时长"));
+                            //danHZSG.appendChild(trow);
+                            //FillData(danHZSG, data.Table1, 7);
+
+
+                        }//IF
+
+
+                    }//FOR
+
+
 
                     //人员管理系统超时报警
-                    var danExp3 = document.getElementById("divAlarmNetExp3");
-                    danExp3.innerHTML = "";
+                    var danRYGL = document.getElementById("divAlarmNetRYGL");
+                    danRYGL.innerHTML = "";
                     trow = document.createElement("tr");
                     if (data.Table2.length > 0) {
-                      //  trow.appendChild(CreatCell(60, "black", "煤矿名称"));
+                          trow.appendChild(CreatCell(60, "black", "煤矿名称"));
                         trow.appendChild(CreatCell(40, "black", "标识卡"));
                         //JobCardCode
                         trow.appendChild(CreatCell(60, "black", "姓名"));
@@ -505,7 +568,7 @@
                     //var divEx3 = document.createElement("div");
                     //divEx3.style.width = "500px";
                     //divEx3.style.display = "inline-block";
-                    danExp3.appendChild(trow);
+                    danRYGL.appendChild(trow);
                     for (var i3 = 0; i3 < data.Table2.length; i3++) {
                         var dataItem3 = data.Table2[i3];
                         //divEx3 = document.createElement("div");
@@ -524,34 +587,35 @@
                         //
                         trow.appendChild(CreatCell(160, "red", dataItem3.OverTimeLength));
                         // divEx3.appendChild(trow);
-                        danExp3.appendChild(trow);
+                        danRYGL.appendChild(trow);
                     }
 
                     //人员管理系统超员报警
-                    var danExp4 = document.getElementById("divAlarmNetExp4");
-                    danExp4.innerHTML = "";
+
                     for (var i4 = 0; i4 < data.Table3.length; i4++) {
                         var dataItem4 = data.Table3[i4];
-                        var divEx4 = document.createElement("div");
-                        divEx4.style.width = "500px";
-                        divEx4.style.display = "inline-block";
-                        divEx4.innerHTML = dataItem4.SimpleName + dataItem4.Post;
-                        danExp4.appendChild(divEx4);
+                        var danRYGL = document.createElement("div");
+                        danRYGL.style.width = "500px";
+                        danRYGL.style.display = "inline-block";
+                        danRYGL.innerHTML = dataItem4.SimpleName + dataItem4.Post;
+                        danRYGL.appendChild(divEx4);
                     }
 
                     //人员管理系统工作异常报警
-                    var danExp5 = document.getElementById("divAlarmNetExp5");
-                    danExp5.innerHTML = "";
-                    for (var i5 = 0; i5 < data.Table4.length; i5++)
-                    {
+
+                    for (var i5 = 0; i5 < data.Table4.length; i5++) {
                         var dataItem5 = data.Table4[i5];
-                        var divEx5 = document.createElement("div");
-                        divEx5.style.width = "500px";
-                        divEx5.style.display = "inline-block";
-                        divEx5.innerHTML = dataItem5.SimpleName + dataItem5.Post;
-                        danExp5.appendChild(divEx5);
+                        var danRYGL = document.createElement("div");
+                        danRYGL.style.width = "500px";
+                        danRYGL.style.display = "inline-block";
+                        danRYGL.innerHTML = dataItem5.SimpleName + dataItem5.Post;
+                        danRYGL.appendChild(divEx5);
                     }
-                }
+
+
+
+
+                }//SUCCESS
             });
         }
 
@@ -730,21 +794,33 @@
     <div id="divAlarmPageDetail" title="实时报警数据" class="easyui-window" data-options="closed:true,iconCls:'icon-error',onClose:function(){ShowAllIframe();},onMinimize:function(){ShowAllIframe();}"
          style="z-index: 100; width: 780px; height: 560px; z-index: 100; ">
         <div style="margin-top: 20px; font-weight: 700;">安全监控报警：</div>
-        <div id="divAlarmNetExp2" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        <div id="divAlarmNetAQJK" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
         </div>
+        <div style="margin-top: 20px; font-weight: 700;">人员管理报警：</div>
+        <div id="divAlarmNetRYGL" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        </div>
+        <div style="margin-top: 20px; font-weight: 700;">矿山压力报警：</div>
+        <div id="divAlarmNetKSYL" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        </div>
+        @*<div style="margin-top: 20px; font-weight: 700;">火灾束管报警：</div>
+        <div id="divAlarmNetHZSG" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+        </div>*@
+        @*<div style="margin-top: 20px; font-weight: 700;">安全监控报警：</div>
+            <div id="divAlarmNetExp2" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+            </div>*@
         <div style="margin-top: 20px;font-weight:700;">网络异常报警：</div>
         <div id="divAlarmNetExp1" style="height: auto; padding-left: 20px; border-style:solid;border-width:1px;border-color:silver;">
         </div>
-       
-        <div style="margin-top: 20px; font-weight: 700;">人员超时报警：</div>
-        <div id="divAlarmNetExp3" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
-        </div>
+
+        @* <div style="margin-top: 20px; font-weight: 700;">人员超时报警：</div>
+            <div id="divAlarmNetExp3" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+            </div>*@
         @*<div style="margin-top: 20px; font-weight: 700;">人员超员报警：</div>*@
-        <div id="divAlarmNetExp4" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
-        </div>
+        @*<div id="divAlarmNetExp4" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+            </div>*@
         @*<div style="margin-top: 20px; font-weight: 700;">特种作业工作异常报警：</div>*@
-        <div id="divAlarmNetExp5" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
-        </div>
+        @*<div id="divAlarmNetExp5" style="height: auto; padding-left: 20px; border-style: solid; border-width: 1px; border-color: silver; ">
+            </div>*@
     </div>
 
     <div id="divAlarmSet" title="报警设置" class="easyui-window" data-options="closed:true,modal:true,iconCls:'icon-save',onClose:function(){ShowAllIframe();},onMinimize:function(){ShowAllIframe();}"
