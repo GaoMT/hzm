@@ -79,7 +79,7 @@
         { field: 'AlarmHigh', title: '报警上限', width: 60 }
             ]],
             onCheck: function (rowIndex, rowData) {
-                debugger;
+            //    debugger;
                 if ($("#ddlSensor").combogrid("getValues").length > 6) {
                     IsSensorCountOverSix = true;
                     $.messager.alert('错误提示', '最多只能选六个测点！', 'error');
@@ -172,7 +172,7 @@
         $('#myform').form('submit',
             {
                 onSubmit: function () {
-                    debugger;
+                  //  debugger;
                     isValid = $(this).form('enableValidation').form('validate');
 
                 },
