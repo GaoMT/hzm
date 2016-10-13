@@ -99,6 +99,6 @@ E:\hzm\InternetDataMine\InternetDataMine\bin\zh-Hans\System.Web.Razor.resources.
 E:\hzm\InternetDataMine\InternetDataMine\bin\zh-Hans\System.Web.WebPages.resources.dll
 E:\hzm\InternetDataMine\InternetDataMine\bin\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 E:\hzm\InternetDataMine\InternetDataMine\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
-E:\hzm\InternetDataMine\InternetDataMine\obj\Debug\InternetDataMine.csprojResolveAssemblyReference.cache
 E:\hzm\InternetDataMine\InternetDataMine\obj\Debug\InternetDataMine.dll
 E:\hzm\InternetDataMine\InternetDataMine\obj\Debug\InternetDataMine.pdb
+E:\hzm\InternetDataMine\InternetDataMine\obj\Debug\InternetDataMine.csprojResolveAssemblyReference.cache

@@ -292,18 +292,18 @@
 
         function palySound1(data, i, sound1, sound2, sound3) {
             Playing(sound1);
-            setTimeout(palySound2, 2800, data, i, sound1, sound2, sound3);
+          //  setTimeout(palySound2, 2800, data, i, sound1, sound2, sound3);
         }
 
-        function palySound2(data, i, sound1, sound2, sound3) {
-            Playing(sound2);
-            setTimeout(palySound3, 2800, data, i, sound1, sound2, sound3);
-        }
+        //function palySound2(data, i, sound1, sound2, sound3) {
+        //    Playing(sound2);
+        //    setTimeout(palySound3, 2800, data, i, sound1, sound2, sound3);
+        //}
 
-        function palySound3(data, i, sound1, sound2, sound3) {
-            Playing(sound3);
-            setTimeout(showMsg, 3800, data, i);
-        }
+        //function palySound3(data, i, sound1, sound2, sound3) {
+        //    Playing(sound3);
+        //    setTimeout(showMsg, 3800, data, i);
+        //}
 
        
 
@@ -830,7 +830,7 @@
         <div style="margin-left: 50px; padding-left: 20px;">
             <div style="width: 160px; display: inline-block;"><input id="soundA" type="radio" value="静音" name="Sound" />静音</div>
             <div style="width: 160px; display: inline-block;"><input id="soundB" type="radio" value="单一声音" name="Sound" />单一声音</div>
-            <div style="width: 160px; display: inline-block;"><input id="soundC" type="radio" value="完整声音" checked="true" name="Sound" />完整声音</div>
+            <div style="width: 160px; display: none;"  ><input id="soundC" type="radio" value="完整声音" checked="true" name="Sound" />完整声音</div>
         </div>
         <div style="margin-left:50px;">
             @*<div style="margin-top: 20px;">按煤矿报警：</div>*@

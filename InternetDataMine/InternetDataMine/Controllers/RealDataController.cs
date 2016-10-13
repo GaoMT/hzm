@@ -42,7 +42,7 @@ namespace InternetDataMine.Controllers
             {
                 queryString = "";
             }
-            string sql = string.Format(@"select * from (Select mc.MineCode,mc.SimpleName,case sc.TypeCode when 1 then '安全监控系统' when 2 then '人员管理系统' when 3 then '瓦斯抽放系统' else '安全监控/瓦斯抽放系统' end as systemName,
+            string sql = string.Format(@"select * from (Select mc.MineCode,mc.SimpleName,case sc.TypeCode when 1 then '安全监控系统' when 2 then '人员管理系统' when 3 then '瓦斯抽放系统' when 5 then '矿山压力系统' when 7 then '火灾束管系统' else '安全监控/瓦斯抽放系统' end as systemName,
 case sc.StateCode when 1 then '通讯中断' when 2 then '传输异常'end as communicationState 
   from SystemConfig sc left join MineConfig mc on sc.MineCode=mc.ID where sc.StateCode<>0 ) as A {0}
 
