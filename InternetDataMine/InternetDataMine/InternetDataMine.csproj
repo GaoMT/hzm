@@ -859,7 +859,9 @@
     <Content Include="DataXML\PerSon\Person_Data_RecordStation_Mine.xml" />
     <Content Include="DataXML\PerSon\Person_Data_RYArea.xml" />
     <Content Include="DataXML\PerSon\Person_Data_RYArea_Mine.xml" />
-    <Content Include="DataXML\PerSon\Person_Data_SSCS.xml" />
+    <Content Include="DataXML\PerSon\Person_Data_SSCS.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="DataXML\PerSon\Person_Data_SSCS_Mine.xml" />
     <Content Include="DataXML\PerSon\Person_Data_TZYC.xml" />
     <Content Include="DataXML\PerSon\Person_Data_TZYC_Mine.xml" />
@@ -926,6 +928,8 @@
     </Content>
     <Content Include="DataXML\Safe\Safe_Bar_ReportDay_Mine.xml" />
     <Content Include="DataXML\Safe\Safe_Bar_RT.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_RT_HG.xml" />
+    <Content Include="DataXML\Safe\Safe_Bar_RT_HG_Mine.xml" />
     <Content Include="DataXML\Safe\Safe_Bar_RT_Mine.xml" />
     <Content Include="DataXML\Safe\Safe_Data_AQBJHis.xml">
       <SubType>Designer</SubType>
@@ -980,12 +984,17 @@
     <Content Include="DataXML\Safe\Safe_Data_RealData.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="DataXML\Safe\Safe_Data_RealData_HG.xml" />
+    <Content Include="DataXML\Safe\Safe_Data_RealData_HG_Mine.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="DataXML\Safe\Safe_Data_RealData_Mine.xml" />
     <Content Include="DataXML\Safe\Safe_DropList_PointNumSelect.xml" />
     <Content Include="DataXML\Safe\Safe_DropList_PointType.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="DataXML\Safe\Safe_DropList_SensorNumSelect.xml" />
+    <Content Include="DataXML\Safe\Safe_DropList_SensorNumSelect_HG.xml" />
     <Content Include="DataXML\Safe\Safe_DropList_SensorTypeSelect.xml" />
     <Content Include="DataXML\Styles\OrangeFreeFormStyle.xml">
       <SubType>Designer</SubType>
@@ -1201,6 +1210,7 @@
     <Content Include="Views\ProcessLog\ProcessLogQuery.cshtml" />
     <Content Include="Views\Chart\SwitchQantity.cshtml" />
     <Content Include="Views\Center\AQJKKYData.cshtml" />
+    <Content Include="Views\Center\AQJKHGData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

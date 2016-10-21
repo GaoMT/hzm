@@ -395,7 +395,7 @@ delete [dbo].[DiskManage] Where Disk_ID ='{0}' Or PDiskID ='{0}'", id);
         {
             string sql = string.Format("with a as "+
                                                        "(" +
-                                        "select a.MineCode,AQJK,RYGL,ksyl,hzsg,a.aqjkstate,b.ryglstate ,c.KSYLState,d.hzsgstate  from " +
+                                        "select a.MineCode,AQJK,RYGL,ksyl,hzsg,a.aqjkstate,b.ryglstate ,c.KSYLState,d.hzsgstate   from " +
                                         "(select MineCode,Name AQJK,StateCode aqjkstate from SystemConfig where TypeCode=1) as a " +
                                         "left join " +
                                         "(select MineCode,name RYGL,StateCode ryglstate from SystemConfig where TypeCode=2) as b " +

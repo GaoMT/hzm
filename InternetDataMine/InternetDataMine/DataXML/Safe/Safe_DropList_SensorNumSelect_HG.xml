@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-21-->
+<TreeList>
+  <Properties dataURL="../../TransJson/TransJsonToTreeList?DataType=Sensor" OriUrl="../../TransJson/TransJsonToTreeList?DataType=Sensor">
+  </Properties>
+  <Cols>
+    <Col name="SensorNum"  width="90" align="center">气体名称</Col>
+    
+  </Cols>
+</TreeList>

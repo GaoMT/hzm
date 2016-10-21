@@ -82,7 +82,11 @@ namespace InternetDataMine.Controllers
         {
             return View();
         }
-
+        public ActionResult AQJKHGData()
+        {
+            return View();
+        
+        }
         /// <summary>
         /// 通过前台传来的页面名称，加载参数
         /// </summary>
@@ -107,6 +111,11 @@ namespace InternetDataMine.Controllers
             else if (loadModel.SystemType == 5)
             {
                 Session["SystemType"] = "5";
+
+            }
+            else if (loadModel.SystemType == 7)
+            {
+                Session["SystemType"] = "7";
 
             }
             else
@@ -931,10 +940,10 @@ namespace InternetDataMine.Controllers
                         //加载实时数据界面
                         case "RealData":
                             //loadModel.QueryBarPath = "../DataXML/Safe/Safe_Bar_RealData" + (string.IsNullOrEmpty(MineCode) ? "" : "_Mine") + ".xml";
-                            loadModel.QueryBarPath = "../DataXML/Safe/Safe_Bar_RT" + (string.IsNullOrEmpty(MineCode) ? "" : "_Mine") + ".xml";
-                            loadModel.QueryDataPath = "../DataXML/Safe/Safe_Data_RealData" + (string.IsNullOrEmpty(MineCode) ? "" : "_Mine") + ".xml";
+                            loadModel.QueryBarPath = "../DataXML/Safe/Safe_Bar_RT_HG" + (string.IsNullOrEmpty(MineCode) ? "" : "_Mine") + ".xml";
+                            loadModel.QueryDataPath = "../DataXML/Safe/Safe_Data_RealData_HG" + (string.IsNullOrEmpty(MineCode) ? "" : "_Mine") + ".xml";
                             loadModel.PreLoadData = "RealData_HG";
-                            loadModel.PageTitle = "实时数据";
+                            loadModel.PageTitle = "JSG8井下自燃火灾束管监测系统实时监测数据";
                             break;
                         #endregion
 

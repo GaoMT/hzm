@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--create by hg 2014-11-21-->
+<TreeList>
+  <Properties  Title="实时数据" editAble="false" bgColor="#FFFFFF" headerBgColor="#FFFFFF"  fadeInStep="0" curSelBackColor="#d7f4fc"  rowHeight="25" GridColor="#b4c3c8"  HeaderFontIndex="2" addRowAble="false" deleteRowAble="false" ></Properties>
+  <Fonts>
+    <Font faceName="Consolas"/>
+    <Font />
+    <Font faceName="微软雅黑" bold="1"/>
+    <Font bold="true" />
+  </Fonts>
+  <Cols>
+    <Col name="TmpID"   width="5%" align="center">ID号</Col>
+    <Col name="SensorNum"  width="30%" align="center">气体名称</Col>
+    <Col name="ShowValue"   width="30%" align="center">测点值</Col>
+    <Col name="datetime" datatype="datetime"   width="35%" align="center">监测时间</Col>
+
+  </Cols>
+</TreeList>

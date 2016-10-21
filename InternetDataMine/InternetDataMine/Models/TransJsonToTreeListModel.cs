@@ -88,7 +88,7 @@ namespace InternetDataMine.Models
                 else
                 {
                     _BLL_Data.PageIndex = 0;
-                    _BLL_Data.PageSize = 100;
+                    //_BLL_Data.PageSize = 100;
                 }
                 DataTable Result = null;
                 DataTableCollection Results;
